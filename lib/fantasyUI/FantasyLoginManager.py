@@ -205,7 +205,7 @@ def main():
     if login_successful:
         print(f"{f.fantasy_api_cookie()=}")
     else:
-        print('fit hit the shan.')
+        print('there was an issue logging in.')
 
 
 if __name__ == "__main__":

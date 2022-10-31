@@ -10,7 +10,7 @@ ${HOMEPAGE}     https://www.espn.com/fantasy/
 ${BROWSER}      Chrome
 ${user}
 ${password}
-${greeting}     Pham!
+${greeting}
 
 *** Test Cases ***
 Auth with Cookie Capture
