@@ -38,6 +38,7 @@ test:
 
 run:
   script:
+    - apt -y update && apt install -y gunicorn
     - pip install -q -r requirements.txt
     - echo "running tests"
 #    - python setup.py bdist_wheel
