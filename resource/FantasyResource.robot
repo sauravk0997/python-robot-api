@@ -20,9 +20,3 @@ A POST request to ${endpoint} should respond with ${status}
     [Documentation]     Custom POST keyword with status validation.
     ${api_response}=    POST  url=${endpoint}  expected_status=${status}
     [Return]    ${api_response}
-
-# Validate ${links} should respond with ${status}
-#     [Documentation]     Custom GET keyword with status validation.
-#     FOR    ${link}    IN    @{links}
-#         A GET request to ${link} should respond with 200   
-#     END

@@ -1,0 +1,16 @@
+{
+    "members": [
+        {
+            "id": "<Member_id>",
+            "isLeagueCreator": true
+        }
+    ],
+    "settings": {
+        "draftSettings": {
+            "date": null
+        },
+        "isCustomizable": true,
+        "name": "<league_name>",
+        "size": "4"
+    }
+}
