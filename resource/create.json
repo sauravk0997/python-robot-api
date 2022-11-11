@@ -1,0 +1,16 @@
+{
+	"members": [{
+		"id": "{BC6305D7-5A17-4840-B231-8D34D45B1DCB}",
+		"isLeagueCreator": true
+	}],
+	"settings": {
+	"draftSettings": {
+		"type": "OFFLINE",
+		"date": 0
+        
+	},
+		"isCustomizable": true,
+		"name": "Fake1",
+		"size": "4"
+	}
+}
