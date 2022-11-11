@@ -22,11 +22,11 @@ Draft Begin
     A post request to ${request_url} and ${data} and ${object} should respond with 200
 
 Add Player
-    set test variable    ${addPlayer_url}   https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/${leagueid}/transactions/ 
+    set test variable    ${addPlayer_url}   https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/${leagueid}/transactions/
     ${data1}=    get file  /Users/yusufmubarakm/Documents/yusuf/fantasy/espn-fantasy-api/resource/PlayersList.json
     ${object}=   Evaluate  json.loads('''${data1}''')
     &{data}=    create dictionary    cookie=${espn_cookie}
-    A post request to ${Transaction_url} and ${data} and ${object} should respond with 200
+    A post request to ${addPlayer_url} and ${data} and ${object} should respond with 200
 
 
 
