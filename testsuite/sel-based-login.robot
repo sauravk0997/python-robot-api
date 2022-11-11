@@ -8,9 +8,9 @@ Library  ../lib/fantasyUI/FantasyLoginManager.py    driver=${BROWSER}    xpaths=
 *** Variables ***
 ${HOMEPAGE}     https://www.espn.com/fantasy/
 ${BROWSER}      Chrome
-${user}
-${password}
-${greeting}
+${user}         saurav.kumar@zucitech.com
+${password}     Saurav@1103
+${greeting}     Saurav!
 
 *** Test Cases ***
 Auth with Cookie Capture
