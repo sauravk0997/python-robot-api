@@ -15,8 +15,8 @@ Resource    resource/FantasyLeagueResource.Robot
 Create a League and Extract the LeagueId           #For Moving a player Required a Fantasy league instead of assuming and hardcoding a leagueid created a tesst league without any validation and also to create league with all validations will be covered by CSEAUTO-28333 once its completed this test case be removed
     &{headers}  create dictionary    cookie=SWID={95096766-E11A-4C94-BB21-2BA8F8C0D3EF}; espn_s2=AECrGNEO5w1VlDOoJEgL1wquDjPrYr1r0XR9A5zJln93t968%2BICfJi3k32jhzzwTZpEzvBWbOf0%2FFx0ObwGqatXTiooE1n3SkjICYmcbiqCYUJjHQp6e9JyUT67qTYAVlmpWwiir8Auj6AMyk5Du%2BySpeboBjJLUm%2BPGsk7ajvLy26t8PgyzWpnbM8EzazCCLqAkeLNjEe1PdV6%2FmHj9t2fZgfusdIAns%2FpsBtgNQtBnzwhFUhrJ6JvyLFF0syVwv%2FGszPfVEzIwfOtXGHbSkdsI3WlAqQc61wm6q%2BkLeUxVnw%3D%3D;
     set global variable    ${headers}
-    ${create_league}=    get file   resource/create.json
-    ${create_league_payload}=   Evaluate  json.loads('''${create_league}''')
+    ${create_league_payload}=    Load JSON from file    resource/create.json
+
     To Create a league send a post request to ${CreateLeague_url} using ${headers} with ${create_league_payload} should respond with 200
 
 Offline Draft Begin                 #For Moving a player Required a Fantasy league with offline drafting startegy instead of assuming and hardcoding created a league with offline draft strategy without any validation and also to create a league with offline strategy along with the validations will be covered by CSEAUTO-28333 once its completed this test case be removed
@@ -39,8 +39,8 @@ Save the Team and complete Draft    #For Moving a player Required a Fantasy leag
 Move the Players by swaping the position of the players
     [Tags]    swap players  valid CSEAUTO-28392
     set test variable    ${MovePlayer_url}   https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/${leagueid}/transactions/
-    ${swap_players}=    get file    resource/SwapPlayer.json
-    ${swap_players_payload}=     Evaluate  json.loads('''${swap_players}''')     #if a user wants to move a player in current scoringperiod then type should be roster and for future scoring period type should be future roster
+    &{swap_players_payload}=    Load JSON from file    resource/SwapPlayer.json
+    #if a user wants to move a player in current scoringperiod then type should be roster and for future scoring period type should be future roster
     ${response}         A post request to ${MovePlayer_url} using ${headers} with ${swap_players_payload} should respond with 200
     Move Player Schema from ${response} should be valid
     #validation to check whether the players positions are swapped
@@ -55,8 +55,8 @@ Move the Players by swaping the position of the players
 Move the Players to Bench
     [Tags]    move players to Bench  valid  CSEAUTO-28395
     set test variable    ${MovePlayer_url}   https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/${leagueid}/transactions/
-    ${Move_to_Bench}=    get file    resource/MovetoBench.json
-    ${Move_to_Bench_payload}=     Evaluate  json.loads('''${Move_to_Bench}''')      #if a user wants to move a player in current scoringperiod then type should be roster and for future scoring period type should be future roster
+    ${Move_to_Bench_payload}=    Load JSON from file    resource/MovetoBench.json
+    #if a user wants to move a player in current scoringperiod then type should be roster and for future scoring period type should be future roster
     ${response}     A post request to ${MovePlayer_url} using ${headers} with ${Move_to_Bench_payload} should respond with 200
     Move Player Schema from ${response} should be valid
     #validation to check whether the player is moved to bench
