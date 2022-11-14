@@ -1,0 +1,9 @@
+# Ignore all pycache files
+*.pyc
+
+# Ignore all report files
+*.html
+*.xml
+
+# Ignore Mac system files
+.DS_store
