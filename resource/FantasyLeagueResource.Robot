@@ -1,9 +1,10 @@
 *** Settings ***
+Documentation       A resource robot file which includes all comm utils/functions and variables related to Fantasy League
 Library    RequestsLibrary
 Library    Collections
 Library    OperatingSystem
-Library    ../lib/fantasyUI/FantasyLoginManager.py    driver=${BROWSER}    xpaths=${CURDIR}/../resource/xpaths.json    WITH NAME  FLM
-Library    ../lib/validators/FantasyLeagueValidator.py
+
+
 
 *** Variables ***
 ${HOMEPAGE}             https://www.espn.com/fantasy/
@@ -14,26 +15,26 @@ ${TeamCreate_url}   https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segm
 ${OfflineDraftStarting_url}    https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/{leagueid}/draftDetail
 ${Transaction_url}   https://lm-api-writes.fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/{leagueid}/transactions/     #This is the common url which will be perfoming different action like adding player,moving players..etc Based on the Json payload we send
 ${BROWSER}      Chrome
-${user}         gagan.duddanahalli.rajaram.-nd@disney.com
-${password}     ym1234
-${greeting}     yusuf!
-${espn_cookie}
-${response}
+${user}         test_api@gmail.com
+${password}     test_api
+${greeting}     TestUser!
+
+
 
 *** Keywords ***
-A post request to ${endpoint} and ${var1} and ${var2} should respond with ${status}
-    ${response}     POST    url=${endpoint}   headers=${var1}     json=${var2}    expected_status=${status}
-    set global variable     ${response}
+To Create a league send a post request to ${endpoint} using ${header} with ${payload} should respond with ${status}
+    ${response}     POST    url=${endpoint}   headers=${headers}     json=${payload}    expected_status=${status}
+    ${leagueid}      get from dictionary    ${response.json()}  id
+    set global variable     ${leagueid}
 
-Authenticate with captured Cookie
-    FLM.Login Fantasy User     username=${user}   password=${password}  expected_profile_name_span_value=${greeting}   url=${HOMEPAGE}
-    ${espn_cookie}=     FLM.Fantasy API Cookie
-    set global variable     ${espn_cookie}
 
-Draft Begin
-    A post request to ${endpoint} and ${var1} and ${var2} should respond with ${status}
+A post request to ${endpoint} using ${header} with ${payload} should respond with ${status}
+    ${response}     POST    url=${endpoint}   headers=${header}     json=${payload}    expected_status=${status}
+    [Return]    ${response}
 
-Add
+
+
+
 
 
 

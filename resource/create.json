@@ -1,6 +1,6 @@
 {
 	"members": [{
-		"id": "{BC6305D7-5A17-4840-B231-8D34D45B1DCB}",
+		"id": "{95096766-E11A-4C94-BB21-2BA8F8C0D3EF}",
 		"isLeagueCreator": true
 	}],
 	"settings": {
@@ -10,7 +10,7 @@
         
 	},
 		"isCustomizable": true,
-		"name": "Fake1",
+		"name": "testleague",
 		"size": "4"
 	}
 }
