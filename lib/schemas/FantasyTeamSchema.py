@@ -72,7 +72,6 @@ class AwaySchema(Schema):
     ties                     = fields.Integer(required=True)
     wins                     = fields.Integer(required=True)
     
-
 class RecordSchema(Schema):
     class Meta:
         unknown = RAISE

@@ -20,7 +20,6 @@ class ScoringItemsSchema(Schema):
     leagueRanking            = fields.Integer(required=True)
     leagueTotal              = fields.Integer(required=True)
     points                   = fields.Integer(required=False)
-    #pointsOverrides          = fields.Nested(required=False)
     statId                   = fields.Integer(required=True)
 
 #ScoringSettings Schema
@@ -37,15 +36,6 @@ class ScoringSettingsSchema(Schema):
     scoringType                 = fields.String(required=True)
     scoringItems                = fields.Raw(required=False)
 
-#Division Schema
-# class DivisionsSchema(Schema):
-#     class Meta:
-#         unknown = RAISE
-    
-#     id            = fields.Integer(required=False)
-#     name          = fields.String(required=True)
-#     size          = fields.Integer(required=True)
-
 # Division Schema
 class MatchupPeriodsSchema(Schema):
     class Meta:
@@ -56,23 +46,14 @@ class ScheduleSettingsSchema(Schema):
     class Meta:
         unknown = RAISE
     
-    #divisions                     = fields.List(DivisionsSchema, required=False)
     divisions                    = fields.Raw(required=False)
     matchupPeriodCount           = fields.Integer(required=True)
     matchupPeriodLength          = fields.Integer(required=True)
-    #matchupPeriods               = fields.FantasyCreateLeagueOwners()
-    # matchupPeriods               = fields.Nested(MatchupPeriodsSchema, required=False);
     matchupPeriods               = fields.Raw(required=False)
     periodTypeId                 = fields.Integer(required=True)
     playoffMatchupPeriodLength   = fields.Integer(required=True)
     playoffSeedingRule           = fields.String(required=False)
     playoffTeamCount             = fields.Integer(required=True)
-
-# #RosterSettings Schema
-# class LineupSlotCountsSettingsSchema(Schema):
-#     class Meta:
-#         unknown = RAISE
-    
 
 #RosterSettings Schema
 class RosterSettingsSchema(Schema):
@@ -84,7 +65,6 @@ class RosterSettingsSchema(Schema):
     lineupLocktimeType          = fields.String(required=True)
     moveLimit                   = fields.Integer(required=True)
     rosterLocktimeType          = fields.String(required=True)
-    # lineupSlotCounts            = fields.Nested(LineupSlotCountsSettingsSchema, required=False)
     lineupSlotCounts            = fields.Raw(required=False)
     lineupSlotStatLimits        = fields.Raw(required=False)
     playerMoveToIR              = fields.Integer(required=False)
@@ -156,12 +136,6 @@ class SettingsSchema(Schema):
     scoringSettings             = fields.Nested(ScoringSettingsSchema, required=False)
     tradeSettings               = fields.Nested(TradeSettingsSchema, required=False)
 
-#Settings Schema
-class PreviousSeasonSchema(Schema):   
-    class Meta:
-        pass
-        # unknown = RAISE
-
 #Status Schema
 class StatusSchema(Schema):
     class Meta:
@@ -181,21 +155,11 @@ class StatusSchema(Schema):
     isViewable                  = fields.Boolean(required=True)
     isWaiverOrderEdited         = fields.Boolean(required=True)
     latestScoringPeriod         = fields.Integer(required=True)
-   # previousSeasons             = FantasyCreateLeaguePreviousSeasons
-    #previousSeasons             = fields.List(PreviousSeasonSchema, required=False)
-    #previousSeasons             = fields.List(PreviousSeasonSchema, required=False)
-    #previousSeasons             = FantasypreviousSeasons
-    #previousSeasons             = fields.List(dump_only=True)
     previousSeasons             = fields.Raw(required=False)
     teamsJoined                 = fields.Integer(required=True)
     transactionScoringPeriod    = fields.Integer(required=True)
     waiverLastExecutionDate     = fields.Integer(required=True)
     waiverProcessStatus         = fields.Raw(required=False)
-    
-# #Groups Schema
-# class OwnersSchema(Schema):
-#     class Meta:
-#         unknown = RAISE
 
 #Teams Schema
 class TeamsSchema(Schema):
@@ -211,7 +175,6 @@ class TeamsSchema(Schema):
     location                = fields.String(required=False)
     logo                    = fields.String(required=False)
     nickname                = fields.String(required=False)
-    # owners                  = fields.List(fields.Nested(OwnersSchema), required=False)
     owners                  = fields.Raw(required=False)
     playoffSeed             = fields.Integer(required=False)
     points                  = fields.Integer(required=False)
@@ -219,7 +182,6 @@ class TeamsSchema(Schema):
     rankCalculatedFinal     = fields.Integer(required=False)
     rankFinal               = fields.Integer(required=False)
     waiverRank              = fields.Integer(required=False)
-    #watchList               = fields.FantasyCreateLeaguewatchList()
     watchList               = fields.Raw(required=False)
 
 #Metadata Schema
