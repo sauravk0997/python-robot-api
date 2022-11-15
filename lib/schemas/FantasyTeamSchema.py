@@ -11,7 +11,7 @@ class TransactionsCounterSchema(Schema):
     matchupAcquisitionTotals    = fields.Raw(required=False)
     moveToActive                = fields.Integer(required=True)
     moveToIR                    = fields.Integer(required=True)
-    paid                        = fields.String(required=True)
+    paid                        = fields.Integer(required=True)
     teamCharges                 = fields.Integer(required=True)
     trades                      = fields.Integer(required=True)
 

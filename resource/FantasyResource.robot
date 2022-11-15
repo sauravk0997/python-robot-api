@@ -6,8 +6,7 @@ Library             DateTime
 Library             RPA.JSON
 Library             Collections
 Library             String
-#Resource            testsuite/fantasy-sport-league-teams-tests.robot
-Library    lib/validators/FantasyCreateLeagueValidator.py
+Library             lib/validators/FantasyCreateLeagueValidator.py
 
 *** Variables ***
 ${TOKEN}=    %7B6E458CFC-7B0E-4811-8B3D-504CF5F7D4C0%7D
@@ -36,10 +35,6 @@ A GET request to ${endpoint} should respond with ${status}
     ${api_response}=    GET  url=${endpoint}  expected_status=${status}
     [Return]    ${api_response}
 
-A POST request to ${endpoint} should respond with ${status}
-    [Documentation]     Custom POST keyword with status validation.
-    ${api_response}=    POST  url=${endpoint}  expected_status=${status}
-    [Return]    ${api_response}
 Initialize users cookie ${espn_cookie}
     log    ${espn_cookie}
     ${SWID}=    Get SWID from cookie ${espn_cookie}
@@ -47,72 +42,71 @@ Initialize users cookie ${espn_cookie}
     Set Global Variable    ${SWID}
 
 Validate Fantasy create league endpoint responds with status code 200
-    &{leagueCreateJsonTemplate}=    Load JSON from file    resource/leagueCreateTemplate.json
+    &{league_create_json_template}=    Load JSON from file    resource/leagueCreateTemplate.json
     #Generate random string of 4 digits
     ${random_string}=    Generate Random String    4    0123456789
     #Get SWID of the user
     ${SWID}=    Get SWID from cookie ${espn_cookie}
     # Update member Id to Json file
-    ${memberIdUpdated}=    Update value to JSON    ${leagueCreateJsonTemplate}    $.members[0].id   ${SWID}
+    ${member_id_updated}=    Update value to JSON    ${league_create_json_template}    $.members[0].id   ${SWID}
     #Save content to JSON file with indentation (value:2 Tab Space)
-    Save JSON to file    ${memberIdUpdated}    resource/leagueCreateTemplate.json    2
+    Save JSON to file    ${member_id_updated}    resource/leagueCreateTemplate.json    2
     #Update Fantasy league name
-    ${leagueUpdated}=    Update value to JSON    ${leagueCreateJsonTemplate}    $.settings.name    My-Fantasy-League-${random_string}
-    Save JSON to file    ${leagueUpdated}    resource/leagueCreateTemplate.json    2
+    ${league_updated}=    Update value to JSON    ${league_create_json_template}    $.settings.name    My-Fantasy-League-${random_string}
+    Save JSON to file    ${league_updated}    resource/leagueCreateTemplate.json    2
     #Cookie dictionary
-    &{header_Value}=    create dictionary     cookie=${espn_cookie}
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
     #Create League API invocation
-    ${league_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUE_CREATE_SLUG}  headers=${header_Value}     json=${leagueCreateJsonTemplate}   expected_status=200
-    #Fantasy Create League Schema from ${response} should be valid
+    ${league_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUE_CREATE_SLUG}  headers=${header_value}     json=${league_create_json_template}   expected_status=200
     #get league Id
-    ${leagueId}=    Get value from JSON    ${league_response.json()}    $.id
-    Set Global Variable    ${leagueId}
-    Log    ${leagueId}    console=${True}
+    ${league_id}=    Get value from JSON    ${league_response.json()}    $.id
+    Set Global Variable    ${league_id}
+    Log    ${league_id}    console=${True}
     [Return]    ${league_response}
 
 Validate members Invitation enpoint responds with status code 201 and response schema should be valid
-    #Send Member Invitation
-    #For loop for each users
+    #Send Member Invitation for all 3 users
     FOR    ${index}    ${item}    IN ENUMERATE    @{user_emails}    start=2
-        @{memberInviteJsonTemplate}=    Load JSON from file    resource/LeagueMemeberInviteTemplate.json
-        ${get_user1_contact_updated}=    Update value to JSON    ${memberInviteJsonTemplate}    $.[0].contact   ${item}
-        Save JSON to file    ${get_user1_contact_updated}    resource/LeagueMemeberInviteTemplate.json    2
-        ${team_id_updated}=    Update value to JSON    ${memberInviteJsonTemplate}    $.[0].teamId   ${index}
+        @{member_invite_json_template}=    Load JSON from file    resource/LeagueMemeberInviteTemplate.json
+        ${user_contact_updated}=    Update value to JSON    ${member_invite_json_template}    $.[0].contact   ${item}
+        Save JSON to file    ${user_contact_updated}    resource/LeagueMemeberInviteTemplate.json    2
+        ${team_id_updated}=    Update value to JSON    ${member_invite_json_template}    $.[0].teamId   ${index}
         Save JSON to file    ${team_id_updated}    resource/LeagueMemeberInviteTemplate.json    2
-        ${inviter_updated}=    Update value to JSON    ${memberInviteJsonTemplate}    $.[0].inviter   ${SWID}
+        ${inviter_updated}=    Update value to JSON    ${member_invite_json_template}    $.[0].inviter   ${SWID}
         #Member invitation API invocation
-        &{header_Value}=    create dictionary     cookie=${espn_cookie}
-        ${memberInvitationResponse}=     PUT    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${leagueId}/${MEMBER_INVITE_SLUG}   headers=${header_Value}     json=${memberInviteJsonTemplate}   expected_status=201
+        &{header_value}=    create dictionary     cookie=${espn_cookie}
+        ${member_invitation_response}=     PUT    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${MEMBER_INVITE_SLUG}   headers=${header_value}     json=${member_invite_json_template}   expected_status=201
         #Schema Validation - Having some issue, need to discuss with team
         #Fantasy Member Invite Schema from ${memberInvitationResponse} should be valid
-        ${invitationId}=    Get value from JSON    ${memberInvitationResponse.json()}    $[0].id
+        ${invitation_id}=    Get value from JSON    ${member_invitation_response.json()}    $[0].id
         #Append invitation Id's to list
-        Append To List    ${INVITATION_LIST}    ${invitationId}
-        #[Return]    ${memberInvitationResponse} - Not possible
+        Append To List    ${INVITATION_LIST}    ${invitation_id}
 
     END
 
 Validate Invitation Accept enpoint responds with status code 200
-    #Member Invitation Accept
-    FOR    ${counter}    IN RANGE    0    3
-        &{header_user_cookie}    Create Dictionary    cookie=${user_cookies}[${counter}]
-        ${memberInvitationAccepation}=    OPTIONS    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${leagueId}/invites/${INVITATION_LIST}[${counter}]?memberId=${member_ids}[${counter}]&join=true    headers=${header_user_cookie}        expected_status=200
-        #[Return]    ${memberInvitationAccepation} - Not possible
+    #Member Invitation Accept for all 3 users
+    FOR    ${index}    IN RANGE    0    3
+        &{header_user_cookie}    Create Dictionary    cookie=${user_cookies}[${index}]
+        ${memberInvitationAccepation}=    OPTIONS    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${INVITATION_LIST}[${index}]?memberId=${member_ids}[${index}]&join=true    headers=${header_user_cookie}        expected_status=200
     END
 
 Validate Teams create endpoint responds with status code 200 and response schema should be valid
-    #Invocation of Teams API
-    FOR    ${counter}    IN RANGE    2    5
-        Log    ${counter}
-        &{teamCreateTemplate}=    Load JSON from file    resource/teamCreateTemplate.json
-        ${team_abbreviation_updated}=    Update value to JSON    ${teamCreateTemplate}    $.abbrev   FL${counter}
+    #Team Creation for all 3 users
+    FOR    ${index}    IN RANGE    2    5
+        &{team_create_json_template}=    Load JSON from file    resource/teamCreateTemplate.json
+        #Team abbreviation update
+        ${team_abbreviation_updated}=    Update value to JSON    ${team_create_json_template}    $.abbrev   FL${index}
         Save JSON to file    ${team_abbreviation_updated}    resource/teamCreateTemplate.json    2
-        ${nick_name_updated}=    Update value to JSON    ${teamCreateTemplate}    $.nickname   FN${counter}
+        #Team nickname update
+        ${nick_name_updated}=    Update value to JSON    ${team_create_json_template}    $.nickname   FN${index}
         Save JSON to file    ${nick_name_updated}    resource/teamCreateTemplate.json    2
-        ${location_updated}=    Update value to JSON    ${teamCreateTemplate}    $.location   FTM${counter}
+        #Team location update
+        ${location_updated}=    Update value to JSON    ${team_create_json_template}    $.location   FTM${index}
         Save JSON to file    ${location_updated}    resource/teamCreateTemplate.json    2
-        &{header_Value}=    create dictionary     cookie=${espn_cookie}
-        ${team_response}=     POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${leagueId}/teams/${counter}   headers=${header_Value}     json=${teamCreateTemplate}   expected_status=200
-        #Validate schema here
-        #[Return]    ${team_response} - Not possible
+        &{header_value}=    create dictionary     cookie=${espn_cookie}
+        #Team create API invocation
+        ${team_response}=     POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/teams/${index}   headers=${header_value}     json=${team_create_json_template}   expected_status=200
+        #Schema validation
+        Fantasy Teams Schema from ${team_response} should be valid
     END

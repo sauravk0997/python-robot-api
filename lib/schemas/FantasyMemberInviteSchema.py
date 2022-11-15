@@ -21,4 +21,7 @@ class FantasyMemberInviteSchema(Schema):
     class Meta:
         unknown = RAISE
     
-    x   = fields.List(fields.Nested(InvitedSchema), required=False)
+    #null = fields.List(fields.Raw(required=False))
+    #null = fields.List(fields.Nested(InvitedSchema), required=False)
+    #fields.List(fields.Raw(required=False))
+    #x   = fields.List(fields.Nested(InvitedSchema), required=False)

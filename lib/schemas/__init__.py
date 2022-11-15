@@ -1,4 +1,3 @@
-import imp
 from .FantasyGamesSchema import *
 from .FantasySportFansSchema import *
 from .FantasyCreateLeagueSchema import *

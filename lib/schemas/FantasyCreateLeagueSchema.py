@@ -1,6 +1,4 @@
-from marshmallow import Schema, fields, RAISE, ValidationError
-from lib.schemas.FantasySportCommon import FantasyCreateLeagueOwners, FantasyCreateLeaguewatchList, FantasyCreateLeaguePreviousSeasons, FantasypreviousSeasons
-from pprint import pprint
+from marshmallow import Schema, fields, RAISE
 
 #TradeSettings Schema
 class TradeSettingsSchema(Schema):
