@@ -1,4 +1,6 @@
-from marshmallow import Schema, fields, RAISE
+from pprint import pprint
+import requests
+from marshmallow import Schema, fields, RAISE, ValidationError
 
 
 class ItemsSchema(Schema):
@@ -35,3 +37,19 @@ class MovePlayerSchema(Schema):
     subOrder = fields.Int(required=True)
     teamId = fields.Int(required=True)
     type = fields.String(required=True)
+
+
+if __name__ == '__main__':
+    target = 'https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/${leagueid}/transactions/'
+    resp = requests.get(target)
+
+    if resp.status_code == 200:
+        try:
+            page = MovePlayerSchema().load(resp.json())
+
+        except ValidationError as ve:
+            pprint(ve.messages)
+        else:
+            print(f'{target} received with status code {resp.status_code} has been Validated')
+    else:
+        print(f'Received unexpected status code {resp.status_code} from {target}')
