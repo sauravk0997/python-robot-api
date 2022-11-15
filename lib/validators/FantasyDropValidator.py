@@ -1,18 +1,20 @@
 from lib.schemas import *
+from lib.schemas.FantasyDropSchema import *
 from marshmallow import ValidationError
 from robot.api.deco import keyword, library
 from robot.api.exceptions import Failure
 import requests
 
 
+
 @library(scope='GLOBAL', version='5.0.2')
-class FantasyGamesCoreValidator(object):
+class FantasyDropValidator(object):
     """JSON validation for ESPN Fantasy Games API"""
 
     def __init__(self, *p, **k):
         pass
 
-    @keyword('Fantasy Games Schema from ${response} should be valid', tags=['schema checks', 'functional', 'CoreV3'],
+    @keyword('Fantasy Drop Schema from ${response} should be valid', tags=['schema checks', 'functional', 'CoreV3'],
              types={'response': requests.Response})
     def base_resp_is_valid(self, response) -> bool:
         """
@@ -25,7 +27,7 @@ class FantasyGamesCoreValidator(object):
           Fantasy Games Schema from ${response} should be valid
         """
         try:
-            data = GamesSchema().load(response.json())
+            schema = DropSchema().load(response.json())
 
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')

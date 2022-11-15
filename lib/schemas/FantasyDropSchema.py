@@ -16,7 +16,7 @@ class ItemsSchema(Schema):
 
 
 
-class DeletePlayerSchema(Schema):
+class DropSchema(Schema):
     """
         Schema for ESPN Fantasy Games API
     """
@@ -46,12 +46,12 @@ class DeletePlayerSchema(Schema):
 
 
 if __name__ == '__main__':
-    target = 'https://fantasy.espn.com/apis/v3/games/FFL/?platform=cinco_18914&view=cinco_wl_gameState&rand=27741223'
+    target = 'https://lm-api-writes.fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/748489070/transactions/'
     resp = requests.get(target)
 
     if resp.status_code == 200:
         try:
-            page = DeletePlayerSchema().load(resp.json())
+            page = DropSchema().load(resp.json())
 
         except ValidationError as ve:
             pprint(ve.messages)
