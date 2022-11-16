@@ -55,7 +55,7 @@ Send Invitations to team members
     Validate members Invitation enpoint responds with status code 201 and response schema should be valid
 
 Accept the Invitation send by the inviter
-    Validate Invitation Accept enpoint responds with status code 200
+    Validate Invitation Accept endpoint responds with status code 200
 
 Create Teams and validate the response schema
     Validate Teams create endpoint responds with status code 200 and response schema should be valid
@@ -103,7 +103,7 @@ Validate members Invitation enpoint responds with status code 201 and response s
 
     END
 
-Validate Invitation Accept enpoint responds with status code 200
+Validate Invitation Accept endpoint responds with status code 200
     #Member Invitation Accept for all 3 users
     FOR    ${index}    IN RANGE    0    3
         &{header_user_cookie}    Create Dictionary    cookie=${user_cookies}[${index}]
