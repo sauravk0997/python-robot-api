@@ -2,6 +2,8 @@ import json
 from robot.api.logger import console
 from robot.api.deco import keyword, not_keyword
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -45,7 +47,7 @@ class FantasyLoginManager(object):
             # TODO: identify other driver types to integrate.
             self.driver = webdriver.Chrome()
         else:
-            self.driver = webdriver.Chrome()
+            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
         self.action_chain = ActionChains(self.driver)
 
