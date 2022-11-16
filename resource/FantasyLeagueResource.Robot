@@ -13,13 +13,7 @@ ${BASEBALL_SPORT}                 fba
 ${SEASON}                         2023
 ${SEGMENT}                        0
 ${create_league_url}              ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues?createAsTypeId=2
-${league_invite_url}              ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/<leagueid>/invites?copyLMOnInvite=false&notifyUnjoined=false
-${league_invitation_accept_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/<leagueid>/invites/{leagueInviteId}?memberId=BC6305D7-5A17-4840-B231-8D34D45B1DCB&join=true
-${team_create_url}                ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/<leagueid>/teams/<teamId>
-${offline_draftStarting_url}      ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/<leagueid>/draftDetail
-${teams_info_url}                 ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/<leagueid>?view=mDraftDetail&view=mLiveScoring&view=mMatchupScore&view=mPendingTransactions&view=mPositionalRatings&view=mRoster&view=mSettings&view=mTeam&view=modular&view=mNav
-${transaction_url}                ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/<leagueid>/transactions/
-${espn_cookie}                    SWID={95096766-E11A-4C94-BB21-2BA8F8C0D3EF}; espn_s2=AECrGNEO5w1VlDOoJEgL1wquDjPrYr1r0XR9A5zJln93t968%2BICfJi3k32jhzzwTZpEzvBWbOf0%2FFx0ObwGqatXTiooE1n3SkjICYmcbiqCYUJjHQp6e9JyUT67qTYAVlmpWwiir8Auj6AMyk5Du%2BySpeboBjJLUm%2BPGsk7ajvLy26t8PgyzWpnbM8EzazCCLqAkeLNjEe1PdV6%2FmHj9t2fZgfusdIAns%2FpsBtgNQtBnzwhFUhrJ6JvyLFF0syVwv%2FGszPfVEzIwfOtXGHbSkdsI3WlAqQc61wm6q%2BkLeUxVnw%3D%3D;
+${user_cookie}                    SWID={95096766-E11A-4C94-BB21-2BA8F8C0D3EF}; espn_s2=AECrGNEO5w1VlDOoJEgL1wquDjPrYr1r0XR9A5zJln93t968%2BICfJi3k32jhzzwTZpEzvBWbOf0%2FFx0ObwGqatXTiooE1n3SkjICYmcbiqCYUJjHQp6e9JyUT67qTYAVlmpWwiir8Auj6AMyk5Du%2BySpeboBjJLUm%2BPGsk7ajvLy26t8PgyzWpnbM8EzazCCLqAkeLNjEe1PdV6%2FmHj9t2fZgfusdIAns%2FpsBtgNQtBnzwhFUhrJ6JvyLFF0syVwv%2FGszPfVEzIwfOtXGHbSkdsI3WlAqQc61wm6q%2BkLeUxVnw%3D%3D;
 ${BROWSER}                        Chrome
 ${user}                           test_api@gmail.com
 ${password}                       test_api
@@ -40,15 +34,15 @@ A post request to ${endpoint} using ${header} with ${payload} should respond wit
     [Return]    ${response}
 
 Create a league
-    &{headers}  create dictionary    cookie=${espn_cookie}
+    &{headers}  create dictionary    cookie=${user_cookie}
     set global variable    ${headers}
     ${create_league_payload}=    Load JSON from file    resource/create.json
     To Create a league send a post request to ${CreateLeague_url} using ${headers} with ${create_league_payload} should respond with 200
 
 Start offline draft
-    set test variable    ${request_url}     ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/draftDetail
+    set test variable    ${offline_draft_begin_url}     ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/draftDetail
     &{BeginDraft_payload}   create dictionary     inProgress=true
-    A post request to ${request_url} using ${headers} with ${BeginDraft_payload} should respond with 200
+    A post request to ${offline_draft_begin_url} using ${headers} with ${BeginDraft_payload} should respond with 200
 
 Add players to a team
     set test variable    ${addPlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
@@ -56,9 +50,9 @@ Add players to a team
     A post request to ${addPlayer_url} using ${headers} with ${players_payload} should respond with 200
 
 Save the added players to the team
-    set test variable    ${request_url}     ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/draftDetail
+    set test variable    ${save_team_url}     ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/draftDetail
     &{CompleteDraft_payload}   create dictionary    drafted=true   inProgress=false
-    A post request to ${request_url} using ${headers} with ${CompleteDraft_payload} should respond with 200
+    A post request to ${save_team_url} using ${headers} with ${CompleteDraft_payload} should respond with 200
 
 Update values to JSON template to swap players
     set test variable    ${Teams_info_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}?view=mDraftDetail&view=mLiveScoring&view=mMatchupScore&view=mPendingTransactions&view=mPositionalRatings&view=mRoster&view=mSettings&view=mTeam&view=modular&view=mNav
