@@ -20,7 +20,7 @@ class ItemsSchema(Schema):
 
 class DropSchema(Schema):
     """
-        Schema for ESPN Fantasy Games API
+        Schema for Drop API response
     """
 
     class Meta:

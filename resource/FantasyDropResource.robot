@@ -14,13 +14,13 @@ ${QUERY_PARAM}=                 view=mDraftDetail&view=mTeam&view=mNav&view=mRos
 ${TEAM_SLUG}=                   apis/v3/games/${GAME}/seasons/${SEASON}/segments/0/leagues/${LEAGUEID}?${QUERY_PARAM}
 ${TRANSACTIONS_BASE_URL}=       https://lm-api-writes.fantasy.espn.com
 ${TRANSACTIONS_SLUG}=           apis/v3/games/${GAME}/seasons/${SEASON}/segments/0/leagues/${LEAGUEID}/transactions
-${FANTASY_COOKIE}=              SWID={2575812E-8058-4D83-9486-CDD9149938CA};espn_s2=AEAHRfKrt7NnGesv/TJuJsEUkEI46F6gVRGITxMzRm4eSpzQWnhOZjAliZGtXp9vPGVwM1lwNtDOKJSeDOmK01tmsHrt2lM7gw3HFunGo4swhRFvb1OgUNZ6oneUMdjlzS3Ilu7ZW12fzMMw3Fy/8kxfKMPDbWgwTTfP6/vuTDKySjqjtjHy4eNexWsmZhEf3au0RReaMLKuaUEZzI+hyf9ZmVultkCn6b4TtPGdm87dNMa0OUkqgB18t2/96ZdOl83EBPmrqWfowAthxlBrHJ4bXEqo/F/ophqUCwTDmD/+GA==
+${USER_COOKIE}=                 SWID={2575812E-8058-4D83-9486-CDD9149938CA};espn_s2=AEAHRfKrt7NnGesv/TJuJsEUkEI46F6gVRGITxMzRm4eSpzQWnhOZjAliZGtXp9vPGVwM1lwNtDOKJSeDOmK01tmsHrt2lM7gw3HFunGo4swhRFvb1OgUNZ6oneUMdjlzS3Ilu7ZW12fzMMw3Fy/8kxfKMPDbWgwTTfP6/vuTDKySjqjtjHy4eNexWsmZhEf3au0RReaMLKuaUEZzI+hyf9ZmVultkCn6b4TtPGdm87dNMa0OUkqgB18t2/96ZdOl83EBPmrqWfowAthxlBrHJ4bXEqo/F/ophqUCwTDmD/+GA==
 ${DELETE_API}=                  ${TRANSACTIONS_BASE_URL}/${TRANSACTIONS_SLUG}  
 
 *** Keywords ***
 A GET request to ${endpoint} should respond with ${status}
     [Documentation]     Custom GET keyword with status validation.
-    &{headers}=         Create Dictionary    Content-Type=application/json   Cookie=${FANTASY_COOKIE}
+    &{headers}=         Create Dictionary    Cookie=${USER_COOKIE}
     ${api_response}=    GET  url=${endpoint}  headers=${headers}   expected_status=200 
     [Return]            ${api_response}
 
@@ -34,7 +34,7 @@ Validate the string is equal to the value for the given key
 A POST request to ${DELETE_API} with ${payload} should respond with ${status}
     [Documentation]     Custom POST keyword with status validation.
     Log To Console      ${payload}
-    &{headers}=         Create Dictionary    Content-Type=application/json   Cookie=${FANTASY_COOKIE}
+    &{headers}=         Create Dictionary    Cookie=${USER_COOKIE}
     ${api_response}=    POST  url=${DELETE_API}  headers=${headers}    json=${payload}    expected_status=200 
     [Return]            ${api_response}
  

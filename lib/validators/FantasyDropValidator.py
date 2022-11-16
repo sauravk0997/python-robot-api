@@ -38,15 +38,15 @@ class FantasyDropValidator(object):
         try:
             scoring_period_id = response.json()['scoringPeriodId']
             for team in response.json()['teams']:
-                noofplayers = len(team['roster']['entries'])
-                for k in range(0, noofplayers):
-                    if (team['roster']['entries'][k]["playerPoolEntry"]["player"]["droppable"]) == True:
-                        teamid = team['roster']['entries'][k]["playerPoolEntry"]["onTeamId"]
-                        playerid = team['roster']['entries'][k]["playerPoolEntry"]["id"]
+                no_of_players = len(team['roster']['entries'])
+                for player in range(0, no_of_players):
+                    if (team['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"]) == True:
+                        team_id = team['roster']['entries'][player]["playerPoolEntry"]["onTeamId"]
+                        player_id = team['roster']['entries'][player]["playerPoolEntry"]["id"]
                         break
                     else:
                         continue
 
-            return scoring_period_id, teamid, playerid
+            return scoring_period_id, team_id, player_id
         except ValidationError as ve:
             raise Failure(f'Parsing failed :{ve.messages}')
