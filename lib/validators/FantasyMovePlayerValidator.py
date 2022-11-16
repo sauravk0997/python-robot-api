@@ -1,13 +1,10 @@
-import requests
 from lib.schemas import *
 from marshmallow import ValidationError
 from robot.api.deco import keyword, library
 from robot.api.exceptions import Failure
 
-
 @library(scope='GLOBAL', version='5.0.2')
-class FantasyLeagueCoreValidator(object):
-
+class FantasyMovePlayerValidator(object):
     def __init__(self, *p, **k):
         pass
 

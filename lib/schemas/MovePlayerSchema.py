@@ -2,8 +2,8 @@ from pprint import pprint
 import requests
 from marshmallow import Schema, fields, RAISE, ValidationError
 
-
 class ItemsSchema(Schema):
+
     class Meta:
         unknown = RAISE
 
@@ -15,7 +15,6 @@ class ItemsSchema(Schema):
     toLineupSlotId = fields.Int(required=True)
     toTeamId = fields.Int(required=True)
     type = fields.String(required=True)
-
 
 class MovePlayerSchema(Schema):
     class Meta:

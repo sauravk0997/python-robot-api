@@ -7,34 +7,22 @@ Library    RequestsLibrary
 Library    Collections
 Library    OperatingSystem
 Library     RPA.JSON
-Library     lib/validators/FantasyLeagueCoreValidator.py
 Resource    resource/FantasyLeagueResource.Robot
 
 *** Test Cases ***
 Move the Players by swaping the position of the players
-    [Tags]    swap players  valid CSEAUTO-28392
+    [Tags]    swap-players  valid CSEAUTO-28392
     Create a League
-    start offline draft
-    Add Players to a team
-    After adding players save the team
-    ${response}    Send a Post Request to swap the position of players
-    Move Player Schema from ${response} should be valid
-    Validate ${response} to check whether the players have swapped their positions
+    Start offline draft
+    Add players to a team
+    Save the added players to the team
+    ${swapped_response}    Swap the position of players and validate the response schema
+    Validate players swapped their positions ${swapped_response}
 
 Move the Players to Bench
-    [Tags]    move players to Bench  valid  CSEAUTO-28395
-    ${response}     Send a Post Request to Move any Player to Bench
-    Move Player Schema from ${response} should be valid
-    Validate ${response} to check whether the player is moved to Bench
-
-
-
-
-
-
-
-
-
+    [Tags]    moveplayers_to_bench  valid  CSEAUTO-28395
+    ${move_to_bench_response}     Move any player to bench and validate the response schema
+    Validate player is moved to bench ${move_to_bench_response}
 
 
 
