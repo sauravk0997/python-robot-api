@@ -32,3 +32,28 @@ class FantasyDropValidator(object):
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
         return True
+
+    
+    @keyword('get droppable players from any team with ${response}', tags=['drop player', 'functional', 'CoreV3'],
+             types={'response': requests.Response})
+    def get_droppable_players(self, response) -> bool:
+        try:
+            spid = response.json()['scoringPeriodId']
+            for i in response.json()['teams']:
+                # print(i['roster']['entries'])
+                noofplayers= len(i['roster']['entries'])
+                # print(noofplayers)
+                for k in range(0,noofplayers):
+                    # print(i['roster']['entries'][k]["playerPoolEntry"]["id"])
+                    if(i['roster']['entries'][k]["playerPoolEntry"]["player"]["droppable"]) == True:
+                        # if(i['roster']['entries'][k]["playerPoolEntry"]["onTeamId"]) != '0':
+                        teamid = i['roster']['entries'][k]["playerPoolEntry"]["onTeamId"]
+                        playerid = i['roster']['entries'][k]["playerPoolEntry"]["id"]
+                        break
+                    else:
+                        continue
+                break
+        
+            return spid,teamid,playerid
+        except ValidationError as ve:
+            raise Failure(f'Parsing failed :{ve.messages}')
