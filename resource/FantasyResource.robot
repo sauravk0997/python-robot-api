@@ -7,6 +7,9 @@ Library             RPA.JSON
 Library             Collections
 Library             String
 Library             lib/validators/FantasyCreateLeagueValidator.py
+Library             lib/fantasyUI/FantasyUtils.py
+Resource            testsuite/sel-based-login.robot
+
 
 *** Variables ***
 ${TOKEN}=    %7B6E458CFC-7B0E-4811-8B3D-504CF5F7D4C0%7D
@@ -35,11 +38,27 @@ A GET request to ${endpoint} should respond with ${status}
     ${api_response}=    GET  url=${endpoint}  expected_status=${status}
     [Return]    ${api_response}
 
-Initialize users cookie ${espn_cookie}
-    log    ${espn_cookie}
+Initialize the user cookie
+    ${espn_cookie}=    Auth with Cookie Capture
+    Set Global Variable      ${espn_cookie}
+    Get SWID of the user ${espn_cookie}
+
+Get SWID of the user ${espn_cookie}
     ${SWID}=    Get SWID from cookie ${espn_cookie}
-    Set Global Variable    ${espn_cookie}
     Set Global Variable    ${SWID}
+
+Create a League and validate the response schema
+    ${response}=    Validate Fantasy create league endpoint responds with status code 200
+    Fantasy Create League Schema from ${response} should be valid
+
+Send Invitations to team members
+    Validate members Invitation enpoint responds with status code 201 and response schema should be valid
+
+Accept the Invitation send by the inviter
+    Validate Invitation Accept enpoint responds with status code 200
+
+Create Teams and validate the response schema
+    Validate Teams create endpoint responds with status code 200 and response schema should be valid
 
 Validate Fantasy create league endpoint responds with status code 200
     &{league_create_json_template}=    Load JSON from file    resource/leagueCreateTemplate.json
