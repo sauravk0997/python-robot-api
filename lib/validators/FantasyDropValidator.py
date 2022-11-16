@@ -32,22 +32,21 @@ class FantasyDropValidator(object):
             raise Failure(f'Schema Data failed validation: {ve.messages}')
         return True
 
-    
     @keyword('Get droppable players of any team from ${response}', tags=['drop player', 'functional', 'CoreV3'],
              types={'response': requests.Response})
     def get_droppable_players(self, response) -> bool:
         try:
             scoring_period_id = response.json()['scoringPeriodId']
-            for i in response.json()['teams']:
-                noofplayers= len(i['roster']['entries'])
-                for k in range(0,noofplayers):
-                    if(i['roster']['entries'][k]["playerPoolEntry"]["player"]["droppable"]) == True:
-                        teamid = i['roster']['entries'][k]["playerPoolEntry"]["onTeamId"]
-                        playerid = i['roster']['entries'][k]["playerPoolEntry"]["id"]
+            for team in response.json()['teams']:
+                noofplayers = len(team['roster']['entries'])
+                for k in range(0, noofplayers):
+                    if (team['roster']['entries'][k]["playerPoolEntry"]["player"]["droppable"]) == True:
+                        teamid = team['roster']['entries'][k]["playerPoolEntry"]["onTeamId"]
+                        playerid = team['roster']['entries'][k]["playerPoolEntry"]["id"]
                         break
                     else:
                         continue
-        
-            return scoring_period_id,teamid,playerid
+
+            return scoring_period_id, teamid, playerid
         except ValidationError as ve:
             raise Failure(f'Parsing failed :{ve.messages}')
