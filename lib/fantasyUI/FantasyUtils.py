@@ -15,6 +15,5 @@ class FantasyUtils(object):
 
     @keyword('Get SWID from cookie ${result}', types={'result': str})
     def get_SWID(self, result) -> str:
-        # print(result)
         swid = result.split(";")
         return swid[0].split("SWID=")[1]
