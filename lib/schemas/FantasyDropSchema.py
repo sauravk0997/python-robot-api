@@ -2,9 +2,11 @@ from marshmallow import Schema, fields, RAISE, ValidationError
 import requests
 from pprint import pprint
 
-
-
 class ItemsSchema(Schema):
+
+    class Meta:
+        unknown = RAISE
+
     fromLineupSlotId = fields.Integer(required=True)
     fromTeamId = fields.Integer(required=True)
     isKeeper = fields.Boolean(required=True)
@@ -14,8 +16,6 @@ class ItemsSchema(Schema):
     toTeamId = fields.Integer(required=True)
     type = fields.String(required=True)
 
-
-
 class DropSchema(Schema):
     """
         Schema for ESPN Fantasy Games API
@@ -24,7 +24,6 @@ class DropSchema(Schema):
     class Meta:
         unknown = RAISE
 
-    
     bidAmount = fields.Integer(required=True)
     executionType = fields.String(required=True)
     id = fields.String(required=True)
@@ -41,9 +40,6 @@ class DropSchema(Schema):
     subOrder = fields.Integer(required=True)
     teamId = fields.Integer(required=True)
     type = fields.String(required=True)
-
-
-
 
 if __name__ == '__main__':
     target = 'https://lm-api-writes.fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/748489070/transactions/'

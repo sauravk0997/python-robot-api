@@ -6,7 +6,6 @@ from robot.api.exceptions import Failure
 import requests
 
 
-
 @library(scope='GLOBAL', version='5.0.2')
 class FantasyDropValidator(object):
     """JSON validation for ESPN Fantasy Games API"""
@@ -34,26 +33,21 @@ class FantasyDropValidator(object):
         return True
 
     
-    @keyword('get droppable players from any team with ${response}', tags=['drop player', 'functional', 'CoreV3'],
+    @keyword('Get droppable players of any team from ${response}', tags=['drop player', 'functional', 'CoreV3'],
              types={'response': requests.Response})
     def get_droppable_players(self, response) -> bool:
         try:
-            spid = response.json()['scoringPeriodId']
+            scoring_period_id = response.json()['scoringPeriodId']
             for i in response.json()['teams']:
-                # print(i['roster']['entries'])
                 noofplayers= len(i['roster']['entries'])
-                # print(noofplayers)
                 for k in range(0,noofplayers):
-                    # print(i['roster']['entries'][k]["playerPoolEntry"]["id"])
                     if(i['roster']['entries'][k]["playerPoolEntry"]["player"]["droppable"]) == True:
-                        # if(i['roster']['entries'][k]["playerPoolEntry"]["onTeamId"]) != '0':
                         teamid = i['roster']['entries'][k]["playerPoolEntry"]["onTeamId"]
                         playerid = i['roster']['entries'][k]["playerPoolEntry"]["id"]
                         break
                     else:
                         continue
-                break
         
-            return spid,teamid,playerid
+            return scoring_period_id,teamid,playerid
         except ValidationError as ve:
             raise Failure(f'Parsing failed :{ve.messages}')

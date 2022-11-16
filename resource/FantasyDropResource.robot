@@ -44,7 +44,7 @@ A POST request to ${DELETE_API} with ${payload} should respond with ${status}
 Fetch payload details to drop a player
     [Documentation]    Custom keyword to form the request payload for the delete API
     ${response}=    A GET request to ${TEAMS_API} should respond with 200
-    ${spid}    ${teamid}    ${playerid}   get droppable players from any team with ${response} 
+    ${spid}    ${teamid}    ${playerid}   Get droppable players of any team from ${response} 
     [Return]    ${spid}    ${teamid}    ${playerid}
 
 Update payload ${payload} with ${teamid} ${playerid} and ${spid}
