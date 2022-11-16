@@ -61,10 +61,11 @@ Update/Add values to swapplayerlist jsontemplate file
     set test variable    ${Teams_info_url}   https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/${leagueid}?view=mDraftDetail&view=mLiveScoring&view=mMatchupScore&view=mPendingTransactions&view=mPositionalRatings&view=mRoster&view=mSettings&view=mTeam&view=modular&view=mNav
     ${response}     GET   url=${Teams_info_url}     headers=${headers}
     ${scoringPeriodId}      get from dictionary    ${response.json()}   scoringPeriodId
-    set global variable    ${scoringPeriodId}    #making global in order to update scoring period for all othe json files
+    set global variable    ${scoringPeriodId}    #making global in order to update scoring period for all other json files
     &{swap_players_payload}=    Load JSON from file    resource/SwapPlayer_template.json
     ${save_scoringperiod}    Update value to JSON    ${swap_players_payload}    $.scoringPeriodId  ${scoringPeriodId}
-    Save JSON to file    ${save_scoringperiod}  resource/SwapPlayer_template.json
+    #Save content to JSON file with indentation (value:2 Tab Space)
+    Save JSON to file    ${save_scoringperiod}  resource/SwapPlayer_template.json    2
 
 
 Send a Post Request to swap the position of players
@@ -85,7 +86,8 @@ Validate ${response} to check whether the players have swapped their positions
 Update/Add Values to Move to bench jsontemplate file
     ${Move_to_Bench_payload}=    Load JSON from file    resource/MovetoBench_template.json
     ${save_scoringperiod}    Update value to JSON    ${Move_to_Bench_payload}    $.scoringPeriodId  ${scoringPeriodId}
-    Save JSON to file    ${save_scoringperiod}     resource/MovetoBench_template.json
+    #Save content to JSON file with indentation (value:2 Tab Space)
+    Save JSON to file    ${save_scoringperiod}     resource/MovetoBench_template.json    2
 
 Send a Post Request to Move any Player to Bench
     set test variable    ${MovePlayer_url}   https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/${leagueid}/transactions/
