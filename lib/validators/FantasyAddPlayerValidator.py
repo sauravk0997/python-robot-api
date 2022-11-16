@@ -6,6 +6,7 @@ from robot.api.exceptions import Failure
 import requests
 
 
+
 @library(scope='GLOBAL', version='5.0.2')
 class FantasyAddPlayerValidator(object):
     """JSON validation for ESPN Fantasy Games API"""
@@ -33,19 +34,23 @@ class FantasyAddPlayerValidator(object):
 
         return True
 
-    @keyword('fetch droppable player')
-    def get_the_value_and_status_code_of_preferences_key_links(self, response,  key)  :
+    @keyword('Fetching droppable player')
+    def get_the_droppable_player(self, response)  :
         try:
-            URL = []
-            length = len(response['preferences'])
-            for j in range(length):
-                for k in response["preferences"][j]["metaData"]["entry"]:
-                    if k == key:
-                        x = response["preferences"][j]["metaData"]["entry"][key]
-                        URL.append(x)
-            UniqueURL= set(URL)
-
+            spid = response.json()['scoringPeriodId']
+            Dropplayerid = None
+            noofplayers= len(response.json()['teams'][0]['roster']['entries'])
+            Dropplayerid=''
+            for k in range(0,noofplayers):
+                if(response.json()['teams'][0]['roster']['entries'][k]["playerPoolEntry"]["player"]["droppable"]) == True:
+                    Dropplayerid = response.json()['teams'][0]['roster']['entries'][k]["playerPoolEntry"]["id"]
+                    #global Dropplayerid
+                    break
+                else:
+                    continue
+            
+            return  spid, Dropplayerid
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
 
-        return True
+        
