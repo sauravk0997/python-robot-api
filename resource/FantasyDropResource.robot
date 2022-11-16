@@ -9,8 +9,6 @@ Library             String
 
 *** Variables ***
 ${TEAMS_API}=        https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/748489070?view=mDraftDetail&view=mLiveScoring&view=mMatchupScore&view=mPendingTransactions&view=mPositionalRatings&view=mRoster&view=mSettings&view=mTeam&view=modular&view=mNav  # tests default to the sandbox environment
-${PLAYERS_API}=      https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/748489070?view=players_wl
-${PLAYERINFO_API}=    https://fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/748489070?scoringPeriodId={spid}&view=kona_playercard
 ${DELETE_API}=       https://lm-api-writes.fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/748489070/transactions/
 ${cleanup}=         ${False}  # False is a built-in RF variable
 
