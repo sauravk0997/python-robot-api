@@ -7,8 +7,8 @@ Library    RequestsLibrary
 Library    Collections
 Library    OperatingSystem
 Library     RPA.JSON
-Library     ../lib/validators/FantasyLeagueCoreValidator.py
-Resource    ../resource/FantasyLeagueResource.Robot
+Library     lib/validators/FantasyLeagueCoreValidator.py
+Resource    resource/FantasyLeagueResource.Robot
 
 *** Test Cases ***
 Move the Players by swaping the position of the players
