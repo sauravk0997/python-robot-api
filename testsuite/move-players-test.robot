@@ -11,7 +11,7 @@ Resource             resource/FantasyLeagueResource.Robot
 
 *** Test Cases ***
 Move the Players by swaping the position of the players
-    [Tags]    swap-players  valid CSEAUTO-28392
+    [Tags]    swap-players    valid  CSEAUTO-28347  CSEAUTO-28392
     Create a League
     Start offline draft
     Add players to a team
@@ -20,6 +20,6 @@ Move the Players by swaping the position of the players
     Validate players swapped their positions ${swapped_response}
 
 Move the Players to Bench
-    [Tags]    moveplayers-to-bench  valid  CSEAUTO-28395
+    [Tags]    moveplayers-to-bench  valid   CSEAUTO-28347   CSEAUTO-28395
     ${move_to_bench_response}     Move any player to bench and validate the response schema
     Validate player is moved to bench ${move_to_bench_response}
