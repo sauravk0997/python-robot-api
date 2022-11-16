@@ -48,9 +48,8 @@ class FantasyAddPlayerValidator(object):
                     break
                 else:
                     continue
-            
+
             return  spid, Dropplayerid
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
-
-        
+            

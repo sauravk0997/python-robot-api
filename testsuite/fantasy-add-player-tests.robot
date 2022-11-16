@@ -7,12 +7,8 @@ Library             ../lib/validators/FantasyAddPlayerValidator.py
 Resource            ../resource/FantasyAddPlayerResourse.robot
 Library             OperatingSystem
 
-
-
-
 *** Test Cases ***
 Add a player to my team as a Team Owner
-    
     [Documentation]     Simple validation of the base level schema url and adding player as a TO for Fantasy Games API.
     [Tags]  valid   fantasy_games       smoke       	CSEAUTO-28331
     Fetching the FREE AGENT player
@@ -22,7 +18,3 @@ Add a player to my team as a Team Owner
     ${response}=    A POST request to ${API_BASE}/${transaction_params} with ${final_payload} add a player should respond with 200
     Validate ${response} to check whether the players is added
     Fantasy Games Schema from ${response} should be valid
-
-
-
-

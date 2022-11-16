@@ -49,11 +49,9 @@ A POST request to ${endpoint} with ${payload} add a player should respond with $
 
 Validate ${api_response} to check whether the players is added
     [Documentation]    whenever we add players position then player1's "fromTeamId" will be equal to player2's "toTeamId" or player1's "toTeamId" will be equal to player2's "fromTeamId"
-    ${Player1s_fromTeamId}  Get value from JSON     ${api_response.json()}     $.items[0].fromTeamId    
-    ${Player2s_toTeamId}    Get value from JSON     ${api_response.json()}     $.items[1].toTeamId  
-    ${Player1s_toTeamId}  Get value from JSON      ${api_response.json()}       $.items[0].toTeamId    
+    ${Player1s_fromTeamId}  Get value from JSON     ${api_response.json()}       $.items[0].fromTeamId    
+    ${Player2s_toTeamId}    Get value from JSON     ${api_response.json()}       $.items[1].toTeamId  
+    ${Player1s_toTeamId}  Get value from JSON      ${api_response.json()}        $.items[0].toTeamId    
     ${Player2s_fromTeamId}    Get value from JSON     ${api_response.json()}     $.items[1].fromTeamId   
-
     should be equal as integers    ${Player1s_fromTeamId}    ${Player2s_toTeamId}
-    Should Be Equal As Integers    ${Player1s_toTeamId}     ${Player2s_fromTeamId}
-
+    Should Be Equal As Integers    ${Player1s_toTeamId}      ${Player2s_fromTeamId}
