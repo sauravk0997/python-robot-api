@@ -16,11 +16,6 @@ A GET request to ${endpoint} should respond with ${status}
     ${api_response}=    GET  url=${endpoint}  expected_status=${status}
     [Return]    ${api_response}
 
-A POST request to ${endpoint} should respond with ${status}
-    [Documentation]     Custom POST keyword with status validation.
-    ${api_response}=    POST  url=${endpoint}  expected_status=${status}
-    [Return]    ${api_response}
-
 # Validate ${links} should respond with ${status}
 #     [Documentation]     Custom GET keyword with status validation.
 #     FOR    ${link}    IN    @{links}
