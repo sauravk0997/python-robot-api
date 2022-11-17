@@ -47,7 +47,7 @@ class FantasyLoginManager(object):
             # TODO: identify other driver types to integrate.
             self.driver = webdriver.Chrome()
         else:
-            self.driver = webdriver.Chrome()
+            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
         self.action_chain = ActionChains(self.driver)
 
