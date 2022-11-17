@@ -1,0 +1,30 @@
+*** Settings ***
+Documentation       Test suite to demontrate  move player functionality in FLM
+
+Library    RequestsLibrary
+Library    ../lib/validators/FantasyDropValidator.py
+Resource   ../resource/FantasyDropResource.robot
+Library    RPA.JSON
+
+*** Variables ***
+${droppedteamid}=    0                           #A dropped player will always have a teamid 0
+
+
+*** Test Cases ***
+Drop a player from any team as a league manager
+    [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
+    [Tags]  valid   fantasy_games    drop   smoke       	CSEAUTO-28332
+
+    #Load the template for the delete api payload
+    &{initial_payload}=    Load JSON from file    resource/dropplayer.json
+    #keyword to fetch the details to form the payload
+    ${spid}    ${teamid}    ${playerid}    Fetch payload details to drop a player
+    #keyword to update the payload with the values from the previous step
+    ${final_payload}    Update payload ${initial_payload} with ${teamid} ${playerid} and ${spid}
+    ${drop_api_response}    A POST request to ${DELETE_API} with ${final_payload} should respond with 200
+    #Validates the schema of the delete api response
+    Fantasy Drop Schema from ${drop_api_response} should be valid
+    #Validates the actual values of the delete api response with expected values
+    should be equal as integers    ${drop_api_response.json()["items"][0]["fromTeamId"]}    ${teamid}    
+    should be equal as integers    ${drop_api_response.json()["items"][0]["toTeamId"]}    ${droppedteamid}
+
