@@ -7,3 +7,4 @@ robotframework-pythonlibcore==3.0.0
 robotframework-requests==0.9.3
 selenium~=4.6.0
 rpaframework==19.1.1
+webdriver-manager==3.8.4

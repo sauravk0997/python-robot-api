@@ -1,0 +1,17 @@
+{
+  "members": [
+    {
+      "id": "{FDA0D473-B9F0-47EE-B819-44851C76A9DE}",
+      "isLeagueCreator": true
+    }
+  ],
+  "settings": {
+    "draftSettings": {
+      "type": "OFFLINE",
+      "date": 0
+    },
+    "isCustomizable": true,
+    "name": "My-Fantasy-League-3854",
+    "size": "4"
+  }
+}
