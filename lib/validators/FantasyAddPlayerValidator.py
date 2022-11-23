@@ -41,41 +41,43 @@ class FantasyAddPlayerValidator(object):
         try:
                 
             no_of_free_agents = len(response.json()['players'])
-            for agents in range(0, (no_of_free_agents)-1):                
+            for agents in range(0, (no_of_free_agents)-1):   
+                        
                 free_agents_id = response.json()['players'][agents]['id']
+                global free_agents_position_id
                 free_agents_position_id = response.json()['players'][agents]['player']['defaultPositionId']
-                if check_matching_position_id(free_agents_id, free_agents_position_id) == True:
+                #if check_matching_position_id(free_agents_id, free_agents_position_id) == True:
 
                         
         except ValidationError as ve:
             raise Failure(f'Parsing failed :{ve.messages}')
-        
+        return free_agents_id, free_agents_position_id
 
     
     @keyword('Get the scoring period Id and drop player id')
     def get_droppable_players(self, TEAM_ID, response) -> bool:
         try:
-            for FreeAgent_Player_Id, free_agents_position_id in FreeAgent_Ids_PositionIdsDict.items():
-                scoring_period_id = response.json()['scoringPeriodId']
-                team_id = int(TEAM_ID)-1
-                no_of_players = len(response.json()['teams'][team_id]['roster']['entries'])
-                for player in range(1, no_of_players):
-                    drop_player_id = 0
-                    droppableBool = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"]
-                    lineupLockedBool = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]['lineupLocked']
-                    drop_player_Position_Id = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]['player']['defaultPositionId']
-                    if ((droppableBool== True) and (lineupLockedBool == False)):
-                        if drop_player_Position_Id == free_agents_position_id:
-                            drop_player_id = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]["id"]
-                            break
-                        else:
-                            #logging.info(f"Player with {free_agents_position_id}, either he is not drooppable or he is locked")
-                            continue
-                            #antasyAddPlayerValidator.get_free_agent_players(response)
-                            
+            
+            scoring_period_id = response.json()['scoringPeriodId']
+            team_id = int(TEAM_ID)-1
+            no_of_players = len(response.json()['teams'][team_id]['roster']['entries'])
+            for player in range(1, no_of_players):
+                drop_player_id = 0
+                droppableBool = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"]
+                lineupLockedBool = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]['lineupLocked']
+                drop_player_Position_Id = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]['player']['defaultPositionId']
+                if ((droppableBool== True) and (lineupLockedBool == False)):
+                    if drop_player_Position_Id == free_agents_position_id:
+                        drop_player_id = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]["id"]
+                        break
                     else:
-                        #logging.info(f"There is no droppable player available with {free_agents_position_id}")
+                        #logging.info(f"Player with {free_agents_position_id}, either he is not drooppable or he is locked")
                         continue
+                        #antasyAddPlayerValidator.get_free_agent_players(response)
+                            
+                else:
+                    #logging.info(f"There is no droppable player available with {free_agents_position_id}")
+                    continue
                 
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')

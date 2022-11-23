@@ -43,8 +43,9 @@ Fetching the Drop Player Id and Scoring Period Id of Player
     [Documentation]     Fetching the player that going to drop from user's team and sending it to json file
     &{header}=   Create Dictionary    cookie=${USER_COOKIE}
     ${team_response}=    GET  url=${TEAM_API}     headers=${header}      expected_status=200 
-    ${scoring_period_id}    ${drop_player_id}    ${free_agents_player_id}    Get the scoring period Id and drop player id    ${TEAM_ID}    ${team_response}
-    [Return]    ${scoring_period_id}    ${drop_player_id}    ${free_agents_player_id}
+    ${scoring_period_id}    ${drop_player_id}    Get the scoring period Id and drop player id    ${TEAM_ID}    ${team_response}
+    Set Global Variable    ${drop_player_id}
+    [Return]    ${scoring_period_id}    ${drop_player_id}
     
 Update payload ${payload} with ${scoring_period_id} and ${drop_player_id}
     [Documentation]     Custom keyword to update the payload with the values from API calls
