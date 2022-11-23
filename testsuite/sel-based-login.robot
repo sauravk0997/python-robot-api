@@ -2,15 +2,14 @@
 Library   Collections
 Library   OperatingSystem
 Library   RequestsLibrary
-
 Library  ../lib/fantasyUI/FantasyLoginManager.py    driver=${BROWSER}    xpaths=${CURDIR}/../resource/xpaths.json    WITH NAME  FLM
 
 *** Variables ***
-${HOMEPAGE}     https://www.espn.com/fantasy/
-${BROWSER}      Chrome
-${user}         saurav.kumar@zucitech.com
-${password}     Saurav@1103
-${greeting}     Saurav!
+${HOMEPAGE}     
+${BROWSER}      
+${user}         
+${password}     
+${greeting}     
 
 *** Test Cases ***
 Auth with Cookie Capture

@@ -8,13 +8,26 @@ Resource            ../resource/FantasyAddPlayerResourse.robot
 Library             OperatingSystem
 
 *** Test Cases ***
-Add a player to my team as a Team Owner
+Add and drop a player to my team as a Team Owner
     [Documentation]     Simple validation of the base level schema url and adding player as a TO for Fantasy Games API.
     [Tags]  valid   fantasy_games       smoke       	CSEAUTO-28331
+    Fetch scoring period id 
     Fetching the FREE AGENT player
-    ${spid}    ${playerid}     Fetching the DropPlayerId and spid of Player
+    ${scoring_period_id}    ${playerid}     Fetching the Drop Player Id and Scoring Period Id of Player 
     &{initial_payload}=    Load JSON from file    resource/AddPlayer.json
-    ${final_payload}    Update payload ${initial_payload} with ${playerid} and ${spid}
-    ${response}=    A POST request to ${API_BASE}/${transaction_params} with ${final_payload} add a player should respond with 200
-    Validate ${response} to check whether the players is added
-    Fantasy Games Schema from ${response} should be valid
+    ${final_payload}    Update payload ${initial_payload} with ${playerid} and ${scoring_period_id}
+    ${response}=    A POST request to ${API_BASE}/${TRANSACTION_PARAMS} with ${final_payload} add a player should respond with 200
+    Validate players are added from ${response}
+    Add Player Schema from ${response} should be valid
+
+Add and drop a player to my team as a League Manager
+    [Documentation]     Simple validation of the base level schema url and adding player as a TO for Fantasy Games API.
+    [Tags]  valid   fantasy_games       smoke       	CSEAUTO-28331
+    Fetch scoring period id 
+    Fetching the FREE AGENT player as LM
+    ${scoring_period_id}    ${playerid}     Fetching the Drop Player Id and Scoring Period Id of Player 
+    &{initial_payload}=    Load JSON from file    resource/AddPlayerLM.json
+    ${final_payload}    As League Manager, Update payload ${initial_payload} with ${playerid} and ${scoring_period_id}
+    ${response}=    A POST request to ${API_BASE}/${TRANSACTION_PARAMS} with ${final_payload} add a player as LM should respond with 200
+    Validate players are added from ${response}
+    Add Player Schema from ${response} should be valid

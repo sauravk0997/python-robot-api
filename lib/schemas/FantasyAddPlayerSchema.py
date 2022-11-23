@@ -14,7 +14,7 @@ class ItemsSchema(Schema):
 
 class AddPlayerSchema(Schema):
     """
-        Schema for ESPN Fantasy Games API
+        Schema for Add Player API
     """
     class Meta:
         unknown = RAISE
