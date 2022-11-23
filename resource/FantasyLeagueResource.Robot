@@ -103,3 +103,33 @@ Validate player is moved to bench ${response}
     [Documentation]    whenever any player is moved to bench "toLineupSlotId" attribute value will be ${BenchSlotId}
     ${toLineupSlotId}    Get value from JSON    ${response.json()}    $.items[0].toLineupSlotId
     should be equal as integers    ${toLineupSlotId}    ${BenchSlotId}
+
+
+Move the eligible Bench Player to lineup and validate the response schema
+    set test variable    ${Teams_info_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}?${teaminfo_query_param}
+    &{headers}  create dictionary    cookie=${user_cookie}
+    ${response}     GET   url=${Teams_info_url}     headers=${headers}
+    @{players_details}    check whether the players on Bench are eligible to moved into lineup from ${response.json()}
+    log to console    ${players_details}
+    ${length_of_players}    get length    ${players_details}
+    IF   ${length_of_players} !=0
+         set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
+         &{payload1}=    Load JSON from file    resource/move-from-bench-to-lineup-template.json
+         ${player_id}    Update value to JSON   ${payload1}     $.items[0].playerId             ${players_details}[0]
+         ${lineup_player_id}     Update value to JSON   ${payload1}     $.items[1].playerId     ${players_details}[1]
+         ${slot}         Update value to JSON   ${payload1}      $.items[0].toLineupSlotId      ${players_details}[2]
+         ${lineup_slot}  Update value to JSON   ${payload1}      $.items[1].fromLineupSlotId    ${players_details}[3]
+         ${scoring_period}  Update value to JSON   ${payload1}      $.scoringPeriodId  ${scoringPeriodId}
+         Save JSON to file    ${player_id}     resource/move-from-bench-to-lineup-template.json    2
+         Save JSON to file    ${lineup_player_id}     resource/move-from-bench-to-lineup-template.json    2
+         Save JSON to file    ${slot}     resource/move-from-bench-to-lineup-template.json    2
+         Save JSON to file    ${lineup_slot}     resource/move-from-bench-to-lineup-template.json    2
+         ${response}    A post request to ${MovePlayer_url} using ${headers} with ${payload1} should respond with 200
+#         [Return]       ${response}
+    ELSE
+       ${message}=  convert to string    currently unable to play bench player to lineup as the lineup transaction is locked
+        Log     ${message}
+    END
+
+
+

@@ -9,7 +9,13 @@
     {
       "playerId": 4065648,
       "type": "LINEUP",
-      "fromLineupSlotId": 2,
+      "fromLineupSlotId": 12,
+      "toLineupSlotId": 6
+    },
+    {
+      "playerId": 3934719,
+      "type": "LINEUP",
+      "fromLineupSlotId": 6,
       "toLineupSlotId": 12
     }
   ]

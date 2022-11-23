@@ -8,6 +8,7 @@ Library              Collections
 Library              OperatingSystem
 Library              RPA.JSON
 Resource             resource/FantasyLeagueResource.Robot
+Library             lib/validators/FantasyMovePlayerValidator.py
 
 *** Test Cases ***
 Move the Players by swaping the position of the players
@@ -23,3 +24,8 @@ Move the Players to Bench
     [Tags]    moveplayers-to-bench  valid   CSEAUTO-28347   CSEAUTO-28395
     ${move_to_bench_response}     Move any player to bench and validate the response schema
     Validate player is moved to bench ${move_to_bench_response}
+
+Move any Player from Bench to LineUp in current scoringperiod
+    [Tags]    moveplayers-from-bench-to-lineup  valid   CSEAUTO-28347   CSEAUTO-28395
+    ${move_from_bench_to_lineup_response}   Move the eligible Bench Player to lineup and validate the response schema
+
