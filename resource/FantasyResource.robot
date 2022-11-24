@@ -34,7 +34,8 @@ ${user1_cookie}    SWID={DADA6BC1-6F16-4B4C-9E34-526B4870B891};espn_s2=AEAqx51yo
 ${user2_cookie}    SWID={F53C173D-F557-4E6E-B576-B12C9BE2C80F};espn_s2=AEAr93yzMIUA7cbl4sI/Jq56zp7bzYIoSrGcUYnMu8BC+gaiWIVSQzJmEjmzw3rmybzS7ZvcMBdmxMk/uJ9CeMd8QDLlPbhr0TPlorN4Q2vvUlNun/KeJ7UQt7cLTgFHumwH8TCD/8W2TbL4AFTuNBEDltlfWnVixzIdxkKnESKEzCwvBwmgo21fITKCOJsZEmMwWF4dc7koYWkxZX8SR30423njQ76iUTWv58HIFRYj8O2f0dPuKVpEIu2x89tMJmcfbIVZtjksWktkZDYEs4iw+GzZS1xmzNbaCf3lJxg3zQ==;
 ${user3_cookie}    SWID={4E0A1098-59AA-492E-ABE1-32C3A44B0233};espn_s2=AEB8pEruBWboxDncWhpikJeM4XdvIuu+9qcz4LTldeKeHAZkl4ndAdaGwuW1w8ruMmv1KDa18fYV5xKHIhhuXFyIFOU3lAN9XD022VkjjRwj2WcyfzUQaP/uyNbRYRs77usFjcLpmncYpF2SqqfYgXB4p841z9LvAuw5oWt1JyuJ2FSNxbctilcj0ibVPWlqI4Mcy99Ge0QwHSdC4K4K12XDT5xRxSlrLRJyaiwkOABhnezYk2ca9Tk3Qs3I3kl0Zn9d/iwZtQB5iya5OeyDiUE8PMuNQWFQ29cYKZUaIi2VvQ==;
 @{user_cookies}       ${user1_cookie}    ${user2_cookie}    ${user3_cookie}
-@{member_ids}         DADA6BC1-6F16-4B4C-9E34-526B4870B891    F53C173D-F557-4E6E-B576-B12C9BE2C80F    FDA0D473-B9F0-47EE-B819-44851C76A9DE
+@{user_cookies_reverse}       ${user3_cookie}    ${user2_cookie}    ${user1_cookie}
+@{member_ids}         DADA6BC1-6F16-4B4C-9E34-526B4870B891    F53C173D-F557-4E6E-B576-B12C9BE2C80F    4E0A1098-59AA-492E-ABE1-32C3A44B0233
 
 
 *** Keywords ***
@@ -63,7 +64,11 @@ Send Invitations to team members
     [Documentation]    Invokes Member Invite API endpoint and validates the response schema.
     Validate members Invitation enpoint responds with status code 201 and response schema should be valid
 
-Accept the Invitation send by the inviter
+# Accept the Invitation send by the inviter
+#     [Documentation]    Invokes Members Accept API endpoint.
+#     Validate Invitation Accept endpoint responds with status code 200
+
+Send Invitations, Accept Invitation send by inviter and Create teams
     [Documentation]    Invokes Members Accept API endpoint.
     Validate Invitation Accept endpoint responds with status code 200
 
@@ -87,6 +92,27 @@ Begin Offline Draft
     &{begin_offline_draft_json_template}=     Load JSON from file    resource/beginOfflineDraft.json
     &{header_value}=    create dictionary     cookie=${espn_cookie}
     ${begin_offline_draft_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${begin_offline_draft_json_template}     expected_status=200
+
+
+Add players to all teams as league creator and save the roster
+    &{offline_draft_team1_json_template}=     Load JSON from file    resource/offlineDraftTeam1.json
+    &{offline_draft_team2_json_template}=     Load JSON from file    resource/offlineDraftTeam2.json
+    &{offline_draft_team3_json_template}=     Load JSON from file    resource/offlineDraftTeam3.json
+    &{offline_draft_team4_json_template}=     Load JSON from file    resource/offlineDraftTeam4.json
+    &{offline_draft_save_json_template}=     Load JSON from file    resource/offlineDraftSave.json
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    #Team 1
+    ${offline_draft_team1_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_team1_json_template}     expected_status=200
+    #${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=200
+    #Team 2
+    ${offline_draft_team2_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_team2_json_template}     expected_status=200
+    #${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=200
+    #Team 3
+    ${offline_draft_team3_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_team3_json_template}     expected_status=200
+    #${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=200
+    #Team 4
+    ${offline_draft_team4_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_team4_json_template}     expected_status=200
+    ${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=200
 
 Add players to team 1 as league creator user and save the roster
     &{offline_draft_team1_json_template}=     Load JSON from file    resource/offlineDraftTeam1.json
@@ -208,20 +234,11 @@ Validate Invitation Accept endpoint responds with status code 200
         &{league_invite_accept_json_template}=    Load JSON from file    resource/LeagueInviteAccept.json
         ${id_updated}=    Update value to JSON    ${league_invite_accept_json_template}    $.id   ${invite_id}
         Save JSON to file    ${id_updated}    resource/LeagueInviteAccept.json    2
-        # ${incremented_value}=    Evaluate    ${index}+1
-        # ${team_id_updated}=    Update value to JSON    ${league_invite_accept_json_template}    $.teamId      ${incremented_value}
-        # Save JSON to file    ${team_id_updated}    resource/LeagueInviteAccept.json    2
         &{header_user_cookie}    Create Dictionary    cookie=${user_cookies}[${index}]
-        #${member}=    Evaluate    {${member_ids}[${index}]}
-        Log To Console    ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${invite_id}?memberId={${member_ids}[${index}]}&join=true
         #Make post request and send json payload to accept invitation - 
         ${memberInvitationAccepation}=    POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${invite_id}?memberId={${member_ids}[${index}]}&join=true    headers=${header_user_cookie}    json=${league_invite_accept_json_template}       expected_status=201
         #Validate the schema
-    END
-
-Validate Teams create endpoint responds with status code 200 and response schema should be valid
-    #Team Creation for all 3 users
-    FOR    ${index}    IN RANGE    2    5
+        ${team_id}=    Get value from JSON    ${memberInvitationAccepation.json()}    $.teamId
         &{team_create_json_template}=    Load JSON from file    resource/teamCreateTemplate.json
         #Team abbreviation update
         ${team_abbreviation_updated}=    Update value to JSON    ${team_create_json_template}    $.abbrev   FL${index}
@@ -232,7 +249,71 @@ Validate Teams create endpoint responds with status code 200 and response schema
         #Team location update
         ${location_updated}=    Update value to JSON    ${team_create_json_template}    $.location   FTM${index}
         Save JSON to file    ${location_updated}    resource/teamCreateTemplate.json    2
-        &{header_value}=    create dictionary     cookie=${espn_cookie}
+        #Team create API invocation
+        ${team_response}=     POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/teams/${team_id}   headers=${header_user_cookie}     json=${team_create_json_template}   expected_status=200
+        #Schema validation
+        Fantasy Teams Schema from ${team_response} should be valid
+    END
+    
+    #Create Team
+    # FOR    ${index}    IN RANGE    0    3
+    #     &{league_invite_accept_json_template}=    Load JSON from file    resource/LeagueInviteAccept.json
+    #     ${id_updated}=    Update value to JSON    ${league_invite_accept_json_template}    $.id   ${invite_id}
+    #     Save JSON to file    ${id_updated}    resource/LeagueInviteAccept.json    2
+    #     # ${incremented_value}=    Evaluate    ${index}+1
+    #     # ${team_id_updated}=    Update value to JSON    ${league_invite_accept_json_template}    $.teamId      ${incremented_value}
+    #     # Save JSON to file    ${team_id_updated}    resource/LeagueInviteAccept.json    2
+    #     &{header_user_cookie}    Create Dictionary    cookie=${user_cookies}[${index}]
+    #     #${member}=    Evaluate    {${member_ids}[${index}]}
+    #     Log To Console    ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${invite_id}?memberId={${member_ids}[${index}]}&join=true
+    #     #Make post request and send json payload to accept invitation - 
+    #     ${memberInvitationAccepation}=    POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${invite_id}?memberId={${member_ids}[${index}]}&join=true    headers=${header_user_cookie}    json=${league_invite_accept_json_template}       expected_status=201
+    #     #Validate the schema
+    # END
+
+# Validate Teams create endpoint responds with status code 200 and response schema should be valid
+#     #Team Creation for all 3 users
+#     FOR    ${index}    IN RANGE    2    5
+#         &{team_create_json_template}=    Load JSON from file    resource/teamCreateTemplate.json
+#         #Team abbreviation update
+#         ${team_abbreviation_updated}=    Update value to JSON    ${team_create_json_template}    $.abbrev   FL${index}
+#         Save JSON to file    ${team_abbreviation_updated}    resource/teamCreateTemplate.json    2
+#         #Team nickname update
+#         ${nick_name_updated}=    Update value to JSON    ${team_create_json_template}    $.nickname   FN${index}
+#         Save JSON to file    ${nick_name_updated}    resource/teamCreateTemplate.json    2
+#         #Team location update
+#         ${location_updated}=    Update value to JSON    ${team_create_json_template}    $.location   FTM${index}
+#         Save JSON to file    ${location_updated}    resource/teamCreateTemplate.json    2
+#         &{header_value}=    create dictionary     cookie=${espn_cookie}
+#         #Team create API invocation
+#         ${team_response}=     POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/teams/${index}   headers=${header_value}     json=${team_create_json_template}   expected_status=200
+#         #Schema validation
+#         Fantasy Teams Schema from ${team_response} should be valid
+#     END
+
+Validate Teams create endpoint responds with status code 200 and response schema should be valid
+    #Team Creation for all 3 users
+    FOR    ${index}    IN RANGE    4    1    -1
+        &{team_create_json_template}=    Load JSON from file    resource/teamCreateTemplate.json
+        #Team abbreviation update
+        ${team_abbreviation_updated}=    Update value to JSON    ${team_create_json_template}    $.abbrev   FL${index}
+        Save JSON to file    ${team_abbreviation_updated}    resource/teamCreateTemplate.json    2
+        #Team nickname update
+        ${nick_name_updated}=    Update value to JSON    ${team_create_json_template}    $.nickname   FN${index}
+        Save JSON to file    ${nick_name_updated}    resource/teamCreateTemplate.json    2
+        #Team location update
+        ${location_updated}=    Update value to JSON    ${team_create_json_template}    $.location   FTM${index}
+        Save JSON to file    ${location_updated}    resource/teamCreateTemplate.json    2
+        IF    ${index} == 4
+            &{header_value}=    create dictionary     cookie=${user1_cookie} 
+        END
+        IF    ${index} == 3
+            &{header_value}=    create dictionary     cookie=${user2_cookie}  
+        END
+        IF    ${index} == 3
+            &{header_value}=    create dictionary     cookie=${user3_cookie}   
+        END
+        #&{header_value}=    create dictionary     cookie=${espn_cookie}
         #Team create API invocation
         ${team_response}=     POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/teams/${index}   headers=${header_value}     json=${team_create_json_template}   expected_status=200
         #Schema validation
