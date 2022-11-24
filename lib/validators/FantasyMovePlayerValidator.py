@@ -36,7 +36,7 @@ class FantasyMovePlayerValidator(object):
         no_of_players_on_bench = 0
         benchplayers_player_id = []
         benchplayer_eligible_slots = []
-        for players in range(0, 12):
+        for players in range(0, 13):
             lineupslotid = JSON().get_value_from_json(response, f'$.teams[0].roster.entries[{players}].lineupSlotId')
             if lineupslotid == 12:  # Bench players line up slot id is 12
                 no_of_players_on_bench += 1
@@ -48,21 +48,22 @@ class FantasyMovePlayerValidator(object):
                     eligible_slots = JSON().get_value_from_json(response, f'$.teams[0].roster.entries[{players}].'
                                                                           f'playerPoolEntry.player.eligibleSlots')
                     benchplayer_eligible_slots += [eligible_slots]
+
                 else:
                     continue
 
-        for player in range(0, 3):
-            benchplayer_eligible_slots[player].remove(12)  #Removing 12 from list since the player has to be moved to lineup from Bench
-            benchplayer_eligible_slots[player].remove(13)  #Removing 13 from list since the player has to be moved to lineup from Bench and not for IR
-        
         if len(benchplayers_player_id) == 0:
-            logging.info(f'team has {no_of_players_on_bench} on bench but cannot be moved to lineup as lineup is locked')
+            logging.info(f'team has {no_of_players_on_bench} players on bench but cannot be moved to lineup as lineup is locked')
         else:
-            for no in range(0, 3):
-                for random_no in range(0, len(benchplayer_eligible_slots[no])):
-                    player_id = benchplayers_player_id[no]
-                    eligible_slots = benchplayer_eligible_slots[no]
-                    slot = eligible_slots[random_no]
+            for player in range(0, len(benchplayer_eligible_slots)):
+                benchplayer_eligible_slots[player].remove(12)  # Removing 12 from list since the player has to be moved to lineup from Bench
+                benchplayer_eligible_slots[player].remove(13)  # Removing 13 from list since the player has to be moved to lineup from Bench and not for IR
+
+            for bench_player in range(0, len(benchplayers_player_id)):
+                for random_slot in range(0, len(benchplayer_eligible_slots[bench_player])):
+                    player_id = benchplayers_player_id[bench_player]
+                    eligible_slots = benchplayer_eligible_slots[bench_player]
+                    slot = eligible_slots[random_slot]
                     for players in range(0, 12):
                         lineupslotid = JSON().get_value_from_json(response,
                                                                   f'$.teams[0].roster.entries[{players}].lineupSlotId')
@@ -73,12 +74,86 @@ class FantasyMovePlayerValidator(object):
                             if line_up_status is False:
                                 line_up_player_id = JSON().get_value_from_json(response,
                                                                                f'$.teams[0].roster.entries[{players}].playerId')
-                                line_up_slot_id = JSON().get_value_from_json(response,
-                                                                             f'$.teams[0].roster.entries[{players}].lineupSlotId')
-                                return [player_id, line_up_player_id, slot, line_up_slot_id]
+                                return [player_id, line_up_player_id, slot]
                         else:
                             continue
             return None
+
+    @keyword('Generate a random future scoring period between ${current} and ${final}')
+    def generate_random_future_scoring_period(self, current, final):
+        future_scoring_period = random.randint(current, final)
+        return future_scoring_period
+
+    @keyword('Get the Eligible players details who can swap their positions from response')
+    def get_eligible_players_details_to_swap_postions(self, scoringperiodid, teamid, response):
+            for player in range(0, 13):
+                current_scoring_period = response.get('scoringPeriodId')
+                lineupslotid = JSON().get_value_from_json(response,
+                                                          f'$.teams[{teamid}].roster.entries[{player}].lineupSlotId')
+                if lineupslotid == 12:
+                    continue
+                elif current_scoring_period == scoringperiodid:
+                    line_up_status = JSON().get_value_from_json(response,
+                                                                    f'$.teams[{teamid}].roster.entries[{player}].'
+                                                                    f'playerPoolEntry.lineupLocked')
+                    if line_up_status is False:
+                        eligible_slot_player1 = JSON().get_value_from_json(response,f'$.teams[{teamid}].roster.entries[{player}].'
+                                                                           f'playerPoolEntry.player.eligibleSlots')
+                    else:
+                        continue
+                else:
+                    eligible_slot_player1 = JSON().get_value_from_json(response,
+                                                                       f'$.teams[{teamid}].roster.entries[{player}].'
+                                                                       f'playerPoolEntry.player.eligibleSlots')
+                for player1 in range(0, 13):
+                    lineupslotid = JSON().get_value_from_json(response,f'$.teams[{teamid}].roster.entries[{player1}].lineupSlotId')
+                    if player == player1:
+                        continue
+                    elif lineupslotid == 12:
+                        continue
+                    elif current_scoring_period == scoringperiodid:
+                        line_up_status = JSON().get_value_from_json(response,
+                                                                    f'$.teams[{teamid}].roster.entries[{player1}].'
+                                                                    f'playerPoolEntry.lineupLocked')
+                        if line_up_status is False:
+                            eligible_slot_player2 = JSON().get_value_from_json(response,
+                                                                               f'$.teams[{teamid}].roster.entries[{player1}].'
+                                                                               f'playerPoolEntry.player.eligibleSlots')
+                            if eligible_slot_player1 == eligible_slot_player2:
+                                player1_player_id = JSON().get_value_from_json(response,f'$.teams[{teamid}].roster.entries[{player}].playerId')
+                                player2_player_id = JSON().get_value_from_json(response,f'$.teams[{teamid}].roster.entries[{player1}].playerId')
+                                player1_lineup_slot_id =  JSON().get_value_from_json(response,f'$.teams[{teamid}].roster.entries[{player}].lineupSlotId')
+                                player2_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{teamid}].roster.entries[{player1}].lineupSlotId')
+                                return  player1_player_id, player2_player_id,player1_lineup_slot_id,player2_lineup_slot_id
+                    else:
+                        eligible_slot_player2 = JSON().get_value_from_json(response,
+                                                                           f'$.teams[{teamid}].roster.entries[{player1}].'
+                                                                           f'playerPoolEntry.player.eligibleSlots')
+                        player1_player_id = JSON().get_value_from_json(response,
+                                                                       f'$.teams[{teamid}].roster.entries[{player}].playerId')
+                        player2_player_id = JSON().get_value_from_json(response,
+                                                                       f'$.teams[{teamid}].roster.entries[{player1}].playerId')
+                        player1_lineup_slot_id = JSON().get_value_from_json(response,
+                                                                            f'$.teams[{teamid}].roster.entries[{player}].lineupSlotId')
+                        player2_lineup_slot_id = JSON().get_value_from_json(response,
+                                                                            f'$.teams[{teamid}].roster.entries[{player1}].lineupSlotId')
+                        return player1_player_id, player2_player_id, player1_lineup_slot_id, player2_lineup_slot_id
+            return None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

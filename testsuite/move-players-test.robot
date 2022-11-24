@@ -18,7 +18,7 @@ Move the Players by swaping the position of the players
     Add players to a team
     Save the added players to the team
     ${swapped_response}    Swap the position of players and validate the response schema
-    Validate players swapped their positions ${swapped_response}
+#    Validate players swapped their positions ${swapped_response}
 
 Move the Players to Bench
     [Tags]    moveplayers-to-bench  valid   CSEAUTO-28347   CSEAUTO-28395
