@@ -46,7 +46,6 @@ class FantasyAddPlayerValidator(object):
                 free_agents_id = free_agent_response.json()['players'][agents]['id']
                 free_agents_position_id = free_agent_response.json()['players'][agents]['player']['defaultPositionId']
                 for player in range(0, no_of_players):
-                    drop_player_id = 0
                     droppableBool = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"]
                     lineupLockedBool = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]['lineupLocked']
                     drop_player_Position_Id = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]['player']['defaultPositionId']
@@ -64,7 +63,7 @@ class FantasyAddPlayerValidator(object):
                         continue
                 if flag == True:
                     break
-                
+            print(scoring_period_id, drop_player_id, free_agents_id)        
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
         return scoring_period_id, drop_player_id, free_agents_id    
