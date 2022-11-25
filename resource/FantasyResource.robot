@@ -94,25 +94,15 @@ Begin Offline Draft
     ${begin_offline_draft_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${begin_offline_draft_json_template}     expected_status=200
 
 
-Add players to all teams as league creator and save the roster
-    &{offline_draft_team1_json_template}=     Load JSON from file    resource/offlineDraftTeam1.json
-    &{offline_draft_team2_json_template}=     Load JSON from file    resource/offlineDraftTeam2.json
-    &{offline_draft_team3_json_template}=     Load JSON from file    resource/offlineDraftTeam3.json
-    &{offline_draft_team4_json_template}=     Load JSON from file    resource/offlineDraftTeam4.json
-    &{offline_draft_save_json_template}=     Load JSON from file    resource/offlineDraftSave.json
+Add players to all teams as league creator user and save the roster
     &{header_value}=    create dictionary     cookie=${espn_cookie}
-    #Team 1
-    ${offline_draft_team1_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_team1_json_template}     expected_status=200
-    #${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=200
-    #Team 2
-    ${offline_draft_team2_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_team2_json_template}     expected_status=200
-    #${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=200
-    #Team 3
-    ${offline_draft_team3_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_team3_json_template}     expected_status=200
-    #${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=200
-    #Team 4
-    ${offline_draft_team4_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_team4_json_template}     expected_status=200
+    &{offline_draft_save_json_template}=     Load JSON from file    resource/offlineDraftSave.json
+    FOR    ${index}    IN RANGE    1    5
+        &{offline_draft_teams_json_template}=     Load JSON from file    resource/offlineDraftTeam${index}.json
+        ${offline_draft_team1_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_teams_json_template}     expected_status=200  
+    END
     ${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=200
+
 
 Add players to team 1 as league creator user and save the roster
     &{offline_draft_team1_json_template}=     Load JSON from file    resource/offlineDraftTeam1.json
