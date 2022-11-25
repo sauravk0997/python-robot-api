@@ -7,12 +7,12 @@
   "executionType": "EXECUTE",
   "items": [
     {
-      "playerId": 3155942,
+      "playerId": 3102531,
       "type": "ADD",
       "toTeamId": 1
     },
     {
-      "playerId": 3149673,
+      "playerId": 6477,
       "type": "DROP",
       "fromTeamId": 1
     }
