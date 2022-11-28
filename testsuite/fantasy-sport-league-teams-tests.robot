@@ -35,7 +35,7 @@ E2E - Validate User Steps as League Creator user to Create Teams and assign Leag
     Assign League Manager Roles to Team2, Team3 and Team4 owners
     Delete the created league
 
-E2E - E2E - Validate User Steps as League Creator user to Create Teams and assign League Manager Power roles to Team2, Team3, and Team4 owners and add Players to own teams as team owners
+E2E - Validate User Steps as League Creator user to Create Teams and assign League Manager Power roles to Team2, Team3, and Team4 owners and add Players to own teams as team owners
     [Documentation]    Create - ESPN Fantasy League, Teams and assign LM roles to all team owners, add players to teams as respective team owners
     ...    Http Methods used - POST, DELETE, PUT
     [Tags]    valid    fantasy    CSEAUTO-28628    CSEAUTO-28396
