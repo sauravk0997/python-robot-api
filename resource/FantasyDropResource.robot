@@ -3,7 +3,7 @@ Documentation       All Common robot utils/functions and variables with respect 
 ...                 ESPN Fantasy Games API are maintained here
 Library             RequestsLibrary
 Library             Collections
-Library             ../lib/validators/FantasyDropValidator.py
+Library             ../lib.validators.FantasyDropValidator.py
 
 *** Variables ***
 ${FANTASY_BASE_URL}=            https://fantasy.espn.com
@@ -36,7 +36,7 @@ A POST request to ${DELETE_API} with ${payload} should respond with ${status}
     [Documentation]     Custom POST keyword with status validation.
     Log To Console      ${payload}
     &{headers}=         Create Dictionary    Cookie=${USER_COOKIE}
-    ${api_response}=    POST  url=${DELETE_API}  headers=${headers}    json=${payload}    expected_status=200 
+    ${api_response}=    POST  url=${DELETE_API}  headers=${headers}    json=${payload}    expected_status=${status} 
     [Return]            ${api_response}
  
 Fetch payload details to drop a player ${myteamid}
@@ -60,7 +60,7 @@ Get undroppable players ${myteamid}
 Get injured players ${myteamid}
     [Documentation]   Custom keyword to form the request payload for the delete API
     ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAM_SLUG} should respond with 200
-    ${spid}    ${teamid}    ${playerid}    Find undroppable players of a team ${response} ${myteamid}
+    ${spid}    ${teamid}    ${playerid}    Find injured players of a team ${response} ${myteamid}
     [Return]          ${spid}    ${teamid}    ${playerid}
 
 
@@ -70,5 +70,5 @@ Update payload ${payload} with ${teamid} ${playerid} and ${spid}
     Set To Dictionary       ${payload["items"][0]}    playerId=${playerid}
     Set To Dictionary       ${payload["items"][0]}    fromTeamId=${teamid}
     Set To Dictionary       ${payload}    scoringPeriodId    ${spid}
-    set global variable     ${payload}
+    set global variable     ${payload}    
     [Return]                ${payload}

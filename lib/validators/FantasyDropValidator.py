@@ -95,3 +95,27 @@ class FantasyDropValidator(object):
         scoring_period_id, teamid, drop_player_list = self.create_player_list(response,teamid,drop_flag)
         return scoring_period_id, teamid, drop_player_list
     
+
+    @keyword('Find injured players of a team ${response} ${myteamid}', tags=['drop player', 'functional', 'CoreV3'],
+                types={'response': requests.Response})
+    def get_injured_players(self, response, teamid) -> bool:
+
+        drop_flag = True
+        injured_flag = True
+        # print(self._teamid)
+        teams = response.json()['teams']
+        scoring_period_id = response.json()['scoringPeriodId']
+        teamid = int(teamid) - 1
+        no_of_players = len(teams[teamid]['roster']['entries'])
+        # injured_bool = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["player"]["injured"]
+        # droppable_bool = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"]
+        drop_player_list = []
+        for player in range(0, no_of_players):
+            print("hehy")
+            if (teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"] == drop_flag) and (teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["player"]["injured"] == injured_flag):
+                player_id = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["id"]
+                # team_id = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["onTeamId"]
+                drop_player_list.append(player_id) 
+            else:
+                continue
+        return scoring_period_id, teamid, drop_player_list
