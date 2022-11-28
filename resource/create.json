@@ -1,0 +1,16 @@
+{
+	"members": [{
+		"id": "{95096766-E11A-4C94-BB21-2BA8F8C0D3EF}",
+		"isLeagueCreator": true
+	}],
+	"settings": {
+	"draftSettings": {
+		"type": "OFFLINE",
+		"date": 0
+        
+	},
+		"isCustomizable": true,
+		"name": "testLague",
+		"size": "4"
+	}
+}
