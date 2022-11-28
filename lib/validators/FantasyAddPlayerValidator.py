@@ -38,7 +38,7 @@ class FantasyAddPlayerValidator(object):
     @keyword('Get the drop player Id and free agent player Id')
     def get_droppable_and_FreeAgents_players(self, TEAM_ID, response, free_agent_response) -> bool:
         try:
-            random_no = random.randint(0, 15)
+            random_no = random.randint(0, 35)
             team_id = int(TEAM_ID)-1
             no_of_players = len(response.json()['teams'][team_id]['roster']['entries'])
             no_of_free_agents = len(free_agent_response.json()['players'])
