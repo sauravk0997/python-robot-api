@@ -28,7 +28,7 @@ class FantasyUtils(object):
     
     @keyword('Get COPY_TO_CLIPBOARD invite id from ${response}', types={'response': requests.Response})
     def get_copytoclipboard_invite_id(self, response) -> str:
-            response_dict = response.get("invited")
-            for objects in response_dict:
-                if objects.get("inviteType") == "COPY_TO_CLIPBOARD":
-                    return objects.get("id")
+            invited_dict = response.get("invited")
+            for invite in invited_dict:
+                if invite.get("inviteType") == "COPY_TO_CLIPBOARD":
+                    return invite.get("id")
