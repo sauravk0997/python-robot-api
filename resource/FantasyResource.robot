@@ -25,7 +25,6 @@ ${MEMBER_INVITE_SLUG}     invites?copyLMOnInvite=false&notifyUnjoined=false
 ${DRAFT_SETTINGS_SLUG}    settings?scoringPeriodId=0
 ${DRAFT_DETAILS_SLUG}     draftDetail
 ${TRANSACTIONS_SLUG}    transactions/
-${MEMBER_INVITE_SLUG1}    https://lm-api-writes.fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/215020142/invites/59dfade1-d958-4479-a10a-c73fc3c42c98?memberId={DADA6BC1-6F16-4B4C-9E34-526B4870B891}&join=true
 @{user_emails}        test_api_user1@test.com    test_api_user2@test.com    test_api_user3@test.com
 #user cookies
 ${user1_cookie}    SWID={DADA6BC1-6F16-4B4C-9E34-526B4870B891};espn_s2=AEAqx51yoqQ+9D/bdVjfB6Vqk60qbd9N4ksqclsl1YDg0YfakxNUOm7PZlZT+GkUAxvxf6VcUSwnhGNh51VAl7bE2+s7TZX+8uvmlhj3hSBVnLy8nXVyLPrDj1rDP6PF+OLvPQaiZtSbIU39EwPQDMatVBuoU1Fcu/yKOTmnZ0LiUhDRoMHti+jdDVhsDgDYVl8DOaJ4i6sfAtOOwIvcH49MiRFzqLR/t8mDI6oAyO8oLBuxXmnQVbaIDyrYSHj/1js/2Y7VlOf12JwcXn8cb1968h0eo2SNyOBI2VN5mwEdZw==;
