@@ -20,14 +20,14 @@ Drop a player from any team as a league manager
     #keyword to fetch the details to form the payload
     ${spid}    ${teamid}    ${playerid}    Fetch payload details to drop a player ${myteamid}
     Log To Console     ${playerid}
-    #keyword to update the payload with the values from the previous step
-    # ${final_payload}    Update payload ${initial_payload} with ${teamid} ${playerid} and ${spid}
-    # ${drop_api_response}    A POST request to ${DELETE_API} with ${final_payload} should respond with 200
+    # keyword to update the payload with the values from the previous step
+    ${final_payload}    Update payload ${initial_payload} with ${teamid} ${playerid} and ${spid}
+    ${drop_api_response}    A POST request to ${DELETE_API} with ${final_payload} should respond with 200
     # #Validates the schema of the delete api response
-    # Fantasy Drop Schema from ${drop_api_response} should be valid
+    Fantasy Drop Schema from ${drop_api_response} should be valid
     # #Validates the actual values of the delete api response with expected values
-    # should be equal as integers    ${drop_api_response.json()["items"][0]["fromTeamId"]}    ${teamid}    
-    # should be equal as integers    ${drop_api_response.json()["items"][0]["toTeamId"]}    ${droppedteamid}
+    should be equal as integers    ${drop_api_response.json()["items"][0]["fromTeamId"]}    ${teamid}    
+    should be equal as integers    ${drop_api_response.json()["items"][0]["toTeamId"]}    ${droppedteamid}
 
 Drop a player from my team as a team manager
 
@@ -37,7 +37,8 @@ Drop a player from my team as a team manager
     &{initial_payload}=    Load JSON from file    resource/dropplayer.json
     ${myteamid}    Set Variable    5
     ${spid}    ${teamid}    ${playerid}    Fetch payload details to drop a player ${myteamid}    
-    Log To Console     ${playerid}
+    run keyword and continue on failure    Log To Console     ${playerid}
+
 
 Get droppable players
     &{initial_payload}=    Load JSON from file    resource/dropplayer.json
@@ -51,5 +52,8 @@ Get undroppable players
     ${spid}    ${teamid}    ${playerid}    Get undroppable players ${myteamid}
     Log To Console     ${playerid}
 
-Get injured player list for drop 
-
+# Get injured player list for drop 
+    &{initial_payload}=    Load JSON from file    resource/dropplayer.json
+    ${myteamid}    Set Variable    5
+    ${spid}    ${teamid}    ${playerid}    Get injured players ${myteamid}
+    Log To Console     ${playerid}

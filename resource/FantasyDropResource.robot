@@ -42,7 +42,7 @@ A POST request to ${DELETE_API} with ${payload} should respond with ${status}
 Fetch payload details to drop a player ${myteamid}
     [Documentation]   Custom keyword to form the request payload for the delete API
     ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAM_SLUG} should respond with 200
-    ${spid}    ${teamid}    ${playerid}    Get a droppable player of any team ${response} ${myteamid}
+    ${spid}    ${teamid}    ${playerid}    Get a player to drop ${response} ${myteamid}
     [Return]          ${spid}    ${teamid}    ${playerid}
 
 Get droppable players ${myteamid}
@@ -57,12 +57,11 @@ Get undroppable players ${myteamid}
     ${spid}    ${teamid}    ${playerid}    Find undroppable players of a team ${response} ${myteamid}
     [Return]          ${spid}    ${teamid}    ${playerid}
 
-
-# Fetch payload details to drop a player from ${myteamid}
-#     [Documentation]   Custom keyword to form the request payload for the delete API
-#     ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAM_SLUG} should respond with 200
-#     ${spid}    ${playerid}   Fetch payload details to drop a player from ${myteamid} ${response} 
-#     [Return]          ${spid}    ${teamid}    ${playerid}
+Get injured players ${myteamid}
+    [Documentation]   Custom keyword to form the request payload for the delete API
+    ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAM_SLUG} should respond with 200
+    ${spid}    ${teamid}    ${playerid}    Find undroppable players of a team ${response} ${myteamid}
+    [Return]          ${spid}    ${teamid}    ${playerid}
 
 
 Update payload ${payload} with ${teamid} ${playerid} and ${spid}
