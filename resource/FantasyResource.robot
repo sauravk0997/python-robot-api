@@ -36,7 +36,7 @@ ${user3_cookie}    SWID={4E0A1098-59AA-492E-ABE1-32C3A44B0233};espn_s2=AEB8pEruB
 @{user_cookies}       ${user1_cookie}    ${user2_cookie}    ${user3_cookie}
 @{user_cookies_reverse}       ${user3_cookie}    ${user2_cookie}    ${user1_cookie}
 @{member_ids}         DADA6BC1-6F16-4B4C-9E34-526B4870B891    F53C173D-F557-4E6E-B576-B12C9BE2C80F    4E0A1098-59AA-492E-ABE1-32C3A44B0233
-
+@{display_name}       ESPNFAN3016725091    ESPNFAN3292075826    ESPNFAN4644965931
 
 *** Keywords ***
 A GET request to ${endpoint} should respond with ${status}
@@ -63,6 +63,20 @@ Create a League and validate the response schema
 Send Invitations to team members
     [Documentation]    Invokes Member Invite API endpoint and validates the response schema.
     Validate members Invitation enpoint responds with status code 201 and response schema should be valid
+
+Assign League Manager Roles to Team2, Team3 and Team4 owners
+    FOR    ${index}    IN RANGE    1    4
+        &{lm_json_template}=     Load JSON from file    resource/JSON/leagueManagerPowerAccess.json
+        ${decremented_index}=    Evaluate    ${index}-1
+        ${display_name_updated}=    Update value to JSON    ${lm_json_template}    $.displayName   ${display_name}[${decremented_index}]
+        Save JSON to file    ${display_name_updated}    resource/JSON/leagueManagerPowerAccess.json    2
+        ${first_name_updated}=    Update value to JSON    ${lm_json_template}    $.firstName    User${index}
+        Save JSON to file    ${first_name_updated}    resource/JSON/leagueManagerPowerAccess.json    2
+        ${id_updated}=    Update value to JSON    ${lm_json_template}    $.id    {${member_ids}[${decremented_index}]}
+        Save JSON to file    ${id_updated}    resource/JSON/leagueManagerPowerAccess.json    2
+        &{header_value}=    create dictionary     cookie=${espn_cookie}
+        ${lm_response}=     PUT    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/members/%7B${member_ids}[${decremented_index}]%7D  headers=${header_value}    json=${lm_json_template}     expected_status=200      
+    END
 
 # Accept the Invitation send by the inviter
 #     [Documentation]    Invokes Members Accept API endpoint.
