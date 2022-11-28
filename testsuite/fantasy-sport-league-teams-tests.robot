@@ -3,7 +3,8 @@ Resource    resource/FantasyResource.robot
 
 *** Test Cases ***
 E2E - Validate User Steps to Create Empty Teams within Leagues
-    [Documentation]    ESPN Fantasy League and empty teams creation without players within leagues
+    [Documentation]    Create - ESPN Fantasy League and empty teams creation without players within leagues
+    ...    Http Methods used - POST, DELETE
     [Tags]    valid    fantasy    CSEAUTO-28333    CSEAUTO-28396
     Initialize the user cookie
     Create a League and validate the response schema
@@ -11,7 +12,8 @@ E2E - Validate User Steps to Create Empty Teams within Leagues
     Delete the created league
  
 E2E - Validate User Steps as League Creator user to Create Teams with players within Leagues
-    [Documentation]    ESPN Fantasy League and teams creation within leagues as League Creator User
+    [Documentation]    Create - ESPN Fantasy League and teams creation with players as League Creator User
+    ...    Http Methods used - POST, DELETE
     [Tags]    valid    fantasy    CSEAUTO-28628    CSEAUTO-28396
     Initialize the user cookie
     Create a League and validate the response schema
@@ -22,7 +24,8 @@ E2E - Validate User Steps as League Creator user to Create Teams with players wi
     Delete the created league
 
 E2E - Validate User Steps as League Creator user to Create Teams and assign League Manager Power roles to Team2, Team3 and Team4 owners
-    [Documentation]    ESPN Fantasy League and teams creation within leagues
+    [Documentation]    Create - ESPN Fantasy League, Teams and assign LM roles to all team owners
+    ...    Http Methods used - POST, DELETE, PUT
     [Tags]    valid    fantasy    CSEAUTO-28628    CSEAUTO-28396
     Initialize the user cookie
     Create a League and validate the response schema
@@ -33,7 +36,8 @@ E2E - Validate User Steps as League Creator user to Create Teams and assign Leag
     Delete the created league
 
 E2E - E2E - Validate User Steps as League Creator user to Create Teams and assign League Manager Power roles to Team2, Team3, and Team4 owners and add Players to own teams as team owners
-    [Documentation]    ESPN Fantasy League and teams creation within leagues
+    [Documentation]    Create - ESPN Fantasy League, Teams and assign LM roles to all team owners, add players to teams as respective team owners
+    ...    Http Methods used - POST, DELETE, PUT
     [Tags]    valid    fantasy    CSEAUTO-28628    CSEAUTO-28396
     Initialize the user cookie
     Create a League and validate the response schema
@@ -41,8 +45,9 @@ E2E - E2E - Validate User Steps as League Creator user to Create Teams and assig
     Schedule Offline Draft
     Begin Offline Draft
     Assign League Manager Roles to Team2, Team3 and Team4 owners
-    # Add players to team 1 as team owner 1 and save the roster
-    # Add players to team 2 as team owner 2 and save the roster
-    # Add players to team 3 as team owner 3 and save the roster
-    # Add players to team 4 as team owner 4 and save the roster
+    Add players to team 1 as League creator user
+    Add players to team 2 as team owner 2
+    Add players to team 3 as team owner 3
+    Add players to team 4 as team owner 4
+    Save the roster
     Delete the created league
