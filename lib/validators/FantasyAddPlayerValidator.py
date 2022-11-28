@@ -4,7 +4,6 @@ from marshmallow import ValidationError
 from robot.api.deco import keyword, library
 from robot.api.exceptions import Failure
 import requests
-import logging
 import random
 
 @library(scope='GLOBAL', version='5.0.2')
