@@ -79,10 +79,12 @@ class FantasyMovePlayerValidator(object):
                         lineup_slot = eligible_slots[bench_player_slots]
                         for lineup_players in range(0, 13):
                             lineup_slot_id = JSON().get_value_from_json(team_response, f'$.teams[0].roster.entries[{lineup_players}].lineupSlotId')
-                            if lineup_slot_id == lineup_slot:
+                            line_up_player_id = JSON().get_value_from_json(team_response,
+                                                                           f'$.teams[0].roster.entries[{lineup_players}].playerId')
+                            if lineup_slot_id == lineup_slot and bench_player_id != line_up_player_id:
                                 line_up_status = JSON().get_value_from_json(team_response, f'$.teams[0].roster.entries[{lineup_players}].playerPoolEntry.lineupLocked')
                                 if line_up_status is False:
-                                    line_up_player_id = JSON().get_value_from_json(team_response, f'$.teams[0].roster.entries[{lineup_players}].playerId')
+                                    # line_up_player_id = JSON().get_value_from_json(team_response, f'$.teams[0].roster.entries[{lineup_players}].playerId')
                                     return [bench_player_id, line_up_player_id, lineup_slot]
                             else:
                                 continue
@@ -94,11 +96,10 @@ class FantasyMovePlayerValidator(object):
     @keyword('Generate a random future scoring period between ${current} and ${final}')
     def generate_random_future_scoring_period(self, current, final):
         try:
-            future_scoring_period = random.randint(current, final)
+            future_scoring_period = random.randint(current+1, final)
             return future_scoring_period
         except ValidationError as ve:
             raise Failure(f'Data validation failed: {ve.messages}')
-
 
     @keyword('Get the Eligible players details who can swap their positions from response')
     def get_eligible_players_details_to_swap_positions(self, scoring_period_id, team_id, response):
@@ -163,6 +164,31 @@ class FantasyMovePlayerValidator(object):
             logging.info('currently no lineup player can be moved to Bench as lineup is locked')
         except ValidationError as ve:
             raise Failure(f'Data validation failed: {ve.messages}')
+
+    @keyword('Get any different team_id from response')
+    def get_any_different_team_id(self, response, league_creator_swid) -> int:
+        try:
+            length_of_teams = JSON().get_value_from_json(response, '$.teams')
+            team_id = []
+            for teams in range(0, len(length_of_teams)):
+                if JSON().get_value_from_json(response,f'$.teams[{teams}].owners[{teams}]') == league_creator_swid:
+                    continue
+                else:
+                    team = JSON().get_value_from_json(response, f'$.teams[{teams}].id')
+                    team_id += [team]
+            random_team_id = random.randint(0, (len(team_id)-1))
+            return team_id[random_team_id]
+        except ValidationError as ve:
+            raise Failure(f'Data validation failed: {ve.messages}')
+
+
+
+
+
+
+
+
+
 
 
 

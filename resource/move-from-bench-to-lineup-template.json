@@ -3,20 +3,20 @@
   "teamId": 1,
   "type": "FUTURE_ROSTER",
   "memberId": "{95096766-E11A-4C94-BB21-2BA8F8C0D3EF}",
-  "scoringPeriodId": 68,
+  "scoringPeriodId": 76,
   "executionType": "EXECUTE",
   "items": [
     {
-      "playerId": 4277905,
+      "playerId": 3059319,
       "type": "LINEUP",
-      "fromLineupSlotId": "12",
-      "toLineupSlotId": 0
+      "fromLineupSlotId": 2,
+      "toLineupSlotId": 11
     },
     {
-      "playerId": 4395724,
+      "playerId": 3913176,
       "type": "LINEUP",
-      "fromLineupSlotId": 0,
-      "toLineupSlotId": "12"
+      "fromLineupSlotId": 11,
+      "toLineupSlotId": 2
     }
   ]
 }
