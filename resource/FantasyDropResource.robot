@@ -3,7 +3,7 @@ Documentation       All Common robot utils/functions and variables with respect 
 ...                 ESPN Fantasy Games API are maintained here
 Library             RequestsLibrary
 Library             Collections
-Library             ../lib.validators.FantasyDropValidator.py
+Library             ../lib/validators/FantasyDropValidator.py
 
 *** Variables ***
 ${FANTASY_BASE_URL}=            https://fantasy.espn.com
