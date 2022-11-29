@@ -92,21 +92,21 @@ A POST request to ${endpoint} with ${payload} add and drop a player as LM should
 
 Drop a player from my team
     Fetch scoring period id
-    ${save_scoringPeriodId}    Update value to JSON    ${drop_payload}    $..scoringPeriodId    ${scoring_period_id}
+    &{drop_payload}=    Load JSON from file    resource/droppablePlayer.json
+    ${save_scoringPeriodId}    Update value to JSON    ${drop_payload}    $.scoringPeriodId    ${scoring_period_id}
     Save JSON to file    ${save_scoringPeriodId}  resource/droppablePlayer.json     2 
     Get the value of Drop Player Id and Free Agent Player Id of Player    1 
-    &{drop_payload}=    Load JSON from file    resource/droppablePlayer.json
     ${droppable_players_id_updated}=    Update value to JSON    ${drop_payload}    $.items[0].playerId    ${Player_details}[0]
     Save JSON to file    ${droppable_players_id_updated}    resource/droppablePlayer.json    2
     Set Global Variable    ${drop_payload}
 
 Add a player to my team
     Fetch scoring period id  
-    ${save_scoringPeriodId}    Update value to JSON    ${add_payload}    $..scoringPeriodId    ${scoring_period_id}
+    &{add_payload}=    Load JSON from file    resource/addablePlayer.json
+    ${save_scoringPeriodId}    Update value to JSON    ${add_payload}    $.scoringPeriodId    ${scoring_period_id}
     Save JSON to file    ${save_scoringPeriodId}  resource/addablePlayer.json    2 
     Get the value of Drop Player Id and Free Agent Player Id of Player    1 
-    &{add_payload}=    Load JSON from file    resource/addablePlayer.json
-    ${addable_players_id_updated}=    Update value to JSON    ${add_payload}    $.scoringPeriodId    ${Player_details}[1]
+    ${addable_players_id_updated}=    Update value to JSON    ${add_payload}    $.items[0].playerId   ${Player_details}[1]
     Save JSON to file    ${addable_players_id_updated}    resource/addablePlayer.json    2
     Set Global Variable    ${add_payload}
 
@@ -123,3 +123,15 @@ A POST request to ${endpoint} add a player to my team should respond with ${stat
     &{header}=   Create Dictionary      cookie=${USER_COOKIE}
     ${api_response}=    POST  url=${endpoint}     headers=${header}    json=${add_payload}     expected_status=${status}           
     [Return]    ${api_response}
+
+Validate players is dropped from my team from ${api_response}
+    [Documentation]    Validation to check whether player is dropped from my team
+    ${player_fromTeamId}  Get value from JSON     ${api_response.json()}       $.items[0].fromTeamId   
+    ${player_TeamId}    Get value from JSON       ${api_response.json()}       $.teamId 
+    Should Be Equal As Integers    ${player_fromTeamId}      ${player_TeamId}
+
+Validate players is added to my team from ${api_response}
+    [Documentation]    Validation to check whether player is added to my team
+    ${player_toTeamId}  Get value from JSON       ${api_response.json()}       $.items[0].toTeamId     
+    ${player_TeamId}    Get value from JSON       ${api_response.json()}       $.teamId   
+    Should Be Equal As Integers    ${player_toTeamId}      ${player_TeamId}
