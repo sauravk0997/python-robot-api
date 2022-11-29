@@ -38,7 +38,6 @@ E2E - Validate User Steps as League Creator user to Create Teams and assign Leag
     [Documentation]    Create - ESPN Fantasy League, Teams and assign LM roles to all team owners, add players to teams as respective team owners
     ...    Http Methods used - POST, DELETE, PUT
     [Tags]    valid    fantasy    CSEAUTO-28628    CSEAUTO-28396
-    #Initialize the user cookie
     Create a League and validate the response schema
     Send Invitations, Accept Invitation send by inviter and Create teams
     Schedule Offline Draft
