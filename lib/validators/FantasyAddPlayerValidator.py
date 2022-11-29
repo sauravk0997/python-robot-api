@@ -35,8 +35,9 @@ class FantasyAddPlayerValidator(object):
         return True
 
     @keyword('Get the droppable player and free-agent player id')
-    def get_droppable_and_FreeAgents_players(self, teamId, response, free_agent_response) -> int:
+    def get_droppable_and_FreeAgents_players(self, teamId, response, free_agent_response) -> list:
         try:
+            player_id_details = []
             random_no = random.randint(0, 35)
             team_id = int(teamId)-1
             no_of_players = len(response.json()['teams'][team_id]['roster']['entries'])
@@ -64,7 +65,9 @@ class FantasyAddPlayerValidator(object):
                     else:
                         continue
                 if flag == True:
-                    break        
+                    break    
+            player_id_details.append(droppable_player_id)   
+            player_id_details.append(free_agents_id)
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
-        return droppable_player_id, free_agents_id    
+        return player_id_details   
