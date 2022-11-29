@@ -100,7 +100,6 @@ Drop a player from my team
     Save JSON to file    ${droppable_players_id_updated}    resource/droppablePlayer.json    2
     Set Global Variable    ${drop_payload}
 
-
 Add a player to my team
     Fetch scoring period id  
     ${save_scoringPeriodId}    Update value to JSON    ${add_payload}    $..scoringPeriodId    ${scoring_period_id}
