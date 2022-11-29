@@ -27,7 +27,9 @@ class FantasyLoginManager(object):
     ]
 
     # scopes the class to the global level so that it's only ever instantiated once during a run
-    ROBOT_LIBRARY_SCOPE = "SUITE"
+    # ROBOT_LIBRARY_SCOPE = "SUITE"
+    # scopes the class to the Test level so that it's instantiated once during each test case run
+    ROBOT_LIBRARY_SCOPE = "TEST"
 
     @not_keyword
     def __init__(self,
@@ -195,6 +197,14 @@ class FantasyLoginManager(object):
         # Everything ran as expected, return state
         return True
 
+    @keyword("Browser shutdown")
+    def close_browser(self):
+        """Closes the current browser."""
+        try:
+            self.driver.close()
+        except Exception as e:
+            console(e)
+     
 
 def main():
     good_user = ''

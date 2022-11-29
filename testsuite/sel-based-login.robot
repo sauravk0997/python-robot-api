@@ -16,3 +16,6 @@ Auth with Cookie Capture
     FLM.Login Fantasy User    username=${user}    password=${password}  expected_profile_name_span_value=${greeting}   url=${HOMEPAGE}
     ${espn_cookie}=     FLM.Fantasy API Cookie
     [Return]    ${espn_cookie}
+
+ Browser Shutdown
+    FLM.Browser shutdown
