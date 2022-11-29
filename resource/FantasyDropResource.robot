@@ -61,7 +61,14 @@ Get injured players ${myteamid}
     [Documentation]   Custom keyword to form the request payload for the delete API
     ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAM_SLUG} should respond with 200
     ${spid}    ${teamid}    ${playerid}    Find injured players of a team ${response} ${myteamid}
-    [Return]          ${spid}    ${teamid}    ${playerid}
+    ${count}=    Get Length    ${playerid}
+    IF    ${count} > 0
+    ${status}    Set Variable    200
+    ${playerid}    Set Variable    ${playerid[0]}
+    ELSE
+    ${status}    Set Variable    400
+    END
+    [Return]          ${spid}    ${teamid}    ${playerid}    ${status}
 
 
 Update payload ${payload} with ${teamid} ${playerid} and ${spid}

@@ -52,16 +52,16 @@ class FantasyDropValidator(object):
                             continue
                     break
                 return scoring_period_id, team_id, player_id
-            
+
             else:
                 drop_flag = True
-                scoring_period_id, teamid, drop_player_list = self.create_player_list(response,teamid,drop_flag)
+                scoring_period_id, teamid, drop_player_list = self.create_player_list(
+                    response, teamid, drop_flag)
                 return scoring_period_id, teamid, drop_player_list[0]
         except ValidationError as ve:
             raise Failure(f'Parsing failed :{ve.messages}')
 
-
-    def create_player_list(self,response,teamid,drop_flag):
+    def create_player_list(self, response, teamid, drop_flag):
 
         teams = response.json()['teams']
         scoring_period_id = response.json()['scoringPeriodId']
@@ -72,32 +72,31 @@ class FantasyDropValidator(object):
             if (teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"]) == drop_flag:
                 player_id = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["id"]
                 team_id = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["onTeamId"]
-                drop_player_list.append(player_id) 
+                drop_player_list.append(player_id)
             else:
                 continue
         return scoring_period_id, team_id, drop_player_list
 
-
     @keyword('Find droppable players of a team ${response} ${myteamid}', tags=['drop player', 'functional', 'CoreV3'],
-                types={'response': requests.Response})
+             types={'response': requests.Response})
     def get_droppable_players(self, response, teamid) -> bool:
 
         drop_flag = True
-        scoring_period_id, teamid, drop_player_list = self.create_player_list(response,teamid,drop_flag)
+        scoring_period_id, teamid, drop_player_list = self.create_player_list(
+            response, teamid, drop_flag)
         return scoring_period_id, teamid, drop_player_list
 
-
     @keyword('Find undroppable players of a team ${response} ${myteamid}', tags=['drop player', 'functional', 'CoreV3'],
-                types={'response': requests.Response})
+             types={'response': requests.Response})
     def get_undroppable_players(self, response, teamid) -> bool:
 
         drop_flag = False
-        scoring_period_id, teamid, drop_player_list = self.create_player_list(response,teamid,drop_flag)
+        scoring_period_id, teamid, drop_player_list = self.create_player_list(
+            response, teamid, drop_flag)
         return scoring_period_id, teamid, drop_player_list
-    
 
     @keyword('Find injured players of a team ${response} ${myteamid}', tags=['drop player', 'functional', 'CoreV3'],
-                types={'response': requests.Response})
+             types={'response': requests.Response})
     def get_injured_players(self, response, teamid) -> bool:
 
         drop_flag = True
@@ -106,16 +105,18 @@ class FantasyDropValidator(object):
         teams = response.json()['teams']
         scoring_period_id = response.json()['scoringPeriodId']
         teamid = int(teamid) - 1
-        no_of_players = len(teams[teamid]['roster']['entries'])
-        # injured_bool = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["player"]["injured"]
-        # droppable_bool = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"]
+        print(teamid)
+        team_id = 0
+        entries = teams[teamid]['roster']['entries']
+        no_of_players = len(entries)
         drop_player_list = []
         for player in range(0, no_of_players):
-            print("hehy")
-            if (teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"] == drop_flag) and (teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["player"]["injured"] == injured_flag):
+            
+            if (entries[player]["playerPoolEntry"]["player"]["droppable"] == drop_flag) and (entries[player]["playerPoolEntry"]["player"]["injured"] == injured_flag):
                 player_id = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["id"]
-                # team_id = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["onTeamId"]
-                drop_player_list.append(player_id) 
+                print(player_id)
+                team_id = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["onTeamId"]
+                drop_player_list.append(player_id)
             else:
                 continue
-        return scoring_period_id, teamid, drop_player_list
+        return scoring_period_id, team_id, drop_player_list
