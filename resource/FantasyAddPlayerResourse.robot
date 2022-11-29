@@ -23,20 +23,21 @@ Fetch scoring period id
     # declaring scoring period id as global to update its value in url and json, to use it in different function
     Set Global Variable    ${scoring_period_id}
 
-Get the value of Drop Player Id and Free Agent Playre Id of Player 
-    [Arguments]    ${TEAM_ID} 
+Get the value of Drop Player Id and Free Agent Player Id of Player 
+    [Arguments]    ${team-id} 
     [Documentation]     Custom keyword for getting the drop player id and free agent player id from reaponse
     # Updating free agent URL and free agent json with current scoring period id
-    ${Free_Agent_Json}   Load JSON from file   resource/FIilterFreeAgent.json
-    ${save_scoring_periodId}    Update value to JSON    ${Free_Agent_Json}    $.players.filterRanksForScoringPeriodIds.value[0]    ${scoring_period_id}
-    Save JSON to file    ${save_scoring_periodId}  resource/FIilterFreeAgent.json    
-    ${Free_Agent_Filter}    Get File   resource/FIilterFreeAgent.json
-    &{Free_Agent_header}=   Create Dictionary    cookie=${USER_COOKIE}    x-fantasy-filter=${Free_Agent_Filter}
-    ${free_agent_response}=    GET  url= ${API_BASE}/apis/v3/games/fba/seasons/${SEASON_ID}/segments/0/leagues/${LEAGUE_ID}?scoringPeriodId=${scoring_period_id}&view=kona_player_info     headers=${Free_Agent_header}      expected_status=200
+    ${free_agent_json}   Load JSON from file   resource/freeAgentFilter.json
+    ${save_scoring_periodId}    Update value to JSON    ${free_agent_json}    $.players.filterRanksForScoringPeriodIds.value[0]    ${scoring_period_id}
+    Save JSON to file    ${save_scoring_periodId}  resource/freeAgentFilter.json    
+    # ${free_agent_filter}    Get File   resource/freeAgentFilter.json
+    ${free_agent_filter}    Get file   resource/freeAgentFilter.json
+    &{free_agent_header}=   Create Dictionary    cookie=${USER_COOKIE}    x-fantasy-filter=${free_agent_filter}
+    ${free_agent_response}=    GET  url= ${API_BASE}/apis/v3/games/fba/seasons/${SEASON_ID}/segments/0/leagues/${LEAGUE_ID}?scoringPeriodId=${scoring_period_id}&view=kona_player_info     headers=${free_agent_header}      expected_status=200
     &{header}=   Create Dictionary    cookie=${USER_COOKIE}
-    ${team_response}=    GET  url=${TEAM_API}=${TEAM_ID}    headers=${header}      expected_status=200 
+    ${team_response}=    GET  url=${TEAM_API}=${team-id}    headers=${header}      expected_status=200 
     # Storing drop player id and free agent id in the list (player details)
-    @{Player_details}    Get the drop player Id and free agent player Id    ${TEAM_ID}    ${team_response}    ${free_agent_response}
+    @{Player_details}    Get the droppable player and free-agent player id    ${team-id}    ${team_response}    ${free_agent_response}
     # Setting player details list as global so that it can be used in test case
     Set Global Variable    @{Player_details}
     [Return]    @{Player_details}
@@ -45,8 +46,8 @@ Update payload ${payload} with ${scoring_period_id}, ${drop_player_id} and ${fre
     [Documentation]     Custom keyword to update the payload with the values from API calls
     ${scoring_period_id_updated}=    Update value to JSON    ${payload}    $.scoringPeriodId    ${scoring_period_id}
     Save JSON to file    ${scoring_period_id_updated}    resource/AddPlayer.json    2
-    ${drop_player_id_updated}=    Update value to JSON    ${payload}    $.items[1].playerId    ${Player_details}[0]
-    Save JSON to file    ${drop_player_id_updated}    resource/AddPlayer.json    2
+    ${droppable_player_id_updated}=    Update value to JSON    ${payload}    $.items[1].playerId    ${Player_details}[0]
+    Save JSON to file    ${droppable_player_id_updated}    resource/AddPlayer.json    2
     ${free_agents_player_id_updated}    Update value to JSON    ${payload}    $.items[0].playerId  ${Player_details}[1]
     Save JSON to file    ${free_agents_player_id_updated}    resource/AddPlayer.json    2
     [Return]    ${payload}
@@ -67,24 +68,65 @@ Validate players are added and dropped from ${api_response}
     should be equal as integers    ${player1s_fromTeamId}    ${player2s_toTeamId}
     Should Be Equal As Integers    ${player1s_toTeamId}      ${player2s_fromTeamId}
 
-As League Manager, Update payload ${payload} with ${scoring_period_id}, ${drop_player_id} and ${free_agents_id} for ${TEAM_ID}
+As League Manager, Update payload ${payload} with ${scoring_period_id}, ${drop_player_id} and ${free_agents_id} for team id ${TEAM_ID}
     [Documentation]     Custom keyword to update the payload with the values from API calls
     ${scoring_period_id_updated}=    Update value to JSON    ${payload}    $.scoringPeriodId    ${scoring_period_id}
     Save JSON to file    ${scoring_period_id_updated}    resource/AddPlayerLM.json    2
-    ${drop_player_id_updated}=    Update value to JSON    ${payload}    $.items[1].playerId    ${Player_details}[0]
-    Save JSON to file    ${drop_player_id_updated}    resource/AddPlayerLM.json    2
+    ${droppable_player_id_updated}=    Update value to JSON    ${payload}    $.items[1].playerId    ${Player_details}[0]
+    Save JSON to file    ${droppable_player_id_updated}    resource/AddPlayerLM.json    2
     ${free_agents_player_id_updated}    Update value to JSON    ${payload}    $.items[0].playerId  ${Player_details}[1]
     Save JSON to file    ${free_agents_player_id_updated}    resource/AddPlayerLM.json    2
-    ${Team_id_updated_1}    Update value to JSON    ${payload}    $.teamId     ${TEAM_ID}
-    Save JSON to file    ${Team_id_updated_1}    resource/AddPlayerLM.json    2
-    ${Team_id_updated_2}    Update value to JSON    ${payload}    $.items[0].toTeamId     ${TEAM_ID}
-    Save JSON to file    ${Team_id_updated_2}    resource/AddPlayerLM.json    2
-    ${Team_id_updated_3}    Update value to JSON    ${payload}    $.items[1].fromTeamId   ${TEAM_ID}
-    Save JSON to file    ${Team_id_updated_3}    resource/AddPlayerLM.json    2
+    ${team_id_updated_1}    Update value to JSON    ${payload}    $.teamId     ${TEAM_ID}
+    Save JSON to file    ${team_id_updated_1}    resource/AddPlayerLM.json    2
+    ${team_id_updated_2}    Update value to JSON    ${payload}    $.items[0].toTeamId     ${TEAM_ID}
+    Save JSON to file    ${team_id_updated_2}    resource/AddPlayerLM.json    2
+    ${team_id_updated_3}    Update value to JSON    ${payload}    $.items[1].fromTeamId   ${TEAM_ID}
+    Save JSON to file    ${team_id_updated_3}    resource/AddPlayerLM.json    2
     [Return]    ${payload}
 
 A POST request to ${endpoint} with ${payload} add and drop a player as LM should respond with ${status}
     [Documentation]     Post request for adding and dropping a player as a League Manager in my team
     &{header}=   Create Dictionary      cookie=${USER_COOKIE}
     ${api_response}=    POST  url=${endpoint}     headers=${header}    json=${payload}     expected_status=${status}           
+    [Return]    ${api_response}
+
+Drop a player from my team
+    Fetch scoring period id
+    Get the value of Drop Player Id and Free Agent Player Id of Player    1 
+    &{drop_payload}=    Load JSON from file    resource/droppablePlayer.json
+    ${droppable_players_id_updated}=    Update value to JSON    ${drop_payload}    $.items[0].playerId    ${Player_details}[0]
+    Save JSON to file    ${droppable_players_id_updated}    resource/droppablePlayer.json    2
+    ${save_scoringPeriodId}    Update value to JSON    ${drop_payload}    $..scoringPeriodId    ${scoring_period_id}
+    Save JSON to file    ${save_scoringPeriodId}  resource/droppablePlayer.json     2 
+    &{add_payload}=    Load JSON from file    resource/addablePlayer.json
+    ${addable_players_id_updated}=    Update value to JSON    ${add_payload}    $.scoringPeriodId    ${Player_details}[1]
+    Save JSON to file    ${addable_players_id_updated}    resource/addablePlayer.json    2
+    ${save_scoringPeriodId}    Update value to JSON    ${add_payload}    $..scoringPeriodId    ${scoring_period_id}
+    Save JSON to file    ${save_scoringPeriodId}  resource/addablePlayer.json    2 
+    Set Global Variable    ${add_payload}
+    Set Global Variable    ${drop_payload}
+
+
+# Add a player to my team
+#     Fetch scoring period id  
+#     Get the value of Drop Player Id and Free Agent Player Id of Player    1 
+#     &{add_payload}=    Load JSON from file    resource/addablePlayer.json
+#     ${addable_players_id_updated}=    Update value to JSON    ${add_payload}    $.scoringPeriodId    ${Player_details}[1]
+#     Save JSON to file    ${addable_players_id_updated}    resource/addablePlayer.json    2
+#     ${save_scoringPeriodId}    Update value to JSON    ${add_payload}    $..scoringPeriodId    ${scoring_period_id}
+#     Save JSON to file    ${save_scoringPeriodId}  resource/addablePlayer.json    2 
+#     Set Global Variable    ${add_payload}
+
+A POST request to ${endpoint} drop a player from my team should respond with ${status}
+    [Documentation]     Post request for dropping a player from my team
+    Drop a player from my team
+    &{header}=   Create Dictionary      cookie=${USER_COOKIE}
+    ${api_response}=    POST  url=${endpoint}     headers=${header}    json=${drop_payload}     expected_status=${status}           
+    [Return]    ${api_response}
+
+A POST request to ${endpoint} add a player to my team should respond with ${status}
+    [Documentation]     Post request for adding a player to my team
+    Drop a player from my team
+    &{header}=   Create Dictionary      cookie=${USER_COOKIE}
+    ${api_response}=    POST  url=${endpoint}     headers=${header}    json=${add_payload}     expected_status=${status}           
     [Return]    ${api_response}

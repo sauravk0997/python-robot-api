@@ -3,16 +3,16 @@
   "teamId": "5",
   "type": "FREEAGENT",
   "memberId": "{107F4FFD-2902-4067-80ED-1B60E523AEA6}",
-  "scoringPeriodId": 43,
+  "scoringPeriodId": 44,
   "executionType": "EXECUTE",
   "items": [
     {
-      "playerId": 4066372,
+      "playerId": 3195,
       "type": "ADD",
       "toTeamId": "5"
     },
     {
-      "playerId": 6580,
+      "playerId": 4395626,
       "type": "DROP",
       "fromTeamId": "5"
     }

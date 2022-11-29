@@ -34,30 +34,37 @@ class FantasyAddPlayerValidator(object):
 
         return True
 
-    @keyword('Get the drop player Id and free agent player Id')
-    def get_droppable_and_FreeAgents_players(self, TEAM_ID, response, free_agent_response) -> bool:
+    @keyword('Get the droppable player and free-agent player id')
+    def get_droppable_and_FreeAgents_players(self, teamId, response, free_agent_response) -> int:
         try:
             random_no = random.randint(0, 35)
-            team_id = int(TEAM_ID)-1
+            team_id = int(teamId)-1
             no_of_players = len(response.json()['teams'][team_id]['roster']['entries'])
             no_of_free_agents = len(free_agent_response.json()['players'])
             for agents in range(random_no, (no_of_free_agents)-1):   
-                flag = False       
+                flag = False      
                 free_agents_id = free_agent_response.json()['players'][agents]['id']
                 free_agents_position_id = free_agent_response.json()['players'][agents]['player']['defaultPositionId']
                 for player in range(0, no_of_players):
-                    droppableBool = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"]
-                    lineupLockedBool = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]['lineupLocked']
-                    drop_player_Position_Id = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]['player']['defaultPositionId']
-                    if ((droppableBool == True) and (lineupLockedBool == False)):
-                        if drop_player_Position_Id == free_agents_position_id:
-                            drop_player_id = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]["id"]
-                            flag = True
-                            break        
+                    Entries = response.json()['teams'][team_id]['roster']['entries']
+                    isPlayerDroppable = Entries[player]["playerPoolEntry"]["player"]["droppable"]
+                    isLineupLocked = Entries[player]["playerPoolEntry"]['lineupLocked']
+                    isOnTeamId = Entries[player]["playerPoolEntry"]['onTeamId']
+                    droppable_player_position_id = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]['player']['defaultPositionId'] 
+                    if isOnTeamId == int(teamId):
+                        if ((isPlayerDroppable == True) and (isLineupLocked == False)):
+                            if droppable_player_position_id == free_agents_position_id:
+                                    droppable_player_id = response.json()['teams'][team_id]['roster']['entries'][player]["playerPoolEntry"]["id"]
+                                    flag = True
+                                    break        
+                            else:
+                                continue
+                        else:
+                            continue
                     else:
                         continue
                 if flag == True:
                     break        
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
-        return drop_player_id, free_agents_id    
+        return droppable_player_id, free_agents_id    
