@@ -42,5 +42,8 @@ As a Fantasy League Manager, add and drop a player to other team
     Add Player Schema from ${response} should be valid
 
 Drop and add a player in my team as a Team Owner
+    [Documentation]     Simple validation of the base level schema url and dropping and then adding a player as a TO for Fantasy Games API.
+    [Tags]  valid   fantasy_games       smoke       	CSEAUTO-28331
     A POST request to ${API_BASE}/${TRANSACTION_PARAMS} drop a player from my team should respond with 200
     A POST request to ${API_BASE}/${TRANSACTION_PARAMS} add a player to my team should respond with 200
+    Add Player Schema from ${response} should be valid
