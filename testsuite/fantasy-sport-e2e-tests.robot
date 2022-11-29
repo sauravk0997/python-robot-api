@@ -1,12 +1,13 @@
 *** Settings ***
 Resource    resource/FantasyResource.robot
+Test Setup    Initialize the user cookie
+Test Teardown    Close the current Browser
 
 *** Test Cases ***
 E2E - Validate User Steps to Create Empty Teams within Leagues
     [Documentation]    Create - ESPN Fantasy League and empty teams creation without players within leagues
     ...    Http Methods used - POST, DELETE
     [Tags]    valid    fantasy    CSEAUTO-28333    CSEAUTO-28396
-    Initialize the user cookie
     Create a League and validate the response schema
     Send Invitations, Accept Invitation send by inviter and Create teams
     Delete the created league
@@ -15,7 +16,6 @@ E2E - Validate User Steps as League Creator user to Create Teams with players wi
     [Documentation]    Create - ESPN Fantasy League and teams creation with players as League Creator User
     ...    Http Methods used - POST, DELETE
     [Tags]    valid    fantasy    CSEAUTO-28628    CSEAUTO-28396
-    Initialize the user cookie
     Create a League and validate the response schema
     Send Invitations, Accept Invitation send by inviter and Create teams
     Schedule Offline Draft
@@ -27,7 +27,6 @@ E2E - Validate User Steps as League Creator user to Create Teams and assign Leag
     [Documentation]    Create - ESPN Fantasy League, Teams and assign LM roles to all team owners
     ...    Http Methods used - POST, DELETE, PUT
     [Tags]    valid    fantasy    CSEAUTO-28628    CSEAUTO-28396
-    Initialize the user cookie
     Create a League and validate the response schema
     Send Invitations, Accept Invitation send by inviter and Create teams
     Schedule Offline Draft
@@ -39,7 +38,7 @@ E2E - Validate User Steps as League Creator user to Create Teams and assign Leag
     [Documentation]    Create - ESPN Fantasy League, Teams and assign LM roles to all team owners, add players to teams as respective team owners
     ...    Http Methods used - POST, DELETE, PUT
     [Tags]    valid    fantasy    CSEAUTO-28628    CSEAUTO-28396
-    Initialize the user cookie
+    #Initialize the user cookie
     Create a League and validate the response schema
     Send Invitations, Accept Invitation send by inviter and Create teams
     Schedule Offline Draft

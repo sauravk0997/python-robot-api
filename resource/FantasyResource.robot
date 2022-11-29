@@ -192,3 +192,6 @@ Validate Invitation Accept, Team Creation endpoints responds with successful sta
         #Schema validation
         Fantasy Teams Schema from ${team_response} should be valid
     END
+
+Close the current Browser
+    Browser Shutdown
