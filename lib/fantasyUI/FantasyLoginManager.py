@@ -3,6 +3,7 @@ from robot.api.logger import console
 from robot.api.deco import keyword, not_keyword
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -49,7 +50,15 @@ class FantasyLoginManager(object):
             # TODO: identify other driver types to integrate.
             self.driver = webdriver.Chrome()
         else:
-            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+            console("*****Intializing Chrome Driver*****")
+            # Headless run
+            opt = Options()
+            opt.headless = True
+            opt.add_argument("--window-size=2560,1600")
+            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), chrome_options=opt)
+
+            # Uncomment this line to run code on Head/Browser UI mode
+            #self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
         self.action_chain = ActionChains(self.driver)
 
@@ -105,6 +114,7 @@ class FantasyLoginManager(object):
         if value not in (None,):
             self.cookie_combined = value
         else:
+            console("***** Fetching User cookie***** ")
             self.cookie_combined = f"SWID={self.cookie_swid['value']}; espn_s2={self.cookie_espn_s2['value']};"
 
         return self.cookie_combined
@@ -115,9 +125,10 @@ class FantasyLoginManager(object):
 
         # Attempt to launch the browser, maximize
         try:
+            console("***** Launching Browser with URL *****")
             self.driver.get(url)
             self.driver.maximize_window()
-
+            console("***** Maximizing window *****")
         except Exception as e:
             console(f'There was an error starting the browser.')
             console(e)
@@ -131,11 +142,11 @@ class FantasyLoginManager(object):
             # move to profile icon and hover
             profile_link = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_PROFILE_ICON"])))
             self.action_chain.move_to_element(profile_link).perform()
-
+            console("***** Mouse hovered on Profile icon *****")
             # once dropdown appears, move to login_link and click
             login_link = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_LINK"])))
             self.action_chain.move_to_element(login_link).click().perform()
-
+            console("***** Click on Log in link *****")
         except Exception as e:
             console(e)
             return False
@@ -150,14 +161,17 @@ class FantasyLoginManager(object):
             sleep(1)
             username_field = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_USERNAME_FIELD"])))
             self.action_chain.send_keys_to_element(username_field, username).perform()
+            console("***** Entered username *****")
 
             # look for password field and fill
             password_field = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_PASSWORD_FIELD"])))
             self.action_chain.send_keys_to_element(password_field, password).perform()
+            console("***** Entered password *****")
 
             # locate and press the login button
             login_button = self.driver.find_element(By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_LOGIN_BUTTON"])
             self.action_chain.click(login_button).perform()
+            console("***** Click on Login Button *****")
 
         except Exception as e:
             console(e)
