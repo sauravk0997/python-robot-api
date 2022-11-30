@@ -28,6 +28,7 @@ before_script:
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
+  - whoami
   #- apt-get install -y chromium-browser
   #- wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
   #- apt update -y
