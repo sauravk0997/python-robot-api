@@ -52,8 +52,9 @@ class FantasyLoginManager(object):
         else:
             console("*****Intializing Chrome Driver*****")
             # Headless run
-            opt = Options()
-            opt.headless = True
+            #opt = Options()
+            opt = webdriver.ChromeOptions()
+            opt.add_argument('--headless')
             opt.add_argument('--no-sandbox')
             opt.add_argument('--disable-dev-shm-usage')
             opt.add_argument('--window-size=2560,1600')
