@@ -70,12 +70,11 @@ Get injured players ${myteamid}
     END
     [Return]          ${spid}    ${teamid}    ${playerid}    ${status}
 
-
-Update payload ${payload} with ${teamid} ${playerid} and ${spid}
+Update payload ${payload} with ${teamid} ${playerid} and ${scoring_period_id}
     [Documentation]         Custom keyword to update the DELETE API payload with the values from API calls.
     Set To Dictionary       ${payload}    teamId    ${teamid}
     Set To Dictionary       ${payload["items"][0]}    playerId=${playerid}
     Set To Dictionary       ${payload["items"][0]}    fromTeamId=${teamid}
-    Set To Dictionary       ${payload}    scoringPeriodId    ${spid}
+    Set To Dictionary       ${payload}    scoringPeriodId    ${scoring_period_id}
     set global variable     ${payload}    
     [Return]                ${payload}

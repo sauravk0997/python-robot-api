@@ -39,14 +39,14 @@ class FantasyDropValidator(object):
             teams = response.json()['teams']
             scoring_period_id = response.json()['scoringPeriodId']
             if teamid == '0':
-                print("league manager")
                 for team in teams:
                     print(team['id'])
                     no_of_players = len(team['roster']['entries'])
                     for player in range(0, no_of_players):
-                        if (team['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"]) == True:
-                            team_id = team['roster']['entries'][player]["playerPoolEntry"]["onTeamId"]
-                            player_id = team['roster']['entries'][player]["playerPoolEntry"]["id"]
+                        player_pool_entry = team['roster']['entries'][player]["playerPoolEntry"]
+                        if (player_pool_entry["player"]["droppable"]) == True and (player_pool_entry["status"]) != 'FREEAGENT':
+                            team_id = player_pool_entry["onTeamId"]
+                            player_id = player_pool_entry["id"]
                             break
                         else:
                             continue
@@ -69,9 +69,10 @@ class FantasyDropValidator(object):
         no_of_players = len(teams[teamid]['roster']['entries'])
         drop_player_list = []
         for player in range(0, no_of_players):
-            if (teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["player"]["droppable"]) == drop_flag:
-                player_id = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["id"]
-                team_id = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["onTeamId"]
+            player_entry = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]
+            if (player_entry["player"]["droppable"]) == drop_flag and (player_entry["onTeamId"]) != 0:
+                player_id = player_entry["id"]
+                team_id = player_entry["onTeamId"]
                 drop_player_list.append(player_id)
             else:
                 continue
@@ -101,21 +102,18 @@ class FantasyDropValidator(object):
 
         drop_flag = True
         injured_flag = True
-        # print(self._teamid)
         teams = response.json()['teams']
         scoring_period_id = response.json()['scoringPeriodId']
         teamid = int(teamid) - 1
-        print(teamid)
         team_id = 0
         entries = teams[teamid]['roster']['entries']
         no_of_players = len(entries)
         drop_player_list = []
         for player in range(0, no_of_players):
-            
-            if (entries[player]["playerPoolEntry"]["player"]["droppable"] == drop_flag) and (entries[player]["playerPoolEntry"]["player"]["injured"] == injured_flag):
-                player_id = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["id"]
-                print(player_id)
-                team_id = teams[teamid]['roster']['entries'][player]["playerPoolEntry"]["onTeamId"]
+            player_entry = entries[player]["playerPoolEntry"]
+            if (player_entry["player"]["droppable"] == drop_flag) and (player_entry["player"]["injured"] == injured_flag):
+                player_id = player_entry["id"]
+                team_id = player_entry["onTeamId"]
                 drop_player_list.append(player_id)
             else:
                 continue
