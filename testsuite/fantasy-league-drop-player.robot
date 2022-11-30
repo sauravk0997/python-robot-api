@@ -58,7 +58,7 @@ Drop a player from the list of droppable players of a team as a team manager
     
 Drop a player from the list of undroppable players of a team as a league manager
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-28629
+    [Tags]  valid    fantasy_games    drop    smoke    CSEAUTO-28629
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    4
     ${league_manager}    Set Variable    True
