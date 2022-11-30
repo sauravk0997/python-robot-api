@@ -54,7 +54,9 @@ class FantasyLoginManager(object):
             # Headless run
             opt = Options()
             opt.headless = True
-            opt.add_argument("--window-size=2560,1600")
+            opt.add_argument('--no-sandbox')
+            opt.add_argument('--disable-dev-shm-usage')
+            opt.add_argument('--window-size=2560,1600')
             self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), chrome_options=opt)
 
             # Uncomment this line to run code on Head/Browser UI mode
