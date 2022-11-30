@@ -2,7 +2,7 @@
 Library   Collections
 Library   OperatingSystem
 Library   RequestsLibrary
-Library  ../lib/fantasyUI/FantasyLoginManager.py    driver=${BROWSER}    xpaths=${CURDIR}/resource/xpaths.json    WITH NAME  FLM
+Library  ../lib/fantasyUI/FantasyLoginManager.py    driver=${BROWSER}    xpaths=${CURDIR}/xpaths.json    WITH NAME  FLM
 
 *** Variables ***
 ${HOMEPAGE}     https://www.espn.com/fantasy/
