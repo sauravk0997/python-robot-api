@@ -19,3 +19,5 @@ Auth with Cookie Capture
 
  Browser Shutdown
     FLM.Browser shutdown
+
+*** Test Cases ***
