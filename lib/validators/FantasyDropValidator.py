@@ -13,7 +13,8 @@ class FantasyDropValidator(object):
     def __init__(self, *p, **k):
         pass
 
-    @keyword('Fantasy Drop Schema from ${response} should be valid', tags=['schema checks', 'functional', 'CoreV3'],
+    #Validates the schema of the response.
+    @keyword('Fantasy Drop Schema from ${response} should be valid', tags=['drop-player','schema checks', 'functional', 'CoreV3'],
              types={'response': requests.Response})
     def base_resp_is_valid(self, response) -> bool:
         """
@@ -32,15 +33,16 @@ class FantasyDropValidator(object):
             raise Failure(f'Schema Data failed validation: {ve.messages}')
         return True
 
-    @keyword('Get a player to drop ${response} ${myteamid}', tags=['drop player', 'functional', 'CoreV3'],
+
+    #Selects the first player fromn all the teams for drop
+    @keyword('Get a player to drop ${response} ${myteamid}', tags=['drop-player', 'functional', 'CoreV3'],
              types={'response': requests.Response})
-    def fetch_droppable_players(self, response, teamid) -> bool:
+    def fetch_droppable_players(self, response, teamid):
         try:
             teams = response.json()['teams']
             scoring_period_id = response.json()['scoringPeriodId']
             if teamid == '0':
                 for team in teams:
-                    print(team['id'])
                     no_of_players = len(team['roster']['entries'])
                     for player in range(0, no_of_players):
                         player_pool_entry = team['roster']['entries'][player]["playerPoolEntry"]
@@ -61,11 +63,12 @@ class FantasyDropValidator(object):
         except ValidationError as ve:
             raise Failure(f'Parsing failed :{ve.messages}')
 
+    #custom function to create list of players that are droppable
     def create_player_list(self, response, teamid, drop_flag):
-
         teams = response.json()['teams']
         scoring_period_id = response.json()['scoringPeriodId']
         teamid = int(teamid) - 1
+        team_id = 0
         no_of_players = len(teams[teamid]['roster']['entries'])
         drop_player_list = []
         for player in range(0, no_of_players):
@@ -78,28 +81,28 @@ class FantasyDropValidator(object):
                 continue
         return scoring_period_id, team_id, drop_player_list
 
-    @keyword('Find droppable players of a team ${response} ${myteamid}', tags=['drop player', 'functional', 'CoreV3'],
+    #Finds the droppable player of team
+    @keyword('Find droppable players of a team ${response} ${myteamid}', tags=['drop-player', 'functional', 'CoreV3'],
              types={'response': requests.Response})
-    def get_droppable_players(self, response, teamid) -> bool:
-
+    def get_droppable_players(self, response, teamid):
         drop_flag = True
         scoring_period_id, teamid, drop_player_list = self.create_player_list(
             response, teamid, drop_flag)
         return scoring_period_id, teamid, drop_player_list
 
-    @keyword('Find undroppable players of a team ${response} ${myteamid}', tags=['drop player', 'functional', 'CoreV3'],
+    #Find the undroppable players of a team
+    @keyword('Find undroppable players of a team ${response} ${myteamid}', tags=['drop-player', 'functional', 'CoreV3'],
              types={'response': requests.Response})
-    def get_undroppable_players(self, response, teamid) -> bool:
-
+    def get_undroppable_players(self, response, teamid):
         drop_flag = False
         scoring_period_id, teamid, drop_player_list = self.create_player_list(
             response, teamid, drop_flag)
         return scoring_period_id, teamid, drop_player_list
 
-    @keyword('Find injured players of a team ${response} ${myteamid}', tags=['drop player', 'functional', 'CoreV3'],
+    #Finds the injured players in a team
+    @keyword('Find injured players of a team ${response} ${myteamid}', tags=['drop-player', 'functional', 'CoreV3'],
              types={'response': requests.Response})
-    def get_injured_players(self, response, teamid) -> bool:
-
+    def get_injured_players(self, response, teamid):
         drop_flag = True
         injured_flag = True
         teams = response.json()['teams']

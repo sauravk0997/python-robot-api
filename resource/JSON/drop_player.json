@@ -1,4 +1,5 @@
 {
+    "isLeagueManager": false,
     "teamId": 5,
     "type": "ROSTER",
     "memberId": "{107F4FFD-2902-4067-80ED-1B60E523AEA6}",
