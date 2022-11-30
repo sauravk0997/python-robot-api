@@ -24,15 +24,15 @@ cache:
     - venv/
 
 before_script:
+  - echo "Hello, $GITLAB_USER_LOGIN!"
+  - whoami
   - python --version  # For debugging
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
-  - whoami
   - useradd -d /builds/{GITLAB_USER_LOGIN} -g users -M -N builder
   - chown -R builder:users ..
-  - |     
-    sudo -H -i -u builder sh -e -x << EOS                                                                                                                                                                                                                       
+  - sudo -H -i -u builder sh -e -x << EOS                                                                                                                                                                                                                       
     umask 0077                                                                                                                                                                                                                                               
     export CONTINUOUS_INTEGRATION_SYSTEM="gitlab" TIMESTAMP=`date +%Y%m%d%H%M%S` DEFAULT_TARGET="debug"                                                                                                                                                      
     export PREFIX="\${HOME}/usr" SYSCONFDIR="\${HOME}/etc/conf" LOCALSTATEDIR="\${HOME}/var"                                                                                                                                                                 
