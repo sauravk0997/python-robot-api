@@ -8,85 +8,83 @@ Library              Collections
 Library              OperatingSystem
 Library              RPA.JSON
 Resource             resource/FantasyLeagueResource.Resource
+Resource             resource/suite_setup_teardown.resource
 Library              lib/validators/FantasyMovePlayerValidator.py
 Suite Setup          Get a Fantasy League details
 Suite Teardown       Delete the created league
 
 *** Variables ***
-${own_team_id}     0
+${own_team_id}     1
 
 *** Test Cases ***
-Move the Players by swaping the position of the players in current scoring period
-    [Tags]    swap-players    valid  CSEAUTO-28347  CSEAUTO-
-    ${team_id}     convert to integer    ${own_team_id}
-    Swap the position of players of team ${team_id} in a current scoring period and validate the response
+As a team owner move the Players by swaping the position of the players in current scoring period
+    [Tags]    team-owner-swap-players-current-scoring-period    valid  CSEAUTO-28347  CSEAUTO-28392
+    ${own_team_id}     convert to integer    ${own_team_id}
+    Swap the position of players of team ${own_team_id} in a current scoring period and validate the response
 
 
-Move any lineup Player to Bench in current scoring period
-    [Tags]    moveplayers-to-bench  valid   CSEAUTO-28347   CSEAUTO-28395
-    ${team_id}     convert to integer    ${own_team_id}
-    Move any lineup player to bench of ${team_id} in current scoring period and validate the response schema and check whether the player is moved to bench
+As a team owner move any lineup Player to Bench in current scoring period
+    [Tags]    to-moveplayers-to-bench-current-scoring-period  valid   CSEAUTO-28347   CSEAUTO-28395
+    ${own_team_id}     convert to integer    ${own_team_id}
+    Move any lineup player to bench of ${own_team_id} in current scoring and validate the response
 
 
-Move any Player from Bench to LineUp in current scoringperiod
-    [Tags]    moveplayers-from-bench-to-lineup  valid   CSEAUTO-28347   CSEAUTO-28395
-    ${team_id}     convert to integer    ${own_team_id}
-    Move the eligible Bench Player of ${team_id} to lineup in current scoring period and validate the response schema and check whether the players changed their positions
+As a team owner move any Player from Bench to LineUp in current scoringperiod
+    [Tags]    to-moveplayers-from-bench-to-lineup-current-scoring-period  valid   CSEAUTO-28630   CSEAUTO-28640
+    ${own_team_id}     convert to integer    ${own_team_id}
+    Move the eligible Bench Player of ${own_team_id} to lineup in current scoring and validate the response
 
+As a team owner move the Players by swaping the position of the players in future scoring period
+    [Tags]    to-swap-players-future-scoring-period    valid  CSEAUTO-28630  CSEAUTO-28646
+    ${own_team_id}     convert to integer    ${own_team_id}
+    ${to-swap-players-future-scoring-period_response}     Swap the position of players of ${own_team_id} in future scoring period and validate the response schema
+    Validate players changed their positions    ${to-swap-players-future-scoring-period_response}
 
-Move the Players by swaping the position of the players in future scoring period
-    [Tags]    swap-players-future-scoring-period    valid  CSEAUTO-28630  CSEAUTO-28646
-    ${team_id}     convert to integer    ${own_team_id}
-    ${swap_player_response}     Swap the position of players of ${team_id} in future scoring period and validate the response schema
-    Validate players changed their positions    ${swap_player_response}
+As a team owner move any lineup Player to Bench in future scoring period
+    [Tags]    to-owner-moveplayers-to-bench-future-scoring-period  valid   CSEAUTO-28630   CSEAUTO-28649
+    ${own_team_id}     convert to integer    ${own_team_id}
+    ${to-moveplayers-to-bench-future-scoring-period_response}     Move any lineup player to bench of ${own_team_id} in future scoring period and validate the response schema
+    Validate player is moved to bench ${to-moveplayers-to-bench-future-scoring-period_response}
 
-Move any lineup Player to Bench in future scoring period
-    [Tags]    moveplayers-to-bench  valid   CSEAUTO-28347   CSEAUTO-28395
-    ${team_id}     convert to integer    ${own_team_id}
-    ${lineup_to_bench_response}     Move any lineup player to bench of ${team_id} in future scoring period and validate the response schema
-    Validate player is moved to bench ${lineup_to_bench_response}
-
-Move any Player from Bench to LineUp in future scoringperiod
-    [Tags]    moveplayers-from-bench-to-lineup  valid   CSEAUTO-28347   CSEAUTO-28395
-    ${team_id}     convert to integer    ${own_team_id}
-    ${swap_player_response1}     Move the eligible Bench Player of ${team_id} to lineup in future scoring period and validate the response schema
-    Validate players changed their positions    ${swap_player_response1}
+As a team owner move any Player from Bench to LineUp in future scoringperiod
+    [Tags]     to-owner-moveplayers-from-bench-to-lineup-future-scoring-period    valid    CSEAUTO-28630    CSEAUTO-28651
+    ${own_team_id}     convert to integer    ${own_team_id}
+    ${to-moveplayers-from-bench-to-lineup-future-scoring-period_response}     Move the eligible Bench Player of ${own_team_id} to lineup in future scoring period and validate the response schema
+    Validate players changed their positions    ${to-moveplayers-from-bench-to-lineup-future-scoring-period_response}
 
 As a League manager swap the position of players of any team in a league in current scoring period
-    [Tags]    swap-players    valid  CSEAUTO-28347  CSEAUTO-28392
+    [Tags]    lm-swap-players-current-scoring-period    valid  CSEAUTO-28347  CSEAUTO-28392
     ${team_id}      Get any different team_id
     Swap the position of players of team ${team_id} in a current scoring period and validate the response
 
 
 As a League manager move any lineup Player to Bench of any team in a league in current scoring period
-    [Tags]    moveplayers-to-bench  valid   CSEAUTO-28347   CSEAUTO-28395
+    [Tags]    lm-moveplayers-to-bench-current-scoring-period  valid   CSEAUTO-28630   CSEAUTO-28641
     ${team_id}      Get any different team_id
-    Move the eligible Bench Player of ${team_id} to lineup in current scoring period and validate the response schema and check whether the players changed their positions
-
+     Move any lineup player to bench of ${team_id} in current scoring and validate the response
 
 As a League manager move any Player from Bench to LineUp of any team in a league in current scoringperiod
-    [Tags]    moveplayers-from-bench-to-lineup  valid   CSEAUTO-28347   CSEAUTO-28395
+    [Tags]    lm-moveplayers-from-bench-to-lineup-current-scoring-period  valid   CSEAUTO-28630  CSEAUTO-28644
     ${team_id}      Get any different team_id
-    Move the eligible Bench Player of ${team_id} to lineup in current scoring period and validate the response schema and check whether the players changed their positions
-
+    Move the eligible Bench Player of ${team_id} to lineup in current scoring and validate the response
 
 As a League manager swap the position of players of any team in a league in future scoring period
-    [Tags]    swap-players-future-scoring-period    valid  CSEAUTO-28630  CSEAUTO-28646
+    [Tags]    lm-swap-players-future-scoring-period    valid  CSEAUTO-28630  CSEAUTO-28652
     ${team_id}      Get any different team_id from future scoring period
-    ${swap_player_response3}     Swap the position of players of ${team_id} in future scoring period and validate the response schema
-    Validate players changed their positions    ${swap_player_response3}
+    ${lm-swap-players-future-scoring-period_response}     Swap the position of players of ${team_id} in future scoring period and validate the response schema
+    Validate players changed their positions    ${lm-swap-players-future-scoring-period_response}
 
 As a League manager move any lineup Player to Bench of any team in a league in future scoring period
-    [Tags]    moveplayers-to-bench  valid   CSEAUTO-28347   CSEAUTO-28395
+    [Tags]    lm-moveplayers-to-bench-future-scoring-period  valid   CSEAUTO-28630   CSEAUTO-28653
     ${team_id}      Get any different team_id from future scoring period
-    ${lineup_to_bench_response}     Move any lineup player to bench of ${team_id} in future scoring period and validate the response schema
-    Validate player is moved to bench ${lineup_to_bench_response}
+    ${lm-moveplayers-to-bench-future-scoring-period_response}     Move any lineup player to bench of ${team_id} in future scoring period and validate the response schema
+    Validate player is moved to bench ${lm-moveplayers-to-bench-future-scoring-period_response}
 
 As a League manager move any Player from Bench to LineUp of any team in a league in future scoringperiod
-    [Tags]    moveplayers-from-bench-to-lineup  valid   CSEAUTO-28347   CSEAUTO-28395
+    [Tags]     lm-moveplayers-from-bench-to-lineup-future-scoring-period valid   CSEAUTO-28630   CSEAUTO-28654
     ${team_id}      Get any different team_id from future scoring period
-    ${swap_player_response2}    Move the eligible Bench Player of ${team_id} to lineup in future scoring period and validate the response schema
-    Validate players changed their positions    ${swap_player_response2}
+    ${lm-moveplayers-from-bench-to-lineup-future-scoring-period_response}     Move the eligible Bench Player of ${team_id} to lineup in future scoring period and validate the response schema
+    Validate players changed their positions     ${lm-moveplayers-from-bench-to-lineup-future-scoring-period_response}
 
 
 

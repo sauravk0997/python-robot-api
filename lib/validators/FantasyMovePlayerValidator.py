@@ -34,25 +34,23 @@ class FantasyMovePlayerValidator(object):
     @keyword('Get the bench players details of team ${team_id} from ${teams_response}')
     def get_the_bench_players_details_of_team(self, team_id, teams_response) -> list:
         try:
-            if team_id != 0:
-                team_id = team_id - 1
             no_of_players_on_bench = 0
             bench_players_player_id = []
             bench_player_eligible_slots = []
             for players in range(0, 13):
                 lineup_slot_id = JSON().get_value_from_json(teams_response,
-                                                            f'$.teams[{team_id}].roster.entries[{players}].lineupSlotId')
+                                                            f'$.teams[{team_id-1}].roster.entries[{players}].lineupSlotId')
                 if lineup_slot_id == 12:  # Bench players line up slot id is 12
                     no_of_players_on_bench += 1
                     line_up_status = JSON().get_value_from_json(teams_response,
-                                                                f'$.teams[{team_id}].roster.entries[{players}]'
+                                                                f'$.teams[{team_id-1}].roster.entries[{players}]'
                                                                 f'.playerPoolEntry.lineupLocked')
                     if line_up_status is False:
                         player_id = JSON().get_value_from_json(teams_response,
-                                                               f'$.teams[{team_id}].roster.entries[{players}].playerId')
+                                                               f'$.teams[{team_id-1}].roster.entries[{players}].playerId')
                         bench_players_player_id += [player_id]
                         eligible_slots = JSON().get_value_from_json(teams_response,
-                                                                    f'$.teams[{team_id}].roster.entries[{players}].'
+                                                                    f'$.teams[{team_id-1}].roster.entries[{players}].'
                                                                     f'playerPoolEntry.player.eligibleSlots')
                         bench_player_eligible_slots += [eligible_slots]
                     else:
@@ -64,8 +62,6 @@ class FantasyMovePlayerValidator(object):
     @keyword('check for ${bench_players} eligibility of team ${team_id} for moving to lineup from ${team_response}')
     def check_bench_player_eligibility_for_moving_to_lineup(self, bench_players, team_id, team_response) -> list:
         try:
-            if team_id != 0:
-                team_id = team_id - 1
             no_players_on_bench = bench_players[0]
             bench_players_player_ids = bench_players[1]
             bench_players_eligible_slots = bench_players[2]
@@ -82,21 +78,23 @@ class FantasyMovePlayerValidator(object):
                         eligible_slots = bench_players_eligible_slots[bench_player]
                         lineup_slot = eligible_slots[bench_player_slots]
                         for lineup_players in range(0, 13):
-                            lineup_slot_id = JSON().get_value_from_json(team_response, f'$.teams[{team_id}].roster.entries[{lineup_players}].lineupSlotId')
+                            lineup_slot_id = JSON().get_value_from_json(team_response,
+                                                                        f'$.teams[{team_id-1}].roster.entries[{lineup_players}].lineupSlotId')
 
                             if lineup_slot_id == lineup_slot:
-                                line_up_status = JSON().get_value_from_json(team_response, f'$.teams[{team_id}].roster.entries[{lineup_players}].playerPoolEntry.lineupLocked')
+                                line_up_status = JSON().get_value_from_json(team_response,
+                                                                            f'$.teams[{team_id-1}].roster.entries[{lineup_players}].playerPoolEntry.lineupLocked')
                                 if line_up_status is False:
                                     line_up_player_id = JSON().get_value_from_json(team_response,
-                                                                                   f'$.teams[{team_id}].roster.entries[{lineup_players}].playerId')
-                                    lineup_slot_id = JSON().get_value_from_json(team_response, f'$.teams[{team_id}].roster.entries[{lineup_players}].lineupSlotId')
+                                                                                   f'$.teams[{team_id-1}].roster.entries[{lineup_players}].playerId')
+                                    lineup_slot_id = JSON().get_value_from_json(team_response,
+                                                                                f'$.teams[{team_id-1}].roster.entries[{lineup_players}].lineupSlotId')
                                     return [bench_player_id, line_up_player_id, lineup_slot_id]
                             else:
                                 continue
                 logging.info("Unable to Move Bench Players to lineup as the lineup transactions are locked")
         except ValidationError as ve:
             raise Failure(f'Data validation failed: {ve.messages}')
-
 
     @keyword('Generate a random future scoring period between ${current} and ${final}')
     def generate_random_future_scoring_period(self, current, final):
@@ -109,35 +107,33 @@ class FantasyMovePlayerValidator(object):
     @keyword('Get the Eligible players details who can swap their positions from response')
     def get_eligible_players_details_to_swap_positions(self, team_id, response):
         try:
-            if team_id != 0:
-                team_id = team_id - 1
             for line_up_player in range(0, 13):
-                player1_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id}].roster.entries[{line_up_player}].lineupSlotId')
+                player1_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{line_up_player}].lineupSlotId')
                 if player1_lineup_slot_id == 12:
                     continue
                 else:
-                    line_up_status = JSON().get_value_from_json(response, f'$.teams[{team_id}].roster.entries[{line_up_player}].playerPoolEntry.lineupLocked')
+                    line_up_status = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{line_up_player}].playerPoolEntry.lineupLocked')
                     if line_up_status is False:
-                        eligible_slot_player1 = JSON().get_value_from_json(response, f'$.teams[{team_id}].roster.entries[{line_up_player}].playerPoolEntry.player.eligibleSlots')
+                        eligible_slot_player1 = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{line_up_player}].playerPoolEntry.player.eligibleSlots')
                     else:
                         continue
                 for compare_line_up_player in range(0, 13):
                     if line_up_player == compare_line_up_player:
                         continue
-                    player2_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id}].roster.entries[{compare_line_up_player}].lineupSlotId')
+                    player2_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{compare_line_up_player}].lineupSlotId')
                     if (player2_lineup_slot_id == 12) or (player2_lineup_slot_id == player1_lineup_slot_id):
                         continue
                     else:
                         line_up_status = JSON().get_value_from_json(response,
-                                                                    f'$.teams[{team_id}].roster.entries[{compare_line_up_player}].playerPoolEntry.lineupLocked')
+                                                                    f'$.teams[{team_id-1}].roster.entries[{compare_line_up_player}].playerPoolEntry.lineupLocked')
                         if line_up_status is False:
-                            eligible_slot_player2 = JSON().get_value_from_json(response, f'$.teams[{team_id}].roster.entries[{compare_line_up_player}].playerPoolEntry.player.eligibleSlots')
+                            eligible_slot_player2 = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{compare_line_up_player}].playerPoolEntry.player.eligibleSlots')
                             if eligible_slot_player1 == eligible_slot_player2:
-                                line_up_player_player_id = JSON().get_value_from_json(response, f'$.teams[{team_id}].roster.entries[{line_up_player}].playerId')
+                                line_up_player_player_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{line_up_player}].playerId')
 
-                                compare_line_up_player_player_id = JSON().get_value_from_json(response, f'$.teams[{team_id}].roster.entries[{compare_line_up_player}].playerId')
-                                line_up_player_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id}].roster.entries[{line_up_player}].lineupSlotId')
-                                compare_line_up_player_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id}].roster.entries[{compare_line_up_player}].lineupSlotId')
+                                compare_line_up_player_player_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{compare_line_up_player}].playerId')
+                                line_up_player_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{line_up_player}].lineupSlotId')
+                                compare_line_up_player_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{compare_line_up_player}].lineupSlotId')
                                 return line_up_player_player_id, compare_line_up_player_player_id, line_up_player_lineup_slot_id, compare_line_up_player_lineup_slot_id
             return
         except ValidationError as ve:
@@ -146,17 +142,15 @@ class FantasyMovePlayerValidator(object):
     @keyword('Get any random lineup player details of team ${team_id} from ${response} to move on bench')
     def get_any_random_lineup_player_details(self, team_id, teams_response) -> list:
         try:
-            if team_id != 0:
-                team_id = team_id - 1
             for players in range(0, 13):
-                lineup_slot_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id}].roster.entries[{players}].lineupSlotId')
+                lineup_slot_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].lineupSlotId')
                 if lineup_slot_id == 12:  # Bench players line up slot id is 12
                     continue
                 else:
-                    line_up_status = JSON().get_value_from_json(teams_response, f'$.teams[{team_id}].roster.entries[{players}].playerPoolEntry.lineupLocked')
+                    line_up_status = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].playerPoolEntry.lineupLocked')
                     if line_up_status is False:
-                        player_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id}].roster.entries[{players}].playerId')
-                        lineup_slot_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id}].roster.entries[{players}].lineupSlotId')
+                        player_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].playerId')
+                        lineup_slot_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].lineupSlotId')
                         return [player_id, lineup_slot_id]
             logging.info('currently no lineup player can be moved to Bench as lineup is locked')
         except ValidationError as ve:
@@ -184,42 +178,3 @@ class FantasyMovePlayerValidator(object):
         for objects in response_dict:
             if objects.get("inviteType") == "COPY_TO_CLIPBOARD":
                 return objects.get("id")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
