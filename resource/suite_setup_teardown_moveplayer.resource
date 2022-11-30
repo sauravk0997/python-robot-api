@@ -9,6 +9,9 @@ Library             lib/validators/FantasyMovePlayerValidator.py
 
 *** Variables ***
 ${fantasy_url}                   https://fantasy.espn.com
+${BASEBALL_SPORT}                fba
+${SEASON}                        2023
+${SEGMENT}                       0
 ${create_league_url}             ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues?createAsTypeId=2
 ${user_cookie}                   SWID={95096766-E11A-4C94-BB21-2BA8F8C0D3EF}; espn_s2=AECrGNEO5w1VlDOoJEgL1wquDjPrYr1r0XR9A5zJln93t968%2BICfJi3k32jhzzwTZpEzvBWbOf0%2FFx0ObwGqatXTiooE1n3SkjICYmcbiqCYUJjHQp6e9JyUT67qTYAVlmpWwiir8Auj6AMyk5Du%2BySpeboBjJLUm%2BPGsk7ajvLy26t8PgyzWpnbM8EzazCCLqAkeLNjEe1PdV6%2FmHj9t2fZgfusdIAns%2FpsBtgNQtBnzwhFUhrJ6JvyLFF0syVwv%2FGszPfVEzIwfOtXGHbSkdsI3WlAqQc61wm6q%2BkLeUxVnw%3D%3D;
 @{user_emails}                   test_api1@gmail.com    test_api2@gmail.com    test_api4@gmail.com

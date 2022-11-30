@@ -7,8 +7,8 @@ Library              RequestsLibrary
 Library              Collections
 Library              OperatingSystem
 Library              RPA.JSON
-Resource             resource/FantasyLeagueResource.Resource
-Resource             resource/suite_setup_teardown.resource
+Resource             resource/FantasyLeague.Resource
+Resource             resource/suite_setup_teardown_moveplayer.resource
 Library              lib/validators/FantasyMovePlayerValidator.py
 Suite Setup          Get a Fantasy League details
 Suite Teardown       Delete the created league

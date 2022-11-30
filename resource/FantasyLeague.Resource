@@ -118,7 +118,7 @@ Move the eligible Bench Player of ${team_id} to lineup in current scoring and va
          Save JSON to file    ${type}                  resource/JSON/move_from_bench_to_lineup_template.json    2
          Save JSON to file    ${team}                  resource/JSON/move_from_bench_to_lineup_template.json    2
          set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
-         ${bench_to_lineup_response}    A post request to ${MovePlayer_url} using ${headers} with ${move-from-bench-to-lineup-payload} should respond with 200
+         ${bench_to_lineup_response}    A post request to ${MovePlayer_url} using ${headers} with ${move_from_bench_to_lineup_payload} should respond with 200
          Move Player Schema from ${bench_to_lineup_response} should be valid
          Validate players changed their positions   ${bench_to_lineup_response}
     ELSE
@@ -203,7 +203,7 @@ Move the eligible Bench Player of ${team_id} to lineup in future scoring period 
     Save JSON to file    ${lineup_slot}              resource/JSON/move_from_bench_to_lineup_template.json    2
     Save JSON to file    ${slot}                     resource/JSON/move_from_bench_to_lineup_template.json    2
     set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
-    ${bench_to_lineup_response}    A post request to ${MovePlayer_url} using ${headers} with ${move-from-bench-to-lineup-template-payload} should respond with 200
+    ${bench_to_lineup_response}    A post request to ${MovePlayer_url} using ${headers} with ${move_from_bench_to_lineup_template_payload} should respond with 200
     Move Player Schema from ${bench_to_lineup_response} should be valid
     [Return]    ${bench_to_lineup_response}
 
