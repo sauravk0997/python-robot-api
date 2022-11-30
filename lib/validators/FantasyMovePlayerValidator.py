@@ -78,17 +78,12 @@ class FantasyMovePlayerValidator(object):
                         eligible_slots = bench_players_eligible_slots[bench_player]
                         lineup_slot = eligible_slots[bench_player_slots]
                         for lineup_players in range(0, 13):
-                            lineup_slot_id = JSON().get_value_from_json(team_response,
-                                                                        f'$.teams[{team_id-1}].roster.entries[{lineup_players}].lineupSlotId')
-
+                            lineup_slot_id = JSON().get_value_from_json(team_response, f'$.teams[{team_id-1}].roster.entries[{lineup_players}].lineupSlotId')
                             if lineup_slot_id == lineup_slot:
-                                line_up_status = JSON().get_value_from_json(team_response,
-                                                                            f'$.teams[{team_id-1}].roster.entries[{lineup_players}].playerPoolEntry.lineupLocked')
+                                line_up_status = JSON().get_value_from_json(team_response, f'$.teams[{team_id-1}].roster.entries[{lineup_players}].playerPoolEntry.lineupLocked')
                                 if line_up_status is False:
-                                    line_up_player_id = JSON().get_value_from_json(team_response,
-                                                                                   f'$.teams[{team_id-1}].roster.entries[{lineup_players}].playerId')
-                                    lineup_slot_id = JSON().get_value_from_json(team_response,
-                                                                                f'$.teams[{team_id-1}].roster.entries[{lineup_players}].lineupSlotId')
+                                    line_up_player_id = JSON().get_value_from_json(team_response, f'$.teams[{team_id-1}].roster.entries[{lineup_players}].playerId')
+                                    lineup_slot_id = JSON().get_value_from_json(team_response, f'$.teams[{team_id-1}].roster.entries[{lineup_players}].lineupSlotId')
                                     return [bench_player_id, line_up_player_id, lineup_slot_id]
                             else:
                                 continue
@@ -97,7 +92,7 @@ class FantasyMovePlayerValidator(object):
             raise Failure(f'Data validation failed: {ve.messages}')
 
     @keyword('Generate a random future scoring period between ${current} and ${final}')
-    def generate_random_future_scoring_period(self, current, final):
+    def generate_random_future_scoring_period(self, current, final) -> int:
         try:
             future_scoring_period = random.randint(current+1, final)
             return future_scoring_period
@@ -105,7 +100,7 @@ class FantasyMovePlayerValidator(object):
             raise Failure(f'Data validation failed: {ve.messages}')
 
     @keyword('Get the Eligible players details who can swap their positions from response')
-    def get_eligible_players_details_to_swap_positions(self, team_id, response):
+    def get_eligible_players_details_to_swap_positions(self, team_id, response) -> list:
         try:
             for line_up_player in range(0, 13):
                 player1_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{line_up_player}].lineupSlotId')
@@ -130,17 +125,16 @@ class FantasyMovePlayerValidator(object):
                             eligible_slot_player2 = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{compare_line_up_player}].playerPoolEntry.player.eligibleSlots')
                             if eligible_slot_player1 == eligible_slot_player2:
                                 line_up_player_player_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{line_up_player}].playerId')
-
                                 compare_line_up_player_player_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{compare_line_up_player}].playerId')
                                 line_up_player_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{line_up_player}].lineupSlotId')
                                 compare_line_up_player_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{compare_line_up_player}].lineupSlotId')
-                                return line_up_player_player_id, compare_line_up_player_player_id, line_up_player_lineup_slot_id, compare_line_up_player_lineup_slot_id
-            return
+                                return [line_up_player_player_id, compare_line_up_player_player_id, line_up_player_lineup_slot_id, compare_line_up_player_lineup_slot_id]
+            logging.info('currently no lineup players can be swapped as lineup is locked')
         except ValidationError as ve:
             raise Failure(f'Data validation failed: {ve.messages}')
 
-    @keyword('Get any random lineup player details of team ${team_id} from ${response} to move on bench')
-    def get_any_random_lineup_player_details(self, team_id, teams_response) -> list:
+    @keyword('Get any lineup player details of team ${team_id} from ${response} to move on bench')
+    def get_any_lineup_player_details(self, team_id, teams_response) -> list:
         try:
             for players in range(0, 13):
                 lineup_slot_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].lineupSlotId')
