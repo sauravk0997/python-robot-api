@@ -26,7 +26,7 @@ cache:
 before_script:
   - echo "Hello, $GITLAB_USER_LOGIN!"
   - echo "HOME, $HOME"
-  - %gitlab-runner ALL = (ALL) NOPASSWD: ALL
+  #- %gitlab-runner ALL = (ALL) NOPASSWD: ALL
   - whoami
   - python --version  # For debugging
   - pip install virtualenv
