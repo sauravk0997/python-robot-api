@@ -26,7 +26,7 @@ A post request to ${endpoint} using ${header} with ${payload} should respond wit
 
 Get the league details from League_info_url for current scoring Period
         set test variable    ${League_info_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}?${teaminfo_query_param}
-        ${league_info_response}         GET   url=${League_info_url}     headers=${headers}
+        ${league_info_response}         GET   url=${League_info_url}     headers=${header_value}
         ${current_scoringPeriodId}      get from dictionary  ${league_info_response.json()}      scoringPeriodId
         ${final_scoringPeriodId}        get value from json  ${league_info_response.json()}      $. status.finalScoringPeriod
         #making global in order to use whenever required in the testcases
@@ -36,7 +36,7 @@ Get the league details from League_info_url for current scoring Period
 
 Get the league details of any from League_info_url for any future scoring period ${futurescoring_period_id}
      set test variable    ${League_info_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}?scoringPeriodId=${futurescoring_period_id}&view=mRoster
-     ${league_info_response}         GET   url=${League_info_url}     headers=${headers}
+     ${league_info_response}         GET   url=${League_info_url}     headers=${header_value}
      [Return]        ${league_info_response}
 
 Swap the position of players of team ${team_id} in a current scoring period and validate the response
@@ -65,7 +65,7 @@ Swap the position of players of team ${team_id} in a current scoring period and 
          Save JSON to file    ${scoring_period}                              resource/JSON/swap_player_template.json    2
          Save JSON to file    ${team}                                        resource/JSON/swap_player_template.json    2
          set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
-         ${swap_player_response}    A post request to ${MovePlayer_url} using ${headers} with ${swap_player_payload} should respond with 200
+         ${swap_player_response}    A post request to ${MovePlayer_url} using ${header_value} with ${swap_player_payload} should respond with 200
          Move Player Schema from ${swap_player_response} should be valid
          Validate players changed their positions   ${swap_player_response}
     ELSE
@@ -90,7 +90,7 @@ Move any lineup player to bench of ${team_id} in current scoring and validate th
         save json to file    ${type}                              resource/JSON/move_to_bench_template.json    2
         save json to file    ${team}                              resource/JSON/move_to_bench_template.json    2
         set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
-        ${lineup_to_bench_response}     A post request to ${MovePlayer_url} using ${headers} with ${Move_to_Bench_payload} should respond with 200
+        ${lineup_to_bench_response}     A post request to ${MovePlayer_url} using ${header_value} with ${Move_to_Bench_payload} should respond with 200
         Move Player Schema from ${lineup_to_bench_response} should be valid
         Validate player is moved to bench ${lineup_to_bench_response}
     ELSE
@@ -118,7 +118,7 @@ Move the eligible Bench Player of ${team_id} to lineup in current scoring and va
          Save JSON to file    ${type}                  resource/JSON/move_from_bench_to_lineup_template.json    2
          Save JSON to file    ${team}                  resource/JSON/move_from_bench_to_lineup_template.json    2
          set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
-         ${bench_to_lineup_response}    A post request to ${MovePlayer_url} using ${headers} with ${move_from_bench_to_lineup_payload} should respond with 200
+         ${bench_to_lineup_response}    A post request to ${MovePlayer_url} using ${header_value} with ${move_from_bench_to_lineup_payload} should respond with 200
          Move Player Schema from ${bench_to_lineup_response} should be valid
          Validate players changed their positions   ${bench_to_lineup_response}
     ELSE
@@ -151,29 +151,25 @@ Swap the position of players of ${team_id} in future scoring period and validate
     Save JSON to file    ${type}                            resource/JSON/swap_player_template.json    2
     save json to file    ${team}                            resource/JSON/swap_player_template.json    2
     set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
-    ${swap_player_response}    A post request to ${MovePlayer_url} using ${headers} with ${swap_player_payload} should respond with 200
+    ${swap_player_response}    A post request to ${MovePlayer_url} using ${header_value} with ${swap_player_payload} should respond with 200
     Move Player Schema from ${swap_player_response} should be valid
     [Return]     ${swap_player_response}
 
 Move any lineup player to bench of ${team_id} in future scoring period and validate the response schema
-    ${future_scoring_period_id}    Generate a random future scoring period between ${current_scoringPeriodId} and ${final_scoringPeriodId}
-    ${league_info_response}        Get the league details of any from League_info_url for any future scoring period ${future_scoring_period_id}
-    @{values}   Get any lineup player details of team ${team_id} from ${league_info_response.json()} to move on bench
-    IF    ${team_id} == 0
-      ${team_id}  evaluate    ${team_id} + 1
-      set global variable   ${team_id}
-    END
+    ${future_scoring_period_id}     Generate a random future scoring period between ${current_scoringPeriodId} and ${final_scoringPeriodId}
+    ${league_info_response}         Get the league details of any from League_info_url for any future scoring period ${future_scoring_period_id}
+    @{lineup_player_details_list}   Get any lineup player details of team ${team_id} from ${league_info_response.json()} to move on bench
     &{move_to_bench_payload}        load json from file    resource/JSON/move_to_bench_template.json
-    ${player_id1}      Update value to JSON   ${move_to_bench_payload}     $.items[0].playerId                    ${values}[0]
-    ${id1}             Update value to JSON   ${move_to_bench_payload}     $.items[0].fromLineupSlotId            ${values}[1]
-    ${type}            Update value to JSON   ${move_to_bench_payload}     $.type                                 FUTURE_ROSTER
-    ${team}            Update value to JSON   ${move_to_bench_payload}     $.teamId                               ${team_id}
-    ${scoring_period}  Update value to JSON   ${move_to_bench_payload}     $.scoringPeriodId                      ${future_scoring_period_id}
-    save json to file    ${player_id1}    resource/JSON/move_to_bench_template.json    2
-    save json to file    ${id1}           resource/JSON/move_to_bench_template.json    2
+    ${player_id}                       Update value to JSON   ${move_to_bench_payload}     $.items[0].playerId                    ${lineup_player_details_list}[0]
+    ${from_lineup_slot_id}             Update value to JSON   ${move_to_bench_payload}     $.items[0].fromLineupSlotId            ${lineup_player_details_list}[1]
+    ${type}                            Update value to JSON   ${move_to_bench_payload}     $.type                                 FUTURE_ROSTER
+    ${team}                            Update value to JSON   ${move_to_bench_payload}     $.teamId                               ${team_id}
+    ${scoring_period}                  Update value to JSON   ${move_to_bench_payload}     $.scoringPeriodId                      ${future_scoring_period_id}
+    save json to file    ${player_id}    resource/JSON/move_to_bench_template.json    2
+    save json to file    ${from_lineup_slot_id}           resource/JSON/move_to_bench_template.json    2
     Save JSON to file    ${type}          resource/JSON/move_to_bench_template.json    2
     set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
-    ${lineup_to_bench_response}     A post request to ${MovePlayer_url} using ${headers} with ${Move_to_Bench_payload} should respond with 200
+    ${lineup_to_bench_response}     A post request to ${MovePlayer_url} using ${header_value} with ${Move_to_Bench_payload} should respond with 200
     Move Player Schema from ${lineup_to_bench_response} should be valid
     [Return]    ${lineup_to_bench_response}
 
@@ -182,10 +178,6 @@ Move the eligible Bench Player of ${team_id} to lineup in future scoring period 
     ${league_info_response}        Get the league details of any from League_info_url for any future scoring period ${future_scoring_period_id}
     @{Bench_players_details}       Get the bench players details of team ${team_id} from ${league_info_response.json()}
     @{Eligible_players_details}    check for ${Bench_players_details} eligibility of team ${team_id} for moving to lineup from ${league_info_response.json()}
-    IF    ${team_id} == 0
-      ${team_id}  evaluate    ${team_id} + 1
-      set global variable   ${team_id}
-    END
     &{move_from_bench_to_lineup_template_payload}    Load JSON from file    resource/JSON/move_from_bench_to_lineup_template.json
     ${player_id}                                     Update value to JSON   ${move_from_bench_to_lineup_template_payload}      $.items[0].playerId             ${Eligible_players_details}[0]
     ${lineup_player_id}                              Update value to JSON   ${move_from_bench_to_lineup_template_payload}     $.items[1].playerId     ${Eligible_players_details}[1]
@@ -203,7 +195,7 @@ Move the eligible Bench Player of ${team_id} to lineup in future scoring period 
     Save JSON to file    ${lineup_slot}              resource/JSON/move_from_bench_to_lineup_template.json    2
     Save JSON to file    ${slot}                     resource/JSON/move_from_bench_to_lineup_template.json    2
     set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
-    ${bench_to_lineup_response}    A post request to ${MovePlayer_url} using ${headers} with ${move_from_bench_to_lineup_template_payload} should respond with 200
+    ${bench_to_lineup_response}    A post request to ${MovePlayer_url} using ${header_value} with ${move_from_bench_to_lineup_template_payload} should respond with 200
     Move Player Schema from ${bench_to_lineup_response} should be valid
     [Return]    ${bench_to_lineup_response}
 
@@ -224,8 +216,6 @@ Validate player is moved to bench ${response}
     should be equal as integers    ${toLineupSlotId}    ${BenchSlotId}
 
 Get any different team_id
-     &{headers}  create dictionary    cookie=${user_cookie}
-     Set Global Variable    ${headers}
     ${league_info_response}     Get the league details from League_info_url for current scoring Period
     ${team_id}      get any different team id from response   ${league_info_response.json()}    ${league_creator_swid}
     [Return]    ${team_id}

@@ -165,10 +165,3 @@ class FantasyMovePlayerValidator(object):
             return team_id[random_team_id]
         except ValidationError as ve:
             raise Failure(f'Data validation failed: {ve.messages}')
-
-    @keyword('Get COPY_TO_CLIPBOARD invite id')
-    def get_copytoclipboard_invite_id(self, response) -> str:
-        response_dict = response.get("invited")
-        for objects in response_dict:
-            if objects.get("inviteType") == "COPY_TO_CLIPBOARD":
-                return objects.get("id")

@@ -7,11 +7,11 @@ Library              RequestsLibrary
 Library              Collections
 Library              OperatingSystem
 Library              RPA.JSON
-Resource             resource/FantasyLeague.Resource
+Resource             resource/FantasyMovePlayer.Resource
 Resource             resource/suite_setup_teardown_moveplayer.resource
 Library              lib/validators/FantasyMovePlayerValidator.py
 Suite Setup          Get a Fantasy League details
-Suite Teardown       Delete the created league
+Suite Teardown       Delete League
 
 *** Variables ***
 ${own_team_id}     1
@@ -21,7 +21,6 @@ As a team owner move the Players by swaping the position of the players in curre
     [Tags]    team-owner-swap-players-current-scoring-period    valid  CSEAUTO-28347  CSEAUTO-28392
     ${own_team_id}     convert to integer    ${own_team_id}
     Swap the position of players of team ${own_team_id} in a current scoring period and validate the response
-
 
 As a team owner move any lineup Player to Bench in current scoring period
     [Tags]    to-moveplayers-to-bench-current-scoring-period  valid   CSEAUTO-28347   CSEAUTO-28395
