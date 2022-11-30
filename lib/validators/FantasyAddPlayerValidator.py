@@ -41,10 +41,10 @@ class FantasyAddPlayerValidator(object):
             team_id = int(teamId)-1
             no_of_players = len(droppable_player_response.json()['teams'][team_id]['roster']['entries'])
             no_of_free_agents = len(free_agent_response.json()['players'])
-            for agents in range(random_no, (no_of_free_agents)-1):   
+            for agent in range(random_no, (no_of_free_agents)-1):   
                 flag = False      
-                free_agents_id = free_agent_response.json()['players'][agents]['id']
-                free_agents_position_id = free_agent_response.json()['players'][agents]['player']['defaultPositionId']
+                free_agents_id = free_agent_response.json()['players'][agent]['id']
+                free_agents_position_id = free_agent_response.json()['players'][agent]['player']['defaultPositionId']
                 for player in range(0, no_of_players):
                     entries = droppable_player_response.json()['teams'][team_id]['roster']['entries']
                     isPlayerDroppable = entries[player]["playerPoolEntry"]["player"]["droppable"]

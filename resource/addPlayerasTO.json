@@ -2,19 +2,13 @@
   "isLeagueManager": false,
   "teamId": 1,
   "type": "FREEAGENT",
-  "memberId": "{107F4FFD-2902-4067-80ED-1B60E523AEA6}",
   "scoringPeriodId": 45,
   "executionType": "EXECUTE",
   "items": [
     {
-      "playerId": 4277843,
+      "playerId": 3155526,
       "type": "ADD",
       "toTeamId": 1
-    },
-    {
-      "playerId": 2528426,
-      "type": "DROP",
-      "fromTeamId": 1
     }
   ]
 }
