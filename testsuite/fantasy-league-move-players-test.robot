@@ -69,19 +69,19 @@ As a League manager move any Player from Bench to LineUp of any team in a league
 
 As a League manager swap the position of players of any team in a league in future scoring period
     [Tags]    lm-swap-players-future-scoring-period    valid  CSEAUTO-28630  CSEAUTO-28652
-    ${team_id}      Get any different team_id from future scoring period
+    ${team_id}      Get any different team_id
     ${lm-swap-players-future-scoring-period_response}     Swap the position of players of ${team_id} in future scoring period and validate the response schema
     Validate players changed their positions    ${lm-swap-players-future-scoring-period_response}
 
 As a League manager move any lineup Player to Bench of any team in a league in future scoring period
     [Tags]    lm-moveplayers-to-bench-future-scoring-period  valid   CSEAUTO-28630   CSEAUTO-28653
-    ${team_id}      Get any different team_id from future scoring period
+    ${team_id}      Get any different team_id
     ${lm-moveplayers-to-bench-future-scoring-period_response}     Move any lineup player to bench of ${team_id} in future scoring period and validate the response schema
     Validate player is moved to bench ${lm-moveplayers-to-bench-future-scoring-period_response}
 
 As a League manager move any Player from Bench to LineUp of any team in a league in future scoringperiod
     [Tags]     lm-moveplayers-from-bench-to-lineup-future-scoring-period valid   CSEAUTO-28630   CSEAUTO-28654
-    ${team_id}      Get any different team_id from future scoring period
+    ${team_id}      Get any different team_id
     ${lm-moveplayers-from-bench-to-lineup-future-scoring-period_response}     Move the eligible Bench Player of ${team_id} to lineup in future scoring period and validate the response schema
     Validate players changed their positions     ${lm-moveplayers-from-bench-to-lineup-future-scoring-period_response}
 

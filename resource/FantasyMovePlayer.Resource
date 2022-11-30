@@ -219,9 +219,3 @@ Get any different team_id
     ${league_info_response}     Get the league details from League_info_url for current scoring Period
     ${team_id}      get any different team id from response   ${league_info_response.json()}    ${league_creator_swid}
     [Return]    ${team_id}
-
-Get any different team_id from future scoring period
-    ${id}    Generate a random future scoring period between ${current_scoringPeriodId} and ${final_scoringPeriodId}
-    ${league_info_response}     Get the league details of any from League_info_url for any future scoring period ${id}
-    ${team_id}      get any different team id from response   ${league_info_response.json()}    ${league_creator_swid}
-    [Return]    ${team_id}
