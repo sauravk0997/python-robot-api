@@ -8,7 +8,7 @@ Resource            ../resource/FantasyAddPlayerResourse.robot
 Library             OperatingSystem
 Resource            testsuite/sel-based-login.robot
 Suite Setup         Get user cookie
-Suite Teardown       Browser Shutdown
+Suite Teardown      Browser Shutdown
 
 *** Test Cases ***
 Add and drop a player in my team as a Team Owner

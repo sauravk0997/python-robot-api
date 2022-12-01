@@ -15,12 +15,11 @@ ${API_BASE}              https://fantasy.espn.com
 ${LEAGUE_SLUG}           apis/v3/games/fba/seasons/${SEASON_ID}/segments/0/leagues/${LEAGUE_ID}
 ${TRANSACTION_SLUG}      transactions/             
 ${TEAM_API}              ${API_BASE}/${LEAGUE_SLUG}?view=mDraftDetail&view=mLiveScoring&view=mMatchupScore&view=mPendingTransactions&view=mPositionalRatings&view=mRoster&view=mSettings&view=mTeam&view=modular&view=mNav&rosterForTeamId
-#${USER_COOKIE}           SWID={107F4FFD-2902-4067-80ED-1B60E523AEA6}; espn_s2=AECrJIHbu9mV9qfddT1xOnYOu8uJDtecBfWmVovhtTiAQDS%2BRnmu%2BogoFhsLon7g3F5J%2F7auRgBMdowDa3Osx%2Bictanm3UqXRwcMHia9zo16%2FfJU2133DjUYHwbA2GgqYYWyuW%2BCrQ4Pz4R233wLykCbAe8E2DHnFg6L7PkZ4jXydAMyvlIInjk19hbdV7tw05o3lSOCPOpKIXH022Lh0qbUZy6PN06r3GSr7Ct%2FqO5PiDV6NFMMuJlMlUAgKy7Zr%2BX9W1UrptN5vv3y5JKh61Sxpo0FmjcKlxcHpaMz%2BkxGyg%3D%3D;
-${HOMEPAGE}     https://www.espn.com/fantasy/
-${BROWSER}      Chrome
-${user}         saurav.kumar@zucitech.com
-${password}     Saurav@1103
-${greeting}     Saurav!
+${HOMEPAGE}              https://www.espn.com/fantasy/
+${BROWSER}               Chrome
+${user}                  saurav.kumar@zucitech.com
+${password}              Saurav@1103
+${greeting}              Saurav!
 
 
 *** Keywords ***
@@ -35,7 +34,6 @@ Fetch scoring period id for team
     &{header}=   Create Dictionary    cookie=${USER_COOKIE}
     ${team_response}=    GET  url=${TEAM_API}=${team_id}      headers=${header}      expected_status=200
     ${scoring_period_id}=    Get value from JSON    ${team_response.json()}    $.scoringPeriodId
-    # declaring scoring period id as global to update its value in url and json, to use it in different function
     Set Global Variable    ${scoring_period_id}
 
 Get the value of Drop Player Id and Free Agent Player Id of Team 
