@@ -109,7 +109,9 @@ class FantasyMovePlayerValidator(object):
                 else:
                     line_up_status = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{line_up_player}].playerPoolEntry.lineupLocked')
                     if line_up_status is False:
-                        eligible_slot_player1 = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{line_up_player}].playerPoolEntry.player.eligibleSlots')
+                        eligible_slot_player1 = JSON().get_value_from_json(response,
+                                                                    f'$.teams[{team_id-1}].roster.entries[{line_up_player}].'
+                                                                    f'playerPoolEntry.player.eligibleSlots')
                     else:
                         continue
                 for compare_line_up_player in range(0, 13):
