@@ -6,6 +6,9 @@ Library             RequestsLibrary
 Library             ../lib/validators/FantasyAddPlayerValidator.py
 Resource            ../resource/FantasyAddPlayerResourse.robot
 Library             OperatingSystem
+Resource            testsuite/sel-based-login.robot
+Suite Setup         Get user cookie
+Suite Teardown       Browser Shutdown
 
 *** Test Cases ***
 Add and drop a player in my team as a Team Owner
@@ -13,7 +16,7 @@ Add and drop a player in my team as a Team Owner
     [Tags]    valid    fantasy_games    CSEAUTO-28331    CSEAUTO-28388
     Fetch scoring period id for team    1
     @{player_details}      Get the value of Drop Player Id and Free Agent Player Id of Team    1
-    &{initial_payload}=    Load JSON from file    resource/addDropPlayerasTO.json
+    &{initial_payload}=    Load JSON from file    resource/JSON/addDropPlayerasTO.json
     ${final_payload}       Update payload ${initial_payload} with ${scoring_period_id}, ${player_details}[0] and ${player_details}[1]
     ${response}=           A POST request to ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} with ${final_payload} to add and drop a player should respond with 200
     Validate players are added and dropped from ${response}
@@ -24,7 +27,7 @@ Add and drop a player in my team as a League Manager
     [Tags]    valid   fantasy_games    CSEAUTO-28331    CSEAUTO-28388
     Fetch scoring period id for team    1
     @{player_details}      Get the value of Drop Player Id and Free Agent Player Id of Team     1
-    &{initial_payload}=    Load JSON from file    resource/addDropPlayerasLM.json
+    &{initial_payload}=    Load JSON from file    resource/JSON/addDropPlayerasLM.json
     ${final_payload}    As League Manager, Update payload ${initial_payload} with ${scoring_period_id}, ${player_details}[0] and ${player_details}[1] for team id 1
     ${response}=    A POST request to ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} with ${final_payload} to add and drop a player as LM should respond with 200
     Validate players are added and dropped from ${response}
@@ -35,7 +38,7 @@ As a Fantasy League Manager, add and drop a player to other team
     [Tags]    valid   fantasy_games    CSEAUTO-28331    CSEAUTO-28388
     Fetch scoring period id for team    5 
     @{player_details}      Get the value of Drop Player Id and Free Agent Player Id of Team     5
-    &{initial_payload}=    Load JSON from file    resource/addDropPlayerasLM.json
+    &{initial_payload}=    Load JSON from file    resource/JSON/addDropPlayerasLM.json
     ${final_payload}    As League Manager, Update payload ${initial_payload} with ${scoring_period_id}, ${player_details}[0] and ${player_details}[1] for team id 5
     ${response}=    A POST request to ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} with ${final_payload} to add and drop a player as LM should respond with 200
     Validate players are added and dropped from ${response}
