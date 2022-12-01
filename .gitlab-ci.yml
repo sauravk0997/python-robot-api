@@ -32,6 +32,17 @@ before_script:
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
+  - useradd -d /builds/{GITLAB_USER} -g users -M -N builder
+    - chown -R builder:users ..
+    - |     
+      sudo -H -i -u builder sh -e -x << EOS                                                                                                                                                                                                                       
+      umask 0077                                                                                                                                                                                                                                               
+      export CONTINUOUS_INTEGRATION_SYSTEM="gitlab" TIMESTAMP=`date +%Y%m%d%H%M%S` DEFAULT_TARGET="debug"                                                                                                                                                      
+      export PREFIX="\${HOME}/usr" SYSCONFDIR="\${HOME}/etc/conf" LOCALSTATEDIR="\${HOME}/var"                                                                                                                                                                 
+      cd my-project                                                                                                                                                                                                                                                  
+      make install                                                                                                                                                                                                                                             
+      make -C _deploy/debian clean package bundle BUILD_ID="-0{other}\${TIMESTAMP}"                                                                                                                                                                        
+      EOS
   # - useradd -d /builds/{GITLAB_USER_LOGIN} -g users -M -N builder
   # - chown -R builder:users ..
   # - sudo -H -i -u builder sh -e -x << EOS                                                                                                                                                                                                                       
