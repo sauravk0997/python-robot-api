@@ -41,6 +41,7 @@ class FantasyDropValidator(object):
         try:
             teams = response.json()['teams']
             scoring_period_id = response.json()['scoringPeriodId']
+            team_id = 0
             if teamid == '0':
                 for team in teams:
                     no_of_players = len(team['roster']['entries'])
@@ -50,9 +51,10 @@ class FantasyDropValidator(object):
                             team_id = player_pool_entry["onTeamId"]
                             player_id = player_pool_entry["id"]
                             break
-                        else:
-                            continue
-                    break
+                    else:
+                        continue
+                    break                    
+
                 return scoring_period_id, team_id, player_id
 
             else:
