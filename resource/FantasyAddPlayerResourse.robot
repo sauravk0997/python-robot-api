@@ -183,3 +183,55 @@ A POST request to ${endpoint} add a player to other team as LM should respond wi
     &{header}=   Create Dictionary      cookie=${USER_COOKIE}
     ${response}=    POST  url=${endpoint}     headers=${header}    json=${add_payload1}     expected_status=${status}           
     [Return]    ${response}
+
+A POST request ${endpoint} not to add a player to my team if my roaster is full should respond with ${status}
+    [Documentation]     Post request for not adding a player to my team if my roaster is full
+    Fetch scoring period id for team    1
+    ${free_agent_json}   Load JSON from file   resource/JSON/freeAgentFilter.json
+    ${scoring_periodId_updated}    Update value to JSON    ${free_agent_json}    $.players.filterRanksForScoringPeriodIds.value[0]    ${scoring_period_id}
+    Save JSON to file    ${scoring_periodId_updated}  resource/JSON/freeAgentFilter.json    
+    ${free_agent_filter}    Get file   resource/JSON/freeAgentFilter.json
+    &{free_agent_header}=   Create Dictionary    cookie=${USER_COOKIE}    x-fantasy-filter=${free_agent_filter}
+    ${free_agent_response}=    GET  url= ${API_BASE}/${LEAGUE_SLUG}?scoringPeriodId=${scoring_period_id}&view=kona_player_info     headers=${free_agent_header}      expected_status=200
+    ${free_agent_player_id}    Get the free-agent player id    ${free_agent_response}
+    &{free_agent_payload}=    Load JSON from file    resource/JSON/addPlayerasTO.json
+    ${save_scoringPeriodId}    Update value to JSON    ${free_agent_payload}    $.scoringPeriodId    ${scoring_period_id}
+    Save JSON to file    ${save_scoringPeriodId}    resource/JSON/addPlayerasTO.json    2 
+    ${free_agent_players_id_updated}=    Update value to JSON    ${free_agent_payload}    $.items[0].playerId   ${free_agent_player_id}
+    Save JSON to file    ${free_agent_players_id_updated}    resource/JSON/addPlayerasTO.json    2
+    Set Global Variable    ${free_agent_payload}
+    &{header}=   Create Dictionary      cookie=${USER_COOKIE}
+    ${response}=    POST  url=${endpoint}     headers=${header}    json=${free_agent_payload}     expected_status=${status}           
+    [Return]    ${response}
+
+Validate player is not added to my team from ${response} and message
+    [Documentation]     Post request for not adding a player to my team if my roaster is full
+    ${response_type}    Get value from JSON       ${response.json()}         $.details[0].type  
+    ${actual_type}    Set Variable      TRAN_ROSTER_LIMIT_EXCEEDED_ONE
+    Should Be Equal As Strings    ${response_type}      ${actual_type}
+
+A POST request ${endpoint} to add a player at position C to my team should respond with ${status}
+    [Documentation]     Post request for not adding a player to my team if my roaster is full
+    Fetch scoring period id for team    1
+    ${free_agent_json}   Load JSON from file   resource/JSON/freeAgentFilter.json
+    ${scoring_periodId_updated}    Update value to JSON    ${free_agent_json}    $.players.filterRanksForScoringPeriodIds.value[0]    ${scoring_period_id}
+    Save JSON to file    ${scoring_periodId_updated}  resource/JSON/freeAgentFilter.json    
+    ${free_agent_filter}    Get file   resource/JSON/freeAgentFilter.json
+    &{free_agent_header}=   Create Dictionary    cookie=${USER_COOKIE}    x-fantasy-filter=${free_agent_filter}
+    ${free_agent_response}=    GET  url= ${API_BASE}/${LEAGUE_SLUG}?scoringPeriodId=${scoring_period_id}&view=kona_player_info     headers=${free_agent_header}      expected_status=200
+    ${free_agent_player_id}    Get the Position C player id    ${free_agent_response}
+    &{free_agent_payload}=    Load JSON from file    resource/JSON/addPlayerasTO.json
+    ${save_scoringPeriodId}    Update value to JSON    ${free_agent_payload}    $.scoringPeriodId    ${scoring_period_id}
+    Save JSON to file    ${save_scoringPeriodId}    resource/JSON/addPlayerasTO.json    2 
+    ${free_agent_players_id_updated}=    Update value to JSON    ${free_agent_payload}    $.items[0].playerId   ${free_agent_player_id}
+    Save JSON to file    ${free_agent_players_id_updated}    resource/JSON/addPlayerasTO.json    2
+    Set Global Variable    ${free_agent_payload}
+    &{header}=   Create Dictionary      cookie=${USER_COOKIE}
+    ${response}=    POST  url=${endpoint}     headers=${header}    json=${free_agent_payload}     expected_status=${status}           
+    [Return]    ${response}
+
+Validate Position C player is not added to my team from ${response} and message
+    [Documentation]     Post request for not adding a player to my team if my roaster is full
+    ${response_type}    Get value from JSON       ${response.json()}         $.details[0].type  
+    ${actual_type}    Set Variable      TRAN_ROSTER_LIMIT_EXCEEDED_ONE
+    Should Be Equal As Strings    ${response_type}      ${actual_type}

@@ -70,3 +70,33 @@ class FantasyAddPlayerValidator(object):
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
         return player_id_details   
+
+
+    @keyword('Get the free-agent player id')
+    def get_freeAgents_player_id(self, free_agent_response) -> int:
+        try:
+            no_of_free_agents = len(free_agent_response.json()['players'])
+            for agent in range(0, (no_of_free_agents)-1):   
+                free_agents_position_id = free_agent_response.json()['players'][agent]['player']['defaultPositionId']
+                if free_agents_position_id != 5:
+                    free_agents_id = free_agent_response.json()['players'][agent]['id']
+                else:
+                    continue
+        except ValidationError as ve:
+             raise Failure(f'Parsing failed :{ve.messages}')
+        return free_agents_id 
+
+    
+    @keyword('Get the Position C player id')
+    def get_Position_C_player_id(self, free_agent_response) -> int:
+        try:
+            no_of_free_agents = len(free_agent_response.json()['players'])
+            for agent in range(0, (no_of_free_agents)-1):   
+                free_agents_position_id = free_agent_response.json()['players'][agent]['player']['defaultPositionId']
+                if free_agents_position_id == 5:
+                    free_agents_id = free_agent_response.json()['players'][agent]['id']
+                else:
+                    continue
+        except ValidationError as ve:
+             raise Failure(f'Parsing failed :{ve.messages}')
+        return free_agents_id 

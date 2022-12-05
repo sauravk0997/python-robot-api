@@ -63,3 +63,15 @@ Drop and add a player in other team as a League Manager
     Add Player Schema from ${add_player_as_LM_response} should be valid
     Validate player is dropped from my team from ${drop_player_as_LM_response}
     Validate player is added to my team from ${add_player_as_LM_response}
+
+As a Team Owner, I should not be able to add a new player in my team, if my roaster is full.
+    [Documentation]     Simple validation of the base level schema url and 'dropping and then adding' a player in my team as a Team Owner for Fantasy Games API.
+    [Tags]    valid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
+    ${free_agent_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} not to add a player to my team if my roaster is full should respond with 409
+    Validate player is not added to my team from ${free_agent_response} and message
+
+As a Team Owner, I should not be able to add more than 4 players at 'Position C' in my team.
+    [Documentation]     Simple validation of the base level schema url and 'dropping and then adding' a player in my team as a Team Owner for Fantasy Games API.
+    [Tags]    valid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
+    ${free_agent_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player at position C to my team should respond with 409
+    Validate Position C player is not added to my team from ${free_agent_response} and message
