@@ -49,3 +49,27 @@ E2E - Validate User Steps as League Creator user to Create Teams and assign Leag
     Add players to team 4 as team owner 4
     Save the roster
     Delete the created league
+
+E2E - Validate User Steps as League Creator user to delete an league with an invalid league id
+    [Documentation]    Delete an league with an invalid league id
+    ...    Http Methods used - POST, DELETE
+    [Tags]    invalid    fantasy    CSEAUTO-29015    CSEAUTO-28396
+    Delete the invalid league
+
+E2E - Validate User Steps as League Creator user to create a league with an invalid team count
+    [Documentation]    Delete an league with an invalid league id
+    ...    Http Methods used - POST
+    [Tags]    invalid    fantasy    CSEAUTO-29015    CSEAUTO-28396
+    Create a League with an invalid team count
+
+E2E - Validate User Steps as League Creator user to create a league with an invalid fantasy team name
+    [Documentation]    Delete an league with an invalid league id
+    ...    Http Methods used - POST
+    [Tags]    invalid    fantasy    CSEAUTO-29015    CSEAUTO-28396
+    Create a League with an invalid fantasy team name
+
+E2E - Validate User Steps to create a league as non-league creator user
+    [Documentation]    create an league as non-league creator user
+    ...    Http Methods used - POST
+    [Tags]    invalid    fantasy    CSEAUTO-29015    CSEAUTO-28396
+    Create a league as a non-league creator user

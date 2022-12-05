@@ -56,6 +56,18 @@ Create a League and validate the response schema
     ${response}=    Validate Fantasy create league endpoint responds with status code 200
     Fantasy Create League Schema from ${response} should be valid
 
+Create a League with an invalid team count
+    [Documentation]    Invokes League create API endpoint with an invalid team count value in payload
+    Validate Fantasy create league endpoint with invalid team count responds with status code 409
+
+Create a League with an invalid fantasy team name
+    [Documentation]    Invokes League create API endpoint with an invalid team count value in payload
+    Validate Fantasy create league endpoint with invalid fantasy team name responds with status code 400
+
+Create a league as a non-league creator user
+    [Documentation]    Invokes League create API endpoint with an invalid team count value in payload
+    Validate Fantasy create league endpoint as non-league creator user responds with status code 400
+
 Assign League Manager Roles to Team2, Team3 and Team4 owners
     [Documentation]    Assigns League Manager Roles to Team2, Team3 and Team4 owners
     FOR    ${index}    IN RANGE    1    4
@@ -80,6 +92,12 @@ Delete the created league
     &{header_value}=    create dictionary     cookie=${espn_cookie}
     #Delete call to delete the created league
     ${delete_response}=     DELETE    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}  headers=${header_value}     expected_status=204
+
+Delete the invalid league
+    [Documentation]    Invoke delete API endpoint to delete the invalid league
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    #Delete call to delete the created league
+    ${delete_response}=     DELETE    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/123456789  headers=${header_value}     expected_status=404
 
 Schedule Offline Draft
     [Documentation]    Draft settings Changes to start Online drafting
@@ -164,6 +182,78 @@ Validate Fantasy create league endpoint responds with status code 200
     Set Global Variable    ${league_id}
     Log    ${league_id}    console=${True}
     [Return]    ${league_response}
+
+Validate Fantasy create league endpoint with invalid team count responds with status code 409
+    [Documentation]    create a league, make league id and invite id as global and returns the league response to the called keyword
+    &{league_create_json_template}=    Load JSON from file    resource/JSON/leagueCreateTemplate.json
+    #Generate random string of 4 digits
+    ${random_string}=    Generate Random String    4    0123456789
+    #Get SWID of the user
+    ${SWID}=    Get SWID from cookie ${espn_cookie}
+    # Update member Id to Json file
+    ${member_id_updated}=    Update value to JSON    ${league_create_json_template}    $.members[0].id   ${SWID}
+    #Save content to JSON file with indentation (value:2 Tab Space)
+    Save JSON to file    ${member_id_updated}    resource/JSON/leagueCreateTemplate.json    2
+    #Update Fantasy league name
+    ${league_updated}=    Update value to JSON    ${league_create_json_template}    $.settings.name    My-Fantasy-League-${random_string}
+    Save JSON to file    ${league_updated}    resource/JSON/leagueCreateTemplate.json    2
+    #invalid team count
+    ${size_updated}=    Update value to JSON    ${league_create_json_template}    $.settings.size    ${random_string}
+    Save JSON to file    ${size_updated}    resource/JSON/leagueCreateTemplate.json    2
+    #Cookie dictionary
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    #Create League API invocation
+    ${league_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUE_CREATE_SLUG}  headers=${header_value}     json=${league_create_json_template}   expected_status=409
+    ${size_re_updated}=    Update value to JSON    ${league_create_json_template}    $.settings.size    4
+    Save JSON to file    ${size_re_updated}    resource/JSON/leagueCreateTemplate.json    2
+
+Validate Fantasy create league endpoint with invalid fantasy team name responds with status code 400
+    [Documentation]    create a league, make league id and invite id as global and returns the league response to the called keyword
+    &{league_create_json_template}=    Load JSON from file    resource/JSON/leagueCreateTemplate.json
+    #Generate random string of 4 digits
+    ${random_string}=    Generate Random String    25    0123456789
+    #Get SWID of the user
+    ${SWID}=    Get SWID from cookie ${espn_cookie}
+    # Update member Id to Json file
+    ${member_id_updated}=    Update value to JSON    ${league_create_json_template}    $.members[0].id   ${SWID}
+    #Save content to JSON file with indentation (value:2 Tab Space)
+    Save JSON to file    ${member_id_updated}    resource/JSON/leagueCreateTemplate.json    2
+    #Update Fantasy league name
+    ${league_updated}=    Update value to JSON    ${league_create_json_template}    $.settings.name    My-Fantasy-League-${random_string}
+    Save JSON to file    ${league_updated}    resource/JSON/leagueCreateTemplate.json    2
+    #Cookie dictionary
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    #Create League API invocation
+    POST    url= ${FANTASY_BASE_URL}/${LEAGUE_CREATE_SLUG}  headers=${header_value}     json=${league_create_json_template}   expected_status=400
+
+Validate Fantasy create league endpoint as non-league creator user responds with status code 400
+    [Documentation]    create a league, make league id and invite id as global and returns the league response to the called keyword
+    &{league_create_json_template}=    Load JSON from file    resource/JSON/leagueCreateTemplate.json
+    #Generate random string of 4 digits
+    ${random_string}=    Generate Random String    4    0123456789
+    #Get SWID of the user
+    ${SWID}=    Get SWID from cookie ${espn_cookie}
+    # Update member Id to Json file
+    ${member_id_updated}=    Update value to JSON    ${league_create_json_template}    $.members[0].id   ${SWID}
+    #Save content to JSON file with indentation (value:2 Tab Space)
+    Save JSON to file    ${member_id_updated}    resource/JSON/leagueCreateTemplate.json    2
+    ${false}=    Convert To Boolean    false
+    ${true}=     Convert To Boolean    true
+    # Update isLeagueCreator value to false
+    ${isLeagueCreator_updated}=    Update value to JSON    ${league_create_json_template}    $.members[0].isLeagueCreator   ${false}
+    #Save content to JSON file with indentation (value:2 Tab Space)
+    Save JSON to file    ${isLeagueCreator_updated}    resource/JSON/leagueCreateTemplate.json    2
+    #Update Fantasy league name
+    ${league_updated}=    Update value to JSON    ${league_create_json_template}    $.settings.name    My-Fantasy-League-${random_string}
+    Save JSON to file    ${league_updated}    resource/JSON/leagueCreateTemplate.json    2
+    #Cookie dictionary
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    #Create League API invocation
+    POST    url= ${FANTASY_BASE_URL}/${LEAGUE_CREATE_SLUG}  headers=${header_value}     json=${league_create_json_template}   expected_status=400
+    # Update isLeagueCreator value to true
+    ${isLeagueCreator_reupdated}=    Update value to JSON    ${league_create_json_template}    $.members[0].isLeagueCreator   ${true}
+    #Save content to JSON file with indentation (value:2 Tab Space)
+    Save JSON to file    ${isLeagueCreator_reupdated}    resource/JSON/leagueCreateTemplate.json    2
 
 Validate Invitation Accept, Team Creation endpoints responds with successful status code
     [Documentation]    Accept League Invite sent by inviter, fetch team id, update team information, invoke team creation API endpoint and validate the response schema
