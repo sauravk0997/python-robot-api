@@ -33,6 +33,26 @@ class FantasyAddPlayerValidator(object):
 
         return True
 
+    @keyword('Invalid Add Player Schema from ${response} should be valid', tags=['schema checks', 'functional', 'CoreV3'],
+             types={'response': requests.Response})
+    def invalid_move_player_should_be_valid(self, response) -> bool:
+        """
+                    Schema for the endpoint: apis/v3/games/fba/seasons/2023/segments/0/leagues/${league_id}/transactions/
+
+                    Expects to receive an embedded python requests object as 'response'
+                    and validates the json against the FantasyLeague class.
+
+                  Examples:
+                  'Move Player Schema from ${response} should be valid
+                """
+        try:
+            schema = InvalidAddPlayerSchema().load(response.json())
+
+        except ValidationError as ve:
+            raise Failure(f'Schema Data failed validation: {ve.messages}')
+        return True
+
+
     @keyword('Get the droppable player and free-agent player id')
     def get_droppable_and_freeAgents_players(self, teamId, droppable_player_response, free_agent_response) -> list:
         try:
