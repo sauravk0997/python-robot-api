@@ -77,3 +77,17 @@ As a Team Owner, I should not be able to add more than 4 players at 'Position C'
     ${free_agent_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player at position C to my team should respond with 409
     Validate Position C player is not added to my team from ${free_agent_response} and message
     Invalid Add Player Schema from ${free_agent_response} should be valid
+
+As a Team Owner, I should not be able to add an On Waivers player in my team.
+    [Documentation]     Simple validation of the base level schema url and 'dropping and then adding' a player in my team as a Team Owner for Fantasy Games API.
+    [Tags]    valid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
+    ${on_Waiver_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add an On Waiver player in my team should respond with 409
+    Validate On Waiver player is added to my team from ${on_Waiver_response}
+    Invalid Add Player Schema from ${on_Waiver_response} should be valid
+
+As a Team Owner, I should not be able to add an On Roaster player in my team.
+    [Documentation]     Simple validation of the base level schema url and 'dropping and then adding' a player in my team as a Team Owner for Fantasy Games API.
+    [Tags]    valid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
+    ${on_raster_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add an On Roaster player in my team should respond with 409
+    Validate On Roaster player is added to my team from ${on_raster_response}
+    Invalid Add Player Schema from ${on_raster_response} should be valid

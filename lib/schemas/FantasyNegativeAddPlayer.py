@@ -2,18 +2,30 @@ from pprint import pprint
 import requests
 from marshmallow import Schema, fields, RAISE, ValidationError
 
+class CustomField(fields.Field):
+    def _deserialize(self, entry, attr, ctx, **k):
+        if isinstance(entry, str):
+             pass
+        elif isinstance(entry, list):
+            pass
+        elif isinstance(entry, dict):
+            pass
+        elif isinstance(entry, None):
+            pass
+        else:
+            raise ValidationError(f'CustomField : Unexpected field type found. {type(entry)}')
 
-class teamidSchema(Schema):
-    class Meta:
-        unknown = RAISE
-    teamid = fields.String(required=True)
+# class teamidSchema(Schema):
+#     class Meta: s
+#         unknown = RAISE
+#     teamid = fields.String(required=False)
 
 class DetailsSchema(Schema):
     message            = fields.String(required=True)
     shortMessage       = fields.String(required=True)
     resolution         = fields.String(allow_none=True, required=True)
     type               = fields.String(required=True)
-    metaData           = fields.Nested(teamidSchema, required=True)
+    metaData           = CustomField(required=True, allow_none=True)
 
 
 class InvalidAddPlayerSchema(Schema):

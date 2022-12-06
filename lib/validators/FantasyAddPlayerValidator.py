@@ -30,7 +30,6 @@ class FantasyAddPlayerValidator(object):
 
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
-
         return True
 
     @keyword('Invalid Add Player Schema from ${response} should be valid', tags=['schema checks', 'functional', 'CoreV3'],
@@ -51,7 +50,6 @@ class FantasyAddPlayerValidator(object):
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
         return True
-
 
     @keyword('Get the droppable player and free-agent player id')
     def get_droppable_and_freeAgents_players(self, teamId, droppable_player_response, free_agent_response) -> list:
@@ -91,7 +89,6 @@ class FantasyAddPlayerValidator(object):
              raise Failure(f'Parsing failed :{ve.messages}')
         return player_id_details   
 
-
     @keyword('Get the free-agent player id')
     def get_freeAgents_player_id(self, free_agent_response) -> int:
         try:
@@ -105,8 +102,7 @@ class FantasyAddPlayerValidator(object):
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
         return free_agents_id 
-
-    
+  
     @keyword('Get the Position C player id')
     def get_Position_C_player_id(self, free_agent_response) -> int:
         try:
@@ -120,3 +116,23 @@ class FantasyAddPlayerValidator(object):
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
         return free_agents_id 
+
+    @keyword('Get the On Waivers player id')
+    def get_On_Waivers_player_id(self, on_Waivers_response) -> int:
+        try:
+            no_of_On_Waivers_player = len(on_Waivers_response.json()['players'])
+            for waivers in range(0, (no_of_On_Waivers_player)-1):   
+                on_Waivers_player_id = on_Waivers_response.json()['players'][waivers]['id']
+        except ValidationError as ve:
+             raise Failure(f'Parsing failed :{ve.messages}')
+        return on_Waivers_player_id 
+
+    @keyword('Get the On Roasters player id')
+    def get_On_Roasters_player_id(self, on_Team_response) -> int:
+        try:
+            no_of_On_Teams_player = len(on_Team_response.json()['players'])
+            for onTeam in range(0, (no_of_On_Teams_player)-1):   
+                on_Team_player_id = on_Team_response.json()['players'][onTeam]['id']
+        except ValidationError as ve:
+             raise Failure(f'Parsing failed :{ve.messages}')
+        return on_Team_player_id 
