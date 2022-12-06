@@ -73,3 +73,24 @@ E2E - Validate User Steps to create a league as non-league creator user
     ...    Http Methods used - POST
     [Tags]    invalid    fantasy    CSEAUTO-29015    CSEAUTO-28396
     Create a league as a non-league creator user
+
+E2E - Validate User Steps to Create a league and Begin the Draft with an invalid payload
+    [Documentation]    Create a league and Begin the Draft with an invalid payload
+    ...    Http Methods used - POST
+    [Tags]    invalid    fantasy    CSEAUTO-29015    CSEAUTO-28396
+    Create a League and validate the response schema
+    Send Invitations, Accept Invitation send by inviter and Create teams
+    Schedule Offline Draft
+    Begin Offline Draft with an invalid payload
+    Delete the created league
+
+E2E - Validate User Steps to Create a league and Save the draft with an invalid payload
+    [Documentation]    Create a league and Save the draft with an invalid payload
+    ...    Http Methods used - POST
+    [Tags]    invalid    fantasy    CSEAUTO-29015    CSEAUTO-28396
+    Create a League and validate the response schema
+    Send Invitations, Accept Invitation send by inviter and Create teams
+    Schedule Offline Draft
+    Begin Offline Draft
+    Add players to all teams as league creator user and save the roster with invalid payload
+    Delete the created league

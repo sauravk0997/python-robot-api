@@ -121,6 +121,19 @@ Begin Offline Draft
     #Post call to start offline drafting
     ${begin_offline_draft_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${begin_offline_draft_json_template}     expected_status=200
 
+Begin Offline Draft with an invalid payload
+    [Documentation]    Start Offline Drafting with an invalid payload
+    #Load payload
+    &{begin_offline_draft_json_template}=     Load JSON from file    resource/JSON/beginOfflineDraft.json
+    ${true}=     Convert To Boolean    true
+    ${inProgress_updated}=    Update value to JSON    ${begin_offline_draft_json_template}    $.inProgress    dummyValue
+    Save JSON to file    ${inProgress_updated}    resource/JSON/beginOfflineDraft.json    2
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    #Post call to start offline drafting
+    ${begin_offline_draft_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${begin_offline_draft_json_template}     expected_status=400
+    ${inProgress_reupdated}=    Update value to JSON    ${begin_offline_draft_json_template}    $.inProgress    ${true}
+    Save JSON to file    ${inProgress_reupdated}    resource/JSON/beginOfflineDraft.json    2
+
 Add players to all teams as league creator user and save the roster
     [Documentation]    Add players to all teams as league creator user
     &{header_value}=    create dictionary     cookie=${espn_cookie}
@@ -135,6 +148,32 @@ Add players to all teams as league creator user and save the roster
     END
     #Post call to add players to the teams
     ${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=200
+
+Add players to all teams as league creator user and save the roster with invalid payload
+    [Documentation]    Add players to all teams as league creator user
+    ${false}=    Convert To Boolean    false
+    ${true}=     Convert To Boolean    true
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    #Load offline draft save payload
+    &{offline_draft_save_json_template}=     Load JSON from file    resource/JSON/offlineDraftSave.json
+    # Loop to iterate for Team1, Team2, Team3 and Team4
+    FOR    ${index}    IN RANGE    1    5
+        #Loads - offlineDraftTeam1.json, offlineDraftTeam2.json, offlineDraftTeam3.json, offlineDraftTeam4.json 
+        &{offline_draft_teams_json_template}=     Load JSON from file    resource/JSON/offlineDraftTeam${index}.json
+        #Post call to add team players
+        ${offline_draft_team_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_teams_json_template}     expected_status=200  
+    END
+    ${drafted_updated}=    Update value to JSON    ${offline_draft_save_json_template}    $.drafted    dummyValue
+    Save JSON to file    ${drafted_updated}    resource/JSON/offlineDraftSave.json    2
+    ${inProgress_updated}=    Update value to JSON    ${offline_draft_save_json_template}    $.inProgress    dummyValue
+    Save JSON to file    ${inProgress_updated}    resource/JSON/offlineDraftSave.json    2
+    #Post call to add players to the teams
+    ${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=400
+    #Resave the JSON
+    ${drafted_updated}=    Update value to JSON    ${offline_draft_save_json_template}    $.drafted    ${true}
+    Save JSON to file    ${drafted_updated}    resource/JSON/offlineDraftSave.json    2
+    ${inProgress_updated}=    Update value to JSON    ${offline_draft_save_json_template}    $.inProgress    ${false}
+    Save JSON to file    ${inProgress_updated}    resource/JSON/offlineDraftSave.json    2
 
 Add players to team ${team_id} as team owner ${team_owner_id}
     [Documentation]    Generic method to add team players to respective teams as team owners
