@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation        Moving players form a fantasy league Positive tests are executing along with schema validation
-...                  to run: robot --pythonpath $PWD ./testsuite/Move-Players-test.robot
+...                  to run: robot --pythonpath $PWD ./testsuite/fantasy-league-move-players-test.robot
 Metadata             Author      Yusuf Mubarak M
 Metadata             Date        14-11-2022
 Library              RequestsLibrary
@@ -88,9 +88,19 @@ As a team owner move the player to any ineligible slot
     ${own_team_id}           convert to integer    ${own_team_id}
     Move any Player of team ${own_team_id} to ineligible slot and validate the response
 
+As a team owner move the player in a current scoring period by providing incorrect type in json payload
+    [Tags]  to-move-player-incorrect-type    Invalid     CSEAUTO-29018       CSEAUTO-29065
+    ${own_team_id}           convert to integer    ${own_team_id}
+    Move any Player of team ${own_team_id} in a current scoring period by providing incorrect type in json payload and validate the response
 
+As a team owner move the player in a future scoring period by providing incorrect type in json payload
+    [Tags]  to-move-player-incorrect-type    Invalid     CSEAUTO-29018       CSEAUTO-29066
+    ${own_team_id}           convert to integer    ${own_team_id}
+    Move any Player of team ${own_team_id} in a future scoring period by providing incorrect type in json payload and validate the response
 
-
-
+As a team owner move the player not available on the team
+    [Tags]  to-move-player-not-available-on-team    Invalid     CSEAUTO-29018       CSEAUTO-29071
+    ${own_team_id}           convert to integer    ${own_team_id}
+    Move the player not available on team ${own_team_id} and validate the response
 
 

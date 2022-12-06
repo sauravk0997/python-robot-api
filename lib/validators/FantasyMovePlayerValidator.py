@@ -41,7 +41,7 @@ class FantasyMovePlayerValidator(object):
                     and validates the json against the FantasyLeague class.
 
                   Examples:
-                  'Move Player Schema from ${response} should be valid
+                  'Invalid Move Player Schema from ${response} should be valid
                 """
         try:
             schema = InvalidMovePlayerSchema().load(response.json())
@@ -193,8 +193,7 @@ class FantasyMovePlayerValidator(object):
                 line_up_status = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{players}].playerPoolEntry.lineupLocked')
                 if line_up_status is False:
                     player_id = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{players}].playerId')
-                    eligible_slot_player= JSON().get_value_from_json(response,f'$.teams[{team_id - 1}].roster.entries[{players}].'
-                                                                       f'playerPoolEntry.player.eligibleSlots')
+                    default_position_id = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{players}].playerPoolEntry.player.defaultPositionId')
                     player_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{players}].lineupSlotId')
                 else:
                     continue
@@ -202,9 +201,8 @@ class FantasyMovePlayerValidator(object):
                     if compare_players == players:
                         continue
                     else:
-                        eligible_slot_player1 = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{compare_players}].'
-                                                                    f'playerPoolEntry.player.eligibleSlots')
-                        if eligible_slot_player != eligible_slot_player1:
+                        default_position_id1 = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{compare_players}].playerPoolEntry.player.defaultPositionId')
+                        if default_position_id != default_position_id1:
                             lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{compare_players}].lineupSlotId')
                             return [player_id, player_lineup_slot_id, lineup_slot_id]
                         else:
@@ -212,14 +210,3 @@ class FantasyMovePlayerValidator(object):
             return None
         except ValidationError as ve:
             raise Failure(f'Data validation failed: {ve.messages}')
-
-
-
-
-
-
-
-
-
-
-
