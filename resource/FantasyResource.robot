@@ -8,7 +8,7 @@ Library             Collections
 Library             String
 Library             lib/validators/FantasyCreateLeagueValidator.py
 Library             lib/fantasyUI/FantasyUtils.py
-Resource            testsuite/sel-based-login.robot
+Resource            resource/sel-based-login.robot
 
 
 *** Variables ***
