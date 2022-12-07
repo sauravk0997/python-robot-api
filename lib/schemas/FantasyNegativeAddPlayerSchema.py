@@ -1,32 +1,15 @@
 from pprint import pprint
 import requests
 from marshmallow import Schema, fields, RAISE, ValidationError
+from lib.schemas.common import *
 
-class CustomField(fields.Field):
-    def _deserialize(self, entry, attr, ctx, **k):
-        if isinstance(entry, str):
-             pass
-        elif isinstance(entry, list):
-            pass
-        elif isinstance(entry, dict):
-            pass
-        elif isinstance(entry, None):
-            pass
-        else:
-            raise ValidationError(f'CustomField : Unexpected field type found. {type(entry)}')
-
-# class teamidSchema(Schema):
-#     class Meta: s
-#         unknown = RAISE
-#     teamid = fields.String(required=False)
 
 class DetailsSchema(Schema):
     message            = fields.String(required=True)
     shortMessage       = fields.String(required=True)
     resolution         = fields.String(allow_none=True, required=True)
     type               = fields.String(required=True)
-    metaData           = CustomField(required=True, allow_none=True)
-
+    metaData           = metaDataCustom(required=True, allow_none=True)
 
 class InvalidAddPlayerSchema(Schema):
 
@@ -35,7 +18,6 @@ class InvalidAddPlayerSchema(Schema):
 
     messages = fields.List(fields.String, required=True)
     details  =  fields.List(fields.Nested(DetailsSchema), required=True)
-
 
 if __name__ == '__main__':
     target = 'https://lm-api-writes.fantasy.espn.com/apis/v3/games/fba/seasons/2023/segments/0/leagues/748489070/transactions/'

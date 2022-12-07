@@ -34,7 +34,7 @@ class FantasyAddPlayerValidator(object):
 
     @keyword('Invalid Add Player Schema from ${response} should be valid', tags=['schema checks', 'functional', 'CoreV3'],
              types={'response': requests.Response})
-    def invalid_move_player_should_be_valid(self, response) -> bool:
+    def invalid_add_player_should_be_valid(self, response) -> bool:
         """
                     Schema for the endpoint: apis/v3/games/fba/seasons/2023/segments/0/leagues/${league_id}/transactions/
 

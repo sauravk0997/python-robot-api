@@ -5,4 +5,4 @@ from .FantasyCreateLeagueSchema import *
 from .FantasyMemberInviteSchema import *
 from .FantasyTeamSchema import *
 from .FantasyMovePlayerSchema import *
-from .FantasyNegativeAddPlayer import *
+from .FantasyNegativeAddPlayerSchema import *

@@ -19,7 +19,7 @@ ${HOMEPAGE}              https://www.espn.com/fantasy/
 ${BROWSER}               Chrome
 ${user}                  saurav.kumar@zucitech.com
 ${password}              Saurav@1103
-${greeting}              Saurav!
+${greeting}              Saurav!                  
 
 
 *** Keywords ***
@@ -199,19 +199,12 @@ A POST request ${endpoint} not to add a player to my team if my roaster is full 
     Save JSON to file                    ${save_scoringPeriodId}                         resource/JSON/addPlayerasTO.json    2 
     ${free_agent_players_id_updated}=    Update value to JSON                            ${free_agent_payload}        $.items[0].playerId      ${free_agent_player_id}
     Save JSON to file                    ${free_agent_players_id_updated}                resource/JSON/addPlayerasTO.json    2
-    Set Global Variable                  ${free_agent_payload}
     &{header}=                           Create Dictionary                               cookie=${USER_COOKIE}
     ${response}=                         POST  url=${endpoint}                           headers=${header}     json=${free_agent_payload}      expected_status=${status}           
     [Return]                             ${response}
 
-Validate player is not added to my team from ${response} and message
-    [Documentation]     Post request for not adding a player to my team if my roaster is full
-    ${response_type}              Get value from JSON       ${response.json()}            $.details[0].type  
-    ${actual_type}                Set Variable              TRAN_ROSTER_LIMIT_EXCEEDED_ONE
-    Should Be Equal As Strings    ${response_type}          ${actual_type}
-
 A POST request ${endpoint} to add a player at position C to my team should respond with ${status}
-    [Documentation]     Post request for not adding a player to my team if my roaster is full
+    [Documentation]     Post request for adding a Position C player to my team when I already have 4 Positiom C player in my team
     Fetch scoring period id for team    1
     ${free_agent_json}                   Load JSON from file                 resource/JSON/freeAgentFilter.json
     ${scoring_periodId_updated}          Update value to JSON                ${free_agent_json}          $.players.filterRanksForScoringPeriodIds.value[0]       ${scoring_period_id}
@@ -225,19 +218,12 @@ A POST request ${endpoint} to add a player at position C to my team should respo
     Save JSON to file                    ${save_scoringPeriodId}             resource/JSON/addPlayerasTO.json        2 
     ${free_agent_players_id_updated}=    Update value to JSON                ${free_agent_payload}                   $.items[0].playerId                         ${free_agent_player_id}
     Save JSON to file                    ${free_agent_players_id_updated}    resource/JSON/addPlayerasTO.json        2
-    Set Global Variable                  ${free_agent_payload}    
     &{header}=                           Create Dictionary                   cookie=${USER_COOKIE}
     ${response}=                         POST  url=${endpoint}               headers=${header}                      json=${free_agent_payload}                  expected_status=${status}           
     [Return]                             ${response}
-
-Validate Position C player is not added to my team from ${response} and message
-    [Documentation]        Post request for not adding a player to my team if my roaster is full
-    ${response_type}               Get value from JSON       ${response.json()}            $.details[0].type  
-    ${actual_type}                 Set Variable              TRAN_ROSTER_LIMIT_EXCEEDED_ONE
-    Should Be Equal As Strings     ${response_type}          ${actual_type}
  
 A POST request ${endpoint} to add an On Waiver player in my team should respond with ${status}
-    [Documentation]     Post request for not adding a player to my team if my roaster is full
+    [Documentation]     Post request for adding a Waiver player to my team 
     Fetch scoring period id for team    1
     ${on_Waiver_json}                    Load JSON from file                 resource/JSON/OnWaiverFilter.json
     ${scoring_periodId_updated}          Update value to JSON                ${on_Waiver_json}          $.players.filterRanksForScoringPeriodIds.value[0]       ${scoring_period_id}
@@ -250,20 +236,13 @@ A POST request ${endpoint} to add an On Waiver player in my team should respond 
     ${save_scoringPeriodId}              Update value to JSON                ${on_Waiver_payload}                   $.scoringPeriodId                           ${scoring_period_id}
     Save JSON to file                    ${save_scoringPeriodId}             resource/JSON/addPlayerasTO.json        2 
     ${on_Waiver_players_id_updated}=    Update value to JSON                 ${on_Waiver_payload}                   $.items[0].playerId                         ${on_Waiver_player_id}
-    Save JSON to file                    ${on_Waiver_players_id_updated}     resource/JSON/addPlayerasTO.json        2
-    Set Global Variable                  ${on_Waiver_payload}    
+    Save JSON to file                    ${on_Waiver_players_id_updated}     resource/JSON/addPlayerasTO.json        2 
     &{header}=                           Create Dictionary                   cookie=${USER_COOKIE}
     ${response}=                         POST  url=${endpoint}               headers=${header}                      json=${on_Waiver_payload}                  expected_status=${status}           
     [Return]                             ${response}
 
-Validate On Waiver player is added to my team from ${response}
-    [Documentation]        Post request for not adding a player to my team if my roaster is full
-    ${response_type}               Get value from JSON       ${response.json()}            $.details[0].type  
-    ${actual_type}                 Set Variable              TRAN_PLAYER_NOT_FREEAGENT
-    Should Be Equal As Strings     ${response_type}          ${actual_type}
-
 A POST request ${endpoint} to add an On Roaster player in my team should respond with ${status}
-    [Documentation]     Post request for not adding a player to my team if my roaster is full
+    [Documentation]     Post request for adding a roaster player to my team 
     Fetch scoring period id for team    1
     ${on_team_json}                      Load JSON from file                  resource/JSON/OnRoastersFilter.json 
     ${scoring_periodId_updated}          Update value to JSON                 ${on_team_json}          $.players.filterRanksForScoringPeriodIds.value[0]         ${scoring_period_id}
@@ -276,14 +255,41 @@ A POST request ${endpoint} to add an On Roaster player in my team should respond
     ${save_scoringPeriodId}              Update value to JSON                 ${on_team_payload}                   $.scoringPeriodId                              ${scoring_period_id}
     Save JSON to file                    ${save_scoringPeriodId}              resource/JSON/addPlayerasTO.json        2 
     ${on_team_players_id_updated}=       Update value to JSON                 ${on_team_payload}                   $.items[0].playerId                            ${on_team_player_id}
-    Save JSON to file                    ${on_team_players_id_updated}        resource/JSON/addPlayerasTO.json        2
-    Set Global Variable                  ${on_team_payload}    
+    Save JSON to file                    ${on_team_players_id_updated}        resource/JSON/addPlayerasTO.json        2 
     &{header}=                           Create Dictionary                    cookie=${USER_COOKIE}
     ${response}=                         POST  url=${endpoint}                headers=${header}                      json=${on_team_payload}                      expected_status=${status}           
     [Return]                             ${response}
 
-Validate On Roaster player is added to my team from ${response}
-    [Documentation]        Post request for not adding a player to my team if my roaster is full
-    ${response_type}               Get value from JSON       ${response.json()}            $.details[0].type  
-    ${actual_type}                 Set Variable              TRAN_PLAYER_NOT_AVAILABLE
-    Should Be Equal As Strings     ${response_type}          ${actual_type}
+A POST request ${endpoint} to add player with wrong scoring period id should respond with ${status}
+    [Documentation]    POST request to add player with wrong scoring period id
+    &{wrong_scoring_periodId_payload}=                  Load JSON from file                  resource/JSON/wrongScoringPeriodId.json        
+    &{header}=                                          Create Dictionary                    cookie=${USER_COOKIE}
+    ${response}=                                        POST  url=${endpoint}                headers=${header}                      json=${wrong_scoring_periodId_payload}                      expected_status=${status}           
+    [Return]                                            ${response}
+
+A POST request ${endpoint} to add a valid player to invalid team should respond with ${status}
+    [Documentation]    POST request to add a valid player to invalid team
+    Fetch scoring period id for team    1
+    ${invalid_team_json}                                Load JSON from file                  resource/JSON/InvalidTeam.json 
+    ${scoring_periodId_updated}                         Update value to JSON                 ${invalid_team_json}                           $.scoringPeriodId                                  ${scoring_period_id}
+    Save JSON to file                                   ${scoring_periodId_updated}          resource/JSON/InvalidTeam.json           2
+    &{header}=                                          Create Dictionary                    cookie=${USER_COOKIE}
+    ${response}=                                        POST  url=${endpoint}                headers=${header}                             json=${invalid_team_json}                         expected_status=${status}           
+    [Return]                                            ${response}
+
+A POST request ${endpoint} to add invalid player to my team should respond with ${status}
+    [Documentation]    POST request to add invalid player to my team
+    Fetch scoring period id for team    1
+    ${invalid_player_json}                              Load JSON from file                  resource/JSON/InvalidPlayer.json 
+    ${scoring_periodId_updated}                         Update value to JSON                 ${invalid_player_json}                           $.scoringPeriodId                                  ${scoring_period_id}
+    Save JSON to file                                   ${scoring_periodId_updated}          resource/JSON/InvalidPlayer.json        2
+    &{header}=                                          Create Dictionary                    cookie=${USER_COOKIE}
+    ${response}=                                        POST  url=${endpoint}                headers=${header}                              json=${invalid_player_json}                         expected_status=${status}           
+    [Return]                                            ${response}
+
+Validate negative scenario for adding player ${response} with message ${error_type}
+    [Documentation]        Validating whether invalid player can be added to my team
+    ${response_type}               Get value from JSON       ${response.json()}                $.details[0].type  
+    Should Be Equal As Strings     ${response_type}          ${error_type}
+
+
