@@ -6,7 +6,7 @@ Library             String
 Library             DateTime   
 Library             RPA.JSON
 Library             lib/validators/FantasyAddPlayerValidator.py
-Library             lib/fantasyUI/FantasyLoginManager.py    driver=${BROWSER}    xpaths=${CURDIR}/../resource/xpaths.json    WITH NAME    FLM
+Library             lib/fantasyUI/FantasyLoginManager.py    driver=${BROWSER}    xpaths=${CURDIR}/JSON/xpaths.json    WITH NAME    FLM
 
 *** Variables ***
 ${LEAGUE_ID}             748489070 
