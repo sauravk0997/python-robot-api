@@ -6,20 +6,27 @@ Library             Collections
 Library             String
 Library             OperatingSystem
 Library             lib/validators/FantasyMovePlayerValidator.py
+Resource            resource/FantasyResource.robot
 
 *** Variables ***
-${fantasy_url}                         https://fantasy.espn.com
-${BASEBALL_SPORT}                      fba
-${SEASON}                              2023
-${SEGMENT}                             0
-${teaminfo_query_param}                view=mDraftDetail&view=mTeam&view=mNav&view=mRoster
-${BenchSlotId}                         12
-${lineup_lock_message}                 Lineup transaction could not be completed, as lineup is locked
-${same_slot_error_type}                TRAN_ROSTER_SAME_SLOT
-${ineligible_slot_error_type}          TRAN_ROSTER_INELIGIBLE_SLOT
-${Incorrect_type_for_current_scoring}  TRAN_INVALID_SCORINGPERIOD_NOT_FUTURE
-${Incorrect_type_for_future_scoring}   TRAN_INVALID_SCORINGPERIOD_NOT_CURRENT
-${player_not_on_team_error_type}       TRAN_ROSTER_PLAYER_NOT_ON_ROSTER
+${fantasy_url}                                https://fantasy.espn.com
+${BASEBALL_SPORT}                             fba
+${SEASON}                                     2023
+${SEGMENT}                                    0
+${teaminfo_query_param}                       view=mDraftDetail&view=mTeam&view=mNav&view=mRoster
+${BenchSlotId}                                12
+${invalid_team_id}                            5
+${invalid_player_id}                          12345
+${lineup_lock_message}                        Lineup transaction could not be completed, as lineup is locked
+#error type for negative scenarios
+${same_slot_error_type}                       TRAN_ROSTER_SAME_SLOT
+${ineligible_slot_error_type}                 TRAN_ROSTER_INELIGIBLE_SLOT
+${Incorrect_type_for_current_scoring}         TRAN_INVALID_SCORINGPERIOD_NOT_FUTURE
+${Incorrect_type_for_future_scoring}          TRAN_INVALID_SCORINGPERIOD_NOT_CURRENT
+${player_not_on_team_error_type}              TRAN_ROSTER_PLAYER_NOT_ON_ROSTER
+${Not_auth_error_type}                        AUTH_UNAUTHORIZED_FOR_TEAM
+${team_not_found_error_type}                  TEAM_NOT_FOUND
+${general_unknow_error_type}                  GENERAL_UNKNOWN_ERROR
 
 *** Keywords ***
 #Post request for Performing various transactions like move,add,delete,drop..etc
@@ -150,7 +157,7 @@ Swap the position of players of team ${team_id} in a future scoring period and v
          ${player2s_to_lineup_slot_id}               Update value to JSON   ${swap_player_payload}     $.items[0].toLineupSlotId              ${Players_details_list}[3]
          ${type}                                     Update value to JSON   ${swap_player_payload}     $.type                                 FUTURE_ROSTER
          ${team}                                     Update value to JSON   ${swap_player_payload}     $.teamId                               ${team_id}
-         ${scoring_period}                           Update value to JSON   ${swap_player_payload}      $.scoringPeriodId                     ${future_scoring_period_id}
+         ${scoring_period}                           Update value to JSON   ${swap_player_payload}     $.scoringPeriodId                      ${future_scoring_period_id}
          Save JSON to file    ${player_id1}                                  resource/JSON/swap_player_template.json    2
          Save JSON to file    ${player_id2}                                  resource/JSON/swap_player_template.json    2
          Save JSON to file    ${player1s_from_lineup_slot_id}                resource/JSON/swap_player_template.json    2
@@ -229,7 +236,7 @@ Move any Player of team ${team_id} to same slot and validate the response
     ${player_details}               get length    ${player_details_list}
     IF    ${player_details} != 0
     # creating a payload and sending a post request to move a lineup player to bench
-        &{same_slot_payload}        load json from file    resource/JSON/Invalid_move_player_template.json
+        &{same_slot_payload}            load json from file    resource/JSON/Invalid_move_player_template.json
         ${player_id}                    Update value to JSON   ${same_slot_payload}         $.items[0].playerId                      ${player_details_list}[0]
         ${from_lineup_slot_id}          Update value to JSON   ${same_slot_payload}         $.items[0].fromLineupSlotId              ${player_details_list}[1]
         ${to_lineup_slot_id}            Update value to JSON   ${same_slot_payload}         $.items[0].toLineupSlotId                ${player_details_list}[1]
@@ -361,6 +368,120 @@ Move the player not available on team ${team_id} and validate the response
         Invalid Move Player Schema from ${player_not_on_team_response} should be valid
         log to console    ${player_not_on_team_response.json()}
         Validate the ${player_not_on_team_response} to contain ${player_not_on_team_error_type}
+    ELSE
+        Log     ${lineup_lock_message}
+    END
+
+Move the players of any team ${team_id} as a team owner and validate the response
+    ${league_info_response}        Get the league details from League_info_url for current scoring Period
+    @{Player_details_list}         Get any lineup player details of team ${team id} from ${league_info_response.json()}
+    ${random_number}               generate random string    1    012
+    &{header_value}                create dictionary    cookie=${user_cookies}[${random_number}]
+    ${player_details}              get length    ${player_details_list}
+    IF    ${player_details} != 0
+    # creating a payload and sending a post request to move a lineup player to bench
+        &{player_not_on_team_payload}            load json from file    resource/JSON/Invalid_move_player_template.json
+        ${player_id}                    Update value to JSON   ${player_not_on_team_payload}         $.items[0].playerId                      ${player_details_list}[0]
+        ${from_lineup_slot_id}          Update value to JSON   ${player_not_on_team_payload}         $.items[0].fromLineupSlotId              ${player_details_list}[1]
+        ${to_lineup_slot_id}            Update value to JSON   ${player_not_on_team_payload}         $.items[0].toLineupSlotId                ${player_details_list}[1]
+        ${type}                         Update value to JSON   ${player_not_on_team_payload}         $.type                                   ROSTER
+        ${scoring_period}               Update value to JSON   ${player_not_on_team_payload}         $.scoringPeriodId                        ${current_scoring_period_id}
+        ${team}                         Update value to JSON   ${player_not_on_team_payload}         $.teamId                                 ${team_id}
+        save json to file    ${player_id}                         resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${from_lineup_slot_id}               resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${to_lineup_slot_id}                 resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${scoring_period}                    resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${type}                              resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${team}                              resource/JSON/Invalid_move_player_template.json    2
+        set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions
+        ${team_owner_move_player_other_team_response}    A post request to ${MovePlayer_url} using ${header_value} with ${player_not_on_team_payload} should respond with 401
+        Invalid Move Player Schema from ${team_owner_move_player_other_team_response} should be valid
+        log to console    ${team_owner_move_player_other_team_response.json()}
+        validate the ${team_owner_move_player_other_team_response} to contain ${Not_auth_error_type}
+    ELSE
+        Log     ${lineup_lock_message}
+    END
+
+Move any player to an invalid team ${team_id} and validate the response
+    ${current_scoring_period_league_info_response}     Get the league details from League_info_url for current scoring Period
+    @{Player_details_list}          Get any lineup player details of team ${team id} from ${current_scoring_period_league_info_response.json()}
+    ${player_details}               get length    ${player_details_list}
+    IF    ${player_details} != 0
+    # creating a payload and sending a post request to move a lineup player to bench
+        &{incorrect_type_current_scoring_payload}        load json from file    resource/JSON/Invalid_move_player_template.json
+        ${player_id}                    Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].playerId                      ${player_details_list}[0]
+        ${from_lineup_slot_id}          Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].fromLineupSlotId              ${player_details_list}[1]
+        ${to_lineup_slot_id}            Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].toLineupSlotId                ${player_details_list}[1]
+        ${type}                         Update value to JSON   ${incorrect_type_current_scoring_payload}         $.type                                   ROSTER
+        ${scoring_period}               Update value to JSON   ${incorrect_type_current_scoring_payload}         $.scoringPeriodId                        ${current_scoring_period_id}
+        ${team}                         Update value to JSON   ${incorrect_type_current_scoring_payload}         $.teamId                                 ${invalid_team_id}
+        save json to file    ${player_id}                         resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${from_lineup_slot_id}               resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${to_lineup_slot_id}                 resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${scoring_period}                    resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${type}                              resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${team}                              resource/JSON/Invalid_move_player_template.json    2
+        set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
+        ${invalid_team_response}     A post request to ${MovePlayer_url} using ${header_value} with ${incorrect_type_current_scoring_payload} should respond with 409
+        log to console    ${invalid_team_response.json()}
+        Invalid Move Player Schema from ${invalid_team_response} should be valid
+        Validate the ${invalid_team_response} to contain ${team_not_found_error_type}
+
+    ELSE
+        Log     ${lineup_lock_message}
+    END
+
+Move any invalid player to team ${team_id} and validate the response
+    ${current_scoring_period_league_info_response}     Get the league details from League_info_url for current scoring Period
+    @{Player_details_list}          Get any lineup player details of team ${team id} from ${current_scoring_period_league_info_response.json()}
+    ${player_details}               get length    ${player_details_list}
+    IF    ${player_details} != 0
+    # creating a payload and sending a post request to move a lineup player to bench
+        &{incorrect_type_current_scoring_payload}        load json from file    resource/JSON/Invalid_move_player_template.json
+        ${player_id}                    Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].playerId                      ${invalid_player_id}
+        ${from_lineup_slot_id}          Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].fromLineupSlotId              ${player_details_list}[1]
+        ${to_lineup_slot_id}            Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].toLineupSlotId                ${player_details_list}[1]
+        ${type}                         Update value to JSON   ${incorrect_type_current_scoring_payload}         $.type                                   ROSTER
+        ${scoring_period}               Update value to JSON   ${incorrect_type_current_scoring_payload}         $.scoringPeriodId                        ${current_scoring_period_id}
+        ${team}                         Update value to JSON   ${incorrect_type_current_scoring_payload}         $.teamId                                 ${team_id}
+        save json to file    ${player_id}                         resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${from_lineup_slot_id}               resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${to_lineup_slot_id}                 resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${scoring_period}                    resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${type}                              resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${team}                              resource/JSON/Invalid_move_player_template.json    2
+        set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
+        ${invalid_player_response}     A post request to ${MovePlayer_url} using ${header_value} with ${incorrect_type_current_scoring_payload} should respond with 500
+        log to console    ${invalid_player_response.json()}
+        Invalid Move Player Schema from ${invalid_player_response} should be valid
+        Validate the ${invalid_player_response} to contain ${general_unknow_error_type}
+    ELSE
+        Log     ${lineup_lock_message}
+    END
+Move any player of team ${team_id} to invalid slot and validate the response
+    ${current_scoring_period_league_info_response}     Get the league details from League_info_url for current scoring Period
+    @{Player_details_list}          Get any lineup player details of team ${team id} from ${current_scoring_period_league_info_response.json()}
+    ${player_details}               get length    ${player_details_list}
+    IF    ${player_details} != 0
+    # creating a payload and sending a post request to move a lineup player to bench
+        &{incorrect_type_current_scoring_payload}        load json from file    resource/JSON/Invalid_move_player_template.json
+        ${player_id}                    Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].playerId                      ${player_details_list}[1]
+        ${from_lineup_slot_id}          Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].fromLineupSlotId              ${player_details_list}[1]
+        ${to_lineup_slot_id}            Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].toLineupSlotId                18
+        ${type}                         Update value to JSON   ${incorrect_type_current_scoring_payload}         $.type                                   ROSTER
+        ${scoring_period}               Update value to JSON   ${incorrect_type_current_scoring_payload}         $.scoringPeriodId                        ${current_scoring_period_id}
+        ${team}                         Update value to JSON   ${incorrect_type_current_scoring_payload}         $.teamId                                 ${team_id}
+        save json to file    ${player_id}                         resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${from_lineup_slot_id}               resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${to_lineup_slot_id}                 resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${scoring_period}                    resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${type}                              resource/JSON/Invalid_move_player_template.json    2
+        save json to file    ${team}                              resource/JSON/Invalid_move_player_template.json    2
+        set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
+        ${invalid_slot_response}     A post request to ${MovePlayer_url} using ${header_value} with ${incorrect_type_current_scoring_payload} should respond with 500
+        log to console    ${invalid_slot_response.json()}
+        Invalid Move Player Schema from ${invalid_slot_response} should be valid
+        Validate the ${invalid_slot_response} to contain ${general_unknow_error_type}
     ELSE
         Log     ${lineup_lock_message}
     END

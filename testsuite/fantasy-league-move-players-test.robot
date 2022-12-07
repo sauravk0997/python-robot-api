@@ -14,7 +14,7 @@ Suite Setup          Get a Fantasy League details
 Suite Teardown       Delete League
 
 *** Variables ***
-${own_team_id}     1
+${own_team_id}            1
 
 *** Test Cases ***
 As a team owner move the Players by swaping the position of the players in current scoring period
@@ -55,7 +55,7 @@ As a League manager swap the position of players of any team in a league in curr
 
 As a League manager move any lineup Player to Bench of any team in a league in current scoring period
     [Tags]    lm-moveplayers-to-bench-current-scoring-period  valid   CSEAUTO-28630   CSEAUTO-28641
-    ${team_id}      Get any different team_id
+     ${team_id}      Get any different team_id
      Move any lineup player to bench of ${team_id} in current scoring and validate the response
 
 As a League manager move any Player from Bench to LineUp of any team in a league in current scoringperiod
@@ -103,4 +103,22 @@ As a team owner move the player not available on the team
     ${own_team_id}           convert to integer    ${own_team_id}
     Move the player not available on team ${own_team_id} and validate the response
 
+As a team owner move the player of any other team
+    [Tags]  to-move-player-of-any-other-team   Invalid     CSEAUTO-29018       CSEAUTO-29075
+    ${own_team_id}       convert to integer    ${own_team_id}
+    Move the players of any team ${own_team_id} as a team owner and validate the response
 
+As a team owner move the player to an invalid team
+    [Tags]  to-move-player-to-an-invalid-team   Invalid     CSEAUTO-29018       CSEAUTO-29126
+    ${own_team_id}      convert to integer    ${own_team_id}
+    Move any player to an invalid team ${own_team_id} and validate the response
+
+As a team owner move players to an invalid slot
+    [Tags]  to-move-a-invalid-slot   Invalid     CSEAUTO-29018       CSEAUTO-29064
+    ${own_team_id}      convert to integer    ${own_team_id}
+    Move any player of team ${own_team_id} to invalid slot and validate the response
+
+As a team owner move the invalid player
+    [Tags]  to-move-a-invalid-player   Invalid     CSEAUTO-29018       CSEAUTO-29077
+    ${own_team_id}      convert to integer    ${own_team_id}
+    Move any invalid player to team ${own_team_id} and validate the response
