@@ -287,6 +287,17 @@ A POST request ${endpoint} to add invalid player to my team should respond with 
     ${response}=                                        POST  url=${endpoint}                headers=${header}                              json=${invalid_player_json}                         expected_status=${status}           
     [Return]                                            ${response}
 
+A POST request ${endpoint} to add invalid player as League Manager to my team should respond with ${status}
+    [Documentation]    POST request to add invalid player to my team
+    Fetch scoring period id for team    1
+    ${invalid_player_json}                              Load JSON from file                  resource/JSON/InvlaidPlayerasLM.json 
+    ${scoring_periodId_updated}                         Update value to JSON                 ${invalid_player_json}                           $.scoringPeriodId                                  ${scoring_period_id}
+    Save JSON to file                                   ${scoring_periodId_updated}          resource/JSON/InvlaidPlayerasLM.json             2
+    &{header}=                                          Create Dictionary                    cookie=${USER_COOKIE}
+    ${response}=                                        POST  url=${endpoint}                headers=${header}                              json=${invalid_player_json}                         expected_status=${status}           
+    [Return]                                            ${response}
+
+
 Validate negative scenario for adding player ${response} with message ${error_type}
     [Documentation]        Validating whether invalid player can be added to my team
     ${response_type}               Get value from JSON       ${response.json()}                $.details[0].type  

@@ -44,6 +44,20 @@ As a Fantasy League Manager, add and drop a player to other team
     Validate players are added and dropped from ${response}
     Add Player Schema from ${response} should be valid
 
+As a Team Owner, I should not be able to add a new player in my team, if my roaster is full.
+    [Documentation]     Simple validation of the base level schema url and adding a player in my team as a Team Owner when my roaster is full for Fantasy Games API.
+    [Tags]    valid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
+    ${free_agent_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} not to add a player to my team if my roaster is full should respond with 409
+    Validate negative scenario for adding player ${free_agent_response} with message TRAN_ROSTER_LIMIT_EXCEEDED_ONE
+    Invalid Add Player Schema from ${free_agent_response} should be valid
+
+As a Team Owner, I should not be able to add more than 4 players at 'Position C' in my team.
+    [Documentation]     Simple validation of the base level schema url and adding a Position C player in my team when I already have 4 Position C player in my team as a Team Owner for Fantasy Games API.
+    [Tags]    valid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
+    ${free_agent_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player at position C to my team should respond with 409
+    Validate negative scenario for adding player ${free_agent_response} with message TRAN_ROSTER_POSITION_LIMIT_EXCEEDED
+    Invalid Add Player Schema from ${free_agent_response} should be valid
+
 Drop and add a player in my team as a Team Owner
     [Documentation]     Simple validation of the base level schema url and 'dropping and then adding' a player in my team as a Team Owner for Fantasy Games API.
     [Tags]    valid   fantasy_games    CSEAUTO-28331    CSEAUTO-28388
@@ -63,20 +77,6 @@ Drop and add a player in other team as a League Manager
     Add Player Schema from ${add_player_as_LM_response} should be valid
     Validate player is dropped from my team from ${drop_player_as_LM_response}
     Validate player is added to my team from ${add_player_as_LM_response}
-
-As a Team Owner, I should not be able to add a new player in my team, if my roaster is full.
-    [Documentation]     Simple validation of the base level schema url and adding a player in my team as a Team Owner when my roaster is full for Fantasy Games API.
-    [Tags]    valid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
-    ${free_agent_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} not to add a player to my team if my roaster is full should respond with 409
-    Validate negative scenario for adding player ${free_agent_response} with message TRAN_ROSTER_LIMIT_EXCEEDED_ONE
-    Invalid Add Player Schema from ${free_agent_response} should be valid
-
-As a Team Owner, I should not be able to add more than 4 players at 'Position C' in my team.
-    [Documentation]     Simple validation of the base level schema url and adding a Position C player in my team when I already have 4 Position C player in my team as a Team Owner for Fantasy Games API.
-    [Tags]    valid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
-    ${free_agent_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player at position C to my team should respond with 409
-    Validate negative scenario for adding player ${free_agent_response} with message TRAN_ROSTER_LIMIT_EXCEEDED_ONE
-    Invalid Add Player Schema from ${free_agent_response} should be valid
 
 As a Team Owner, I should not be able to add an On Waivers player in my team.
     [Documentation]     Simple validation of the base level schema url and adding a waiver player in my team as a Team Owner for Fantasy Games API.
@@ -106,10 +106,17 @@ As a League Manager, add a valid player to invalid team
     Validate negative scenario for adding player ${invalid_team_reaponse} with message TEAM_NOT_FOUND
     Invalid Add Player Schema from ${invalid_team_reaponse} should be valid
 
-As a Team Owner, add a invalid playe to my team
+As a Team Owner, add a invalid player to my team
     [Documentation]    Simple validation of the base level schema url and adding a invalid player to my team
     [Tags]    valid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
     ${invalid_player_reaponse}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add invalid player to my team should respond with 400
     Validate negative scenario for adding player ${invalid_player_reaponse} with message PLAYER_NOT_EXISTS
     Invalid Add Player Schema from ${invalid_player_reaponse} should be valid    
+
+As a League Manager, add an invalid player to my team
+    [Documentation]    Simple validation of the base level schema url and adding an invalid player as LM to my team
+    [Tags]    valid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
+    ${invalid_player_reaponse}=    A POST request ${API_BASE}/apis/v3/games/fba/seasons/${SEASON_ID}/segments/0/leagues/${leagueid}/${TRANSACTION_SLUG} to add invalid player as League Manager to my team should respond with 400
+    Validate negative scenario for adding player ${invalid_player_reaponse} with message PLAYER_NOT_EXISTS
+    Invalid Add Player Schema from ${invalid_player_reaponse} should be valid
 
