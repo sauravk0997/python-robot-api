@@ -1,7 +1,4 @@
-from pprint import pprint
-import requests
-from marshmallow import Schema, fields, RAISE, ValidationError
-
+from marshmallow import Schema, fields, RAISE
 
 class DetailsSchema(Schema):
     message            = fields.String(required=True)
@@ -10,11 +7,8 @@ class DetailsSchema(Schema):
     type               = fields.String(required=True)
     metaData           = fields.String(allow_none=True, required=True)
 
-
 class InvalidSchema(Schema):
-
     class Meta:
         unknown = RAISE
-
     messages = fields.List(fields.String, required=True)
     details  =  fields.List(fields.Nested(DetailsSchema), required=False)
