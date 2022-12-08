@@ -144,9 +144,9 @@ Validate player is added to my team from ${response}
 
 As League Manager, Drop a player from other team ${team_ID}
     Fetch scoring period id for team    5
-    &{drop_payload1}=                   Load JSON from file        resource/JSON/dropPlayerasLM.json
-    ${save_scoringPeriodId}             Update value to JSON       ${drop_payload1}    $.scoringPeriodId                            ${scoring_period_id}
-    Save JSON to file                   ${save_scoringPeriodId}    resource/JSON/dropPlayerasLM.json     2 
+    &{drop_payload1}=                   Load JSON from file                            resource/JSON/dropPlayerasLM.json
+    ${save_scoringPeriodId}             Update value to JSON                           ${drop_payload1}    $.scoringPeriodId                            ${scoring_period_id}
+    Save JSON to file                   ${save_scoringPeriodId}                        resource/JSON/dropPlayerasLM.json     2 
     Get the value of Drop Player Id and Free Agent Player Id of Team    5 
     ${droppable_players_id_updated}=    Update value to JSON       ${drop_payload1}    $.items[0].playerId                           ${player_details}[0]
     Save JSON to file                   ${droppable_players_id_updated}                resource/JSON/dropPlayerasLM.json    2
@@ -184,58 +184,51 @@ A POST request to ${endpoint} add a player to other team as LM should respond wi
     ${response}=     POST  url=${endpoint}     headers=${header}    json=${add_payload1}     expected_status=${status}           
     [Return]         ${response}
 
+Updating header and filter for response with json file ${json_file}
+    Fetch scoring period id for team    1
+    ${player_json}                       Load JSON from file                             ${json_file}
+    ${scoring_periodId_updated}          Update value to JSON    ${player_json}          $.players.filterRanksForScoringPeriodIds.value[0]          ${scoring_period_id}
+    Save JSON to file                    ${scoring_periodId_updated}                     ${json_file}    
+    ${player_filter}                     Get file                                        ${json_file}
+    &{player_header}=                    Create Dictionary                               cookie=${USER_COOKIE}                                      x-fantasy-filter=${player_filter}
+    ${player_response}=                  GET  url= ${API_BASE}/${LEAGUE_SLUG}?scoringPeriodId=${scoring_period_id}&view=kona_player_info            headers=${player_header}               expected_status=200
+    Set Global Variable                   ${player_response}
+    
+
 A POST request ${endpoint} not to add a player to my team if my roaster is full should respond with ${status}
     [Documentation]     Post request for not adding a player to my team if my roaster is full
-    Fetch scoring period id for team    1
-    ${free_agent_json}                   Load JSON from file                             resource/JSON/freeAgentFilter.json
-    ${scoring_periodId_updated}          Update value to JSON    ${free_agent_json}      $.players.filterRanksForScoringPeriodIds.value[0]     ${scoring_period_id}
-    Save JSON to file                    ${scoring_periodId_updated}                     resource/JSON/freeAgentFilter.json    
-    ${free_agent_filter}                 Get file                                        resource/JSON/freeAgentFilter.json
-    &{free_agent_header}=                Create Dictionary                               cookie=${USER_COOKIE}                                 x-fantasy-filter=${free_agent_filter}
-    ${free_agent_response}=              GET  url= ${API_BASE}/${LEAGUE_SLUG}?scoringPeriodId=${scoring_period_id}&view=kona_player_info       headers=${free_agent_header}               expected_status=200
-    ${free_agent_player_id}              Get the free-agent player id                    ${free_agent_response}
+    Updating header and filter for response with json file resource/JSON/freeAgentFilter.json
+    ${free_agent_player_id}              Get the free-agent player id                    ${player_response}
     &{free_agent_payload}=               Load JSON from file                             resource/JSON/addPlayerasTO.json
-    ${save_scoringPeriodId}              Update value to JSON                            ${free_agent_payload}        $.scoringPeriodId        ${scoring_period_id}
+    ${save_scoringPeriodId}              Update value to JSON                            ${free_agent_payload}        $.scoringPeriodId             ${scoring_period_id}
     Save JSON to file                    ${save_scoringPeriodId}                         resource/JSON/addPlayerasTO.json    2 
-    ${free_agent_players_id_updated}=    Update value to JSON                            ${free_agent_payload}        $.items[0].playerId      ${free_agent_player_id}
+    ${free_agent_players_id_updated}=    Update value to JSON                            ${free_agent_payload}        $.items[0].playerId           ${free_agent_player_id}
     Save JSON to file                    ${free_agent_players_id_updated}                resource/JSON/addPlayerasTO.json    2
     &{header}=                           Create Dictionary                               cookie=${USER_COOKIE}
-    ${response}=                         POST  url=${endpoint}                           headers=${header}     json=${free_agent_payload}      expected_status=${status}           
+    ${response}=                         POST  url=${endpoint}                           headers=${header}        json=${free_agent_payload}          expected_status=${status}           
     [Return]                             ${response}
 
 A POST request ${endpoint} to add a player at position C to my team should respond with ${status}
     [Documentation]     Post request for adding a Position C player to my team when I already have 4 Positiom C player in my team
-    Fetch scoring period id for team    1
-    ${free_agent_json}                   Load JSON from file                 resource/JSON/freeAgentFilter.json
-    ${scoring_periodId_updated}          Update value to JSON                ${free_agent_json}          $.players.filterRanksForScoringPeriodIds.value[0]       ${scoring_period_id}
-    Save JSON to file                    ${scoring_periodId_updated}         resource/JSON/freeAgentFilter.json    
-    ${free_agent_filter}                 Get file                            resource/JSON/freeAgentFilter.json
-    &{free_agent_header}=                Create Dictionary                   cookie=${USER_COOKIE}                  x-fantasy-filter=${free_agent_filter}
-    ${free_agent_response}=              GET  url= ${API_BASE}/${LEAGUE_SLUG}?scoringPeriodId=${scoring_period_id}&view=kona_player_info                         headers=${free_agent_header}      expected_status=200
-    ${free_agent_player_id}              Get the Position C player id        ${free_agent_response}
+    Updating header and filter for response with json file resource/JSON/freeAgentFilter.json
+    ${free_agent_player_id}              Get the Position C player id        ${player_response}
     &{free_agent_payload}=               Load JSON from file                 resource/JSON/addPlayerasTO.json
     ${save_scoringPeriodId}              Update value to JSON                ${free_agent_payload}                   $.scoringPeriodId                           ${scoring_period_id}
     Save JSON to file                    ${save_scoringPeriodId}             resource/JSON/addPlayerasTO.json        2 
     ${free_agent_players_id_updated}=    Update value to JSON                ${free_agent_payload}                   $.items[0].playerId                         ${free_agent_player_id}
     Save JSON to file                    ${free_agent_players_id_updated}    resource/JSON/addPlayerasTO.json        2
     &{header}=                           Create Dictionary                   cookie=${USER_COOKIE}
-    ${response}=                         POST  url=${endpoint}               headers=${header}                      json=${free_agent_payload}                  expected_status=${status}           
+    ${response}=                         POST  url=${endpoint}               headers=${header}                        json=${free_agent_payload}                  expected_status=${status}           
     [Return]                             ${response}
  
 A POST request ${endpoint} to add an On Waiver player in my team should respond with ${status}
     [Documentation]     Post request for adding a Waiver player to my team 
-    Fetch scoring period id for team    1
-    ${on_Waiver_json}                    Load JSON from file                 resource/JSON/OnWaiverFilter.json
-    ${scoring_periodId_updated}          Update value to JSON                ${on_Waiver_json}          $.players.filterRanksForScoringPeriodIds.value[0]       ${scoring_period_id}
-    Save JSON to file                    ${scoring_periodId_updated}         resource/JSON/OnWaiverFilter.json    
-    ${on_Waiver_filter}                  Get file                            resource/JSON/OnWaiverFilter.json
-    &{on_Waiver_header}=                 Create Dictionary                   cookie=${USER_COOKIE}                  x-fantasy-filter=${on_Waiver_filter}
-    ${on_Waiver_response}=               GET  url= ${API_BASE}/${LEAGUE_SLUG}?scoringPeriodId=${scoring_period_id}&view=kona_player_info                         headers=${on_Waiver_header}      expected_status=200
-    ${on_Waiver_player_id}               Get the On Waivers player id        ${on_Waiver_response}
+    Updating header and filter for response with json file resource/JSON/onWaiverFilter.json
+    ${on_Waiver_player_id}               Get the On Waivers player id        ${player_response}
     &{on_Waiver_payload}=                Load JSON from file                 resource/JSON/addPlayerasTO.json
     ${save_scoringPeriodId}              Update value to JSON                ${on_Waiver_payload}                   $.scoringPeriodId                           ${scoring_period_id}
     Save JSON to file                    ${save_scoringPeriodId}             resource/JSON/addPlayerasTO.json        2 
-    ${on_Waiver_players_id_updated}=    Update value to JSON                 ${on_Waiver_payload}                   $.items[0].playerId                         ${on_Waiver_player_id}
+    ${on_Waiver_players_id_updated}=     Update value to JSON                ${on_Waiver_payload}                   $.items[0].playerId                         ${on_Waiver_player_id}
     Save JSON to file                    ${on_Waiver_players_id_updated}     resource/JSON/addPlayerasTO.json        2 
     &{header}=                           Create Dictionary                   cookie=${USER_COOKIE}
     ${response}=                         POST  url=${endpoint}               headers=${header}                      json=${on_Waiver_payload}                  expected_status=${status}           
@@ -243,14 +236,8 @@ A POST request ${endpoint} to add an On Waiver player in my team should respond 
 
 A POST request ${endpoint} to add an On Roaster player in my team should respond with ${status}
     [Documentation]     Post request for adding a roaster player to my team 
-    Fetch scoring period id for team    1
-    ${on_team_json}                      Load JSON from file                  resource/JSON/OnRoastersFilter.json 
-    ${scoring_periodId_updated}          Update value to JSON                 ${on_team_json}          $.players.filterRanksForScoringPeriodIds.value[0]         ${scoring_period_id}
-    Save JSON to file                    ${scoring_periodId_updated}          resource/JSON/OnRoastersFilter.json    
-    ${on_team_filter}                    Get file                             resource/JSON/OnRoastersFilter.json
-    &{on_team_header}=                   Create Dictionary                    cookie=${USER_COOKIE}                  x-fantasy-filter=${on_team_filter}
-    ${on_team_response}=                 GET  url= ${API_BASE}/${LEAGUE_SLUG}?scoringPeriodId=${scoring_period_id}&view=kona_player_info                          headers=${on_team_header}        expected_status=200
-    ${on_team_player_id}                 Get the On Roasters player id        ${on_team_response}
+    Updating header and filter for response with json file resource/JSON/onRoastersFilter.json
+    ${on_team_player_id}                 Get the On Roasters player id        ${player_response}
     &{on_team_payload}=                  Load JSON from file                  resource/JSON/addPlayerasTO.json
     ${save_scoringPeriodId}              Update value to JSON                 ${on_team_payload}                   $.scoringPeriodId                              ${scoring_period_id}
     Save JSON to file                    ${save_scoringPeriodId}              resource/JSON/addPlayerasTO.json        2 
@@ -267,40 +254,17 @@ A POST request ${endpoint} to add player with wrong scoring period id should res
     ${response}=                                        POST  url=${endpoint}                headers=${header}                      json=${wrong_scoring_periodId_payload}                      expected_status=${status}           
     [Return]                                            ${response}
 
-A POST request ${endpoint} to add a valid player to invalid team should respond with ${status}
-    [Documentation]    POST request to add a valid player to invalid team
+A POST request ${endpoint} to add a player with proper ${payload} should respond with ${status}
+    [Documentation]    POST request for negative scenario either add a invalid player or invalid team
     Fetch scoring period id for team    1
-    ${invalid_team_json}                                Load JSON from file                  resource/JSON/InvalidTeam.json 
+    ${invalid_team_json}                                Load JSON from file                  ${payload}                              
     ${scoring_periodId_updated}                         Update value to JSON                 ${invalid_team_json}                           $.scoringPeriodId                                  ${scoring_period_id}
-    Save JSON to file                                   ${scoring_periodId_updated}          resource/JSON/InvalidTeam.json           2
+    Save JSON to file                                   ${scoring_periodId_updated}          ${payload}           2
     &{header}=                                          Create Dictionary                    cookie=${USER_COOKIE}
     ${response}=                                        POST  url=${endpoint}                headers=${header}                             json=${invalid_team_json}                         expected_status=${status}           
     [Return]                                            ${response}
 
-A POST request ${endpoint} to add invalid player to my team should respond with ${status}
-    [Documentation]    POST request to add invalid player to my team
-    Fetch scoring period id for team    1
-    ${invalid_player_json}                              Load JSON from file                  resource/JSON/InvalidPlayer.json 
-    ${scoring_periodId_updated}                         Update value to JSON                 ${invalid_player_json}                           $.scoringPeriodId                                  ${scoring_period_id}
-    Save JSON to file                                   ${scoring_periodId_updated}          resource/JSON/InvalidPlayer.json        2
-    &{header}=                                          Create Dictionary                    cookie=${USER_COOKIE}
-    ${response}=                                        POST  url=${endpoint}                headers=${header}                              json=${invalid_player_json}                         expected_status=${status}           
-    [Return]                                            ${response}
-
-A POST request ${endpoint} to add invalid player as League Manager to my team should respond with ${status}
-    [Documentation]    POST request to add invalid player to my team
-    Fetch scoring period id for team    1
-    ${invalid_player_json}                              Load JSON from file                  resource/JSON/InvlaidPlayerasLM.json 
-    ${scoring_periodId_updated}                         Update value to JSON                 ${invalid_player_json}                           $.scoringPeriodId                                  ${scoring_period_id}
-    Save JSON to file                                   ${scoring_periodId_updated}          resource/JSON/InvlaidPlayerasLM.json             2
-    &{header}=                                          Create Dictionary                    cookie=${USER_COOKIE}
-    ${response}=                                        POST  url=${endpoint}                headers=${header}                              json=${invalid_player_json}                         expected_status=${status}           
-    [Return]                                            ${response}
-
-
 Validate negative scenario for adding player ${response} with message ${error_type}
-    [Documentation]        Validating whether invalid player can be added to my team
+    [Documentation]        Validating whether invalid player can be added to  invalid team
     ${response_type}               Get value from JSON       ${response.json()}                $.details[0].type  
     Should Be Equal As Strings     ${response_type}          ${error_type}
-
-

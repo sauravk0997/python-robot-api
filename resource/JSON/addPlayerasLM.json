@@ -2,11 +2,11 @@
   "isLeagueManager": true,
   "teamId": "5",
   "type": "FREEAGENT",
-  "scoringPeriodId": 52,
+  "scoringPeriodId": 53,
   "executionType": "EXECUTE",
   "items": [
     {
-      "playerId": 2991230,
+      "playerId": 3102530,
       "type": "ADD",
       "toTeamId": "5"
     }
