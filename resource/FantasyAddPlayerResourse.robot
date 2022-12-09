@@ -192,60 +192,53 @@ Updating header and filter for response with json file ${json_file}
     ${player_filter}                     Get file                                        ${json_file}
     &{player_header}=                    Create Dictionary                               cookie=${USER_COOKIE}                                      x-fantasy-filter=${player_filter}
     ${player_response}=                  GET  url= ${API_BASE}/${LEAGUE_SLUG}?scoringPeriodId=${scoring_period_id}&view=kona_player_info            headers=${player_header}               expected_status=200
-    Set Global Variable                   ${player_response}
-    
+    Set Global Variable                  ${player_response}
+
+ Updating payload for the Post request 
+    [Arguments]                          ${player_id}
+    &{payload}=                          Load JSON from file                             resource/JSON/addPlayerasTO.json
+    ${save_scoringPeriodId}              Update value to JSON                            ${payload}        $.scoringPeriodId             ${scoring_period_id}
+    Save JSON to file                    ${save_scoringPeriodId}                         resource/JSON/addPlayerasTO.json    2 
+    ${free_agent_players_id_updated}=    Update value to JSON                            ${payload}        $.items[0].playerId           ${player_id}
+    Save JSON to file                    ${free_agent_players_id_updated}                resource/JSON/addPlayerasTO.json    2
+    Set Global Variable                  ${payload}
+
 
 A POST request ${endpoint} not to add a player to my team if my roaster is full should respond with ${status}
     [Documentation]     Post request for not adding a player to my team if my roaster is full
     Updating header and filter for response with json file resource/JSON/freeAgentFilter.json
-    ${free_agent_player_id}              Get the free-agent player id                    ${player_response}
-    &{free_agent_payload}=               Load JSON from file                             resource/JSON/addPlayerasTO.json
-    ${save_scoringPeriodId}              Update value to JSON                            ${free_agent_payload}        $.scoringPeriodId             ${scoring_period_id}
-    Save JSON to file                    ${save_scoringPeriodId}                         resource/JSON/addPlayerasTO.json    2 
-    ${free_agent_players_id_updated}=    Update value to JSON                            ${free_agent_payload}        $.items[0].playerId           ${free_agent_player_id}
-    Save JSON to file                    ${free_agent_players_id_updated}                resource/JSON/addPlayerasTO.json    2
-    &{header}=                           Create Dictionary                               cookie=${USER_COOKIE}
-    ${response}=                         POST  url=${endpoint}                           headers=${header}        json=${free_agent_payload}          expected_status=${status}           
-    [Return]                             ${response}
+    ${free_agent_player_id}                  Get the free-agent player id                    ${player_response}
+    Updating payload for the Post request    ${free_agent_player_id}
+    &{header}=                               Create Dictionary                               cookie=${USER_COOKIE}
+    ${response}=                             POST  url=${endpoint}                           headers=${header}        json=${payload}          expected_status=${status}           
+    [Return]                                 ${response}
 
 A POST request ${endpoint} to add a player at position C to my team should respond with ${status}
     [Documentation]     Post request for adding a Position C player to my team when I already have 4 Positiom C player in my team
     Updating header and filter for response with json file resource/JSON/freeAgentFilter.json
-    ${free_agent_player_id}              Get the Position C player id        ${player_response}
-    &{free_agent_payload}=               Load JSON from file                 resource/JSON/addPlayerasTO.json
-    ${save_scoringPeriodId}              Update value to JSON                ${free_agent_payload}                   $.scoringPeriodId                           ${scoring_period_id}
-    Save JSON to file                    ${save_scoringPeriodId}             resource/JSON/addPlayerasTO.json        2 
-    ${free_agent_players_id_updated}=    Update value to JSON                ${free_agent_payload}                   $.items[0].playerId                         ${free_agent_player_id}
-    Save JSON to file                    ${free_agent_players_id_updated}    resource/JSON/addPlayerasTO.json        2
-    &{header}=                           Create Dictionary                   cookie=${USER_COOKIE}
-    ${response}=                         POST  url=${endpoint}               headers=${header}                        json=${free_agent_payload}                  expected_status=${status}           
-    [Return]                             ${response}
+    ${free_agent_player_id}                  Get the Position C player id        ${player_response}
+    Updating payload for the Post request    ${free_agent_player_id}
+    &{header}=                               Create Dictionary                   cookie=${USER_COOKIE}
+    ${response}=                             POST  url=${endpoint}               headers=${header}                        json=${payload}                  expected_status=${status}           
+    [Return]                                 ${response}
  
 A POST request ${endpoint} to add an On Waiver player in my team should respond with ${status}
     [Documentation]     Post request for adding a Waiver player to my team 
     Updating header and filter for response with json file resource/JSON/onWaiverFilter.json
-    ${on_Waiver_player_id}               Get the On Waivers player id        ${player_response}
-    &{on_Waiver_payload}=                Load JSON from file                 resource/JSON/addPlayerasTO.json
-    ${save_scoringPeriodId}              Update value to JSON                ${on_Waiver_payload}                   $.scoringPeriodId                           ${scoring_period_id}
-    Save JSON to file                    ${save_scoringPeriodId}             resource/JSON/addPlayerasTO.json        2 
-    ${on_Waiver_players_id_updated}=     Update value to JSON                ${on_Waiver_payload}                   $.items[0].playerId                         ${on_Waiver_player_id}
-    Save JSON to file                    ${on_Waiver_players_id_updated}     resource/JSON/addPlayerasTO.json        2 
-    &{header}=                           Create Dictionary                   cookie=${USER_COOKIE}
-    ${response}=                         POST  url=${endpoint}               headers=${header}                      json=${on_Waiver_payload}                  expected_status=${status}           
-    [Return]                             ${response}
+    ${on_Waiver_player_id}                   Get the On Waivers player id        ${player_response}
+    Updating payload for the Post request    ${on_Waiver_player_id}
+    &{header}=                               Create Dictionary                   cookie=${USER_COOKIE}
+    ${response}=                             POST  url=${endpoint}               headers=${header}                      json=${payload}                  expected_status=${status}           
+    [Return]                                 ${response}
 
 A POST request ${endpoint} to add an On Roaster player in my team should respond with ${status}
     [Documentation]     Post request for adding a roaster player to my team 
     Updating header and filter for response with json file resource/JSON/onRoastersFilter.json
-    ${on_team_player_id}                 Get the On Roasters player id        ${player_response}
-    &{on_team_payload}=                  Load JSON from file                  resource/JSON/addPlayerasTO.json
-    ${save_scoringPeriodId}              Update value to JSON                 ${on_team_payload}                   $.scoringPeriodId                              ${scoring_period_id}
-    Save JSON to file                    ${save_scoringPeriodId}              resource/JSON/addPlayerasTO.json        2 
-    ${on_team_players_id_updated}=       Update value to JSON                 ${on_team_payload}                   $.items[0].playerId                            ${on_team_player_id}
-    Save JSON to file                    ${on_team_players_id_updated}        resource/JSON/addPlayerasTO.json        2 
-    &{header}=                           Create Dictionary                    cookie=${USER_COOKIE}
-    ${response}=                         POST  url=${endpoint}                headers=${header}                      json=${on_team_payload}                      expected_status=${status}           
-    [Return]                             ${response}
+    ${on_team_player_id}                     Get the On Roasters player id        ${player_response}
+    Updating payload for the Post request    ${on_team_player_id}
+    &{header}=                               Create Dictionary                    cookie=${USER_COOKIE}
+    ${response}=                             POST  url=${endpoint}                headers=${header}                      json=${payload}                      expected_status=${status}           
+    [Return]                                 ${response}
 
 A POST request ${endpoint} to add player with wrong scoring period id should respond with ${status}
     [Documentation]    POST request to add player with wrong scoring period id

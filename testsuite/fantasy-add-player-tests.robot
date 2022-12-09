@@ -114,3 +114,9 @@ As a Team Owner, add a invalid player to my team
     Validate negative scenario for adding player ${invalid_player_reaponse} with message PLAYER_NOT_EXISTS
     Invalid Add Player Schema from ${invalid_player_reaponse} should be valid    
 
+As a League Manager, add an invalid player to my team
+    [Documentation]    Simple validation of the base level schema url and adding an invalid player as LM to my team
+    [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
+    ${invalid_player_reaponse}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/invlaidPlayerasLM.json should respond with 400
+    Validate negative scenario for adding player ${invalid_player_reaponse} with message PLAYER_NOT_EXISTS
+    Invalid Add Player Schema from ${invalid_player_reaponse} should be valid
