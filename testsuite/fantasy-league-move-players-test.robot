@@ -27,7 +27,6 @@ As a team owner move any lineup Player to Bench in current scoring period
     ${own_team_id}     convert to integer    ${own_team_id}
     Move any lineup player to bench of ${own_team_id} in current scoring and validate the response
 
-
 As a team owner move any Player from Bench to LineUp in current scoringperiod
     [Tags]    to-moveplayers-from-bench-to-lineup-current-scoring-period  valid   CSEAUTO-28630   CSEAUTO-28640
     ${own_team_id}     convert to integer    ${own_team_id}

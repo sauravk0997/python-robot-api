@@ -158,14 +158,18 @@ class FantasyMovePlayerValidator(object):
     def get_any_lineup_player_details(self, team_id, teams_response) -> list:
         try:
             for players in range(0, 13):
-                lineup_slot_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].lineupSlotId')
+                lineup_slot_id = JSON().get_value_from_json(teams_response,
+                                                            f'$.teams[{team_id - 1}].roster.entries[{players}].lineupSlotId')
                 if lineup_slot_id == 12:  # Bench players line up slot id is 12
                     continue
                 else:
-                    line_up_status = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].playerPoolEntry.lineupLocked')
+                    line_up_status = JSON().get_value_from_json(teams_response,
+                                                                f'$.teams[{team_id - 1}].roster.entries[{players}].playerPoolEntry.lineupLocked')
                     if line_up_status is False:
-                        player_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].playerId')
-                        lineup_slot_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].lineupSlotId')
+                        player_id = JSON().get_value_from_json(teams_response,
+                                                               f'$.teams[{team_id - 1}].roster.entries[{players}].playerId')
+                        lineup_slot_id = JSON().get_value_from_json(teams_response,
+                                                                    f'$.teams[{team_id - 1}].roster.entries[{players}].lineupSlotId')
                         return [player_id, lineup_slot_id]
             logging.info('currently no lineup player can be moved to Bench as lineup is locked')
         except ValidationError as ve:
@@ -198,7 +202,8 @@ class FantasyMovePlayerValidator(object):
                 else:
                     continue
                 for compare_players in range(0, 13):
-                    if compare_players == players:
+                    lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{compare_players}].lineupSlotId')
+                    if compare_players == players or lineup_slot_id == 12:
                         continue
                     else:
                         default_position_id1 = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{compare_players}].playerPoolEntry.player.defaultPositionId')
