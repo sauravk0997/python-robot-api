@@ -26,7 +26,7 @@ class FantasyAddPlayerValidator(object):
           Fantasy Games Schema from ${response} should be valid
         """
         try:
-            data = AddPlayerSchema().load(response.json())
+            valid_schema = AddPlayerSchema().load(response.json())
 
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
@@ -45,7 +45,7 @@ class FantasyAddPlayerValidator(object):
                   'Add Player Schema from ${response} should be valid
                 """
         try:
-            schema = InvalidAddPlayerSchema().load(response.json())
+           Invalid_schema = InvalidSchema().load(response.json())
 
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
