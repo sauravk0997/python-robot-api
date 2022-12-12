@@ -42,7 +42,7 @@ class FantasyAddPlayerValidator(object):
                     and validates the json against the FantasyLeague class.
 
                   Examples:
-                  'Move Player Schema from ${response} should be valid
+                  'Add Player Schema from ${response} should be valid
                 """
         try:
             schema = InvalidAddPlayerSchema().load(response.json())

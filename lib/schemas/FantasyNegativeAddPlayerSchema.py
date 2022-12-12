@@ -9,7 +9,8 @@ class DetailsSchema(Schema):
     shortMessage       = fields.String(required=True)
     resolution         = fields.String(allow_none=True, required=True)
     type               = fields.String(required=True)
-    metaData           = metaDataCustom(required=True, allow_none=True)
+    #metaData           = metaDataCustom(required=True, allow_none=True)
+    metaData           = fields.Raw(required=False, allow_none=True)
 
 class InvalidAddPlayerSchema(Schema):
 

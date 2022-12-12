@@ -21,17 +21,16 @@ ${user}                  saurav.kumar@zucitech.com
 ${password}              Saurav@1103
 ${greeting}              Saurav!                  
 
-
 *** Keywords ***
-
 Get user cookie
     FLM.Login Fantasy User    username=${user}         password=${password}       expected_profile_name_span_value=${greeting}     url=${HOMEPAGE}
     ${USER_COOKIE}=           FLM.Fantasy API Cookie
     Set Global Variable       ${USER_COOKIE}
+    &{header}=                Create Dictionary                    cookie=${USER_COOKIE}
+    Set Global Variable       ${header}
 
 Fetch scoring period id for team
     [Arguments]              ${team_id}
-    &{header}=               Create Dictionary                    cookie=${USER_COOKIE}
     ${team_response}=        GET  url=${TEAM_API}=${team_id}      headers=${header}      expected_status=200
     ${scoring_period_id}=    Get value from JSON    ${team_response.json()}              $.scoringPeriodId
     Set Global Variable      ${scoring_period_id}
@@ -45,7 +44,6 @@ Get the value of Drop Player Id and Free Agent Player Id of Team
     ${free_agent_filter}           Get file                            resource/JSON/freeAgentFilter.json
     &{free_agent_header}=          Create Dictionary                   cookie=${USER_COOKIE}    x-fantasy-filter=${free_agent_filter}
     ${free_agent_response}=        GET  url= ${API_BASE}/${LEAGUE_SLUG}?scoringPeriodId=${scoring_period_id}&view=kona_player_info                  headers=${free_agent_header}      expected_status=200
-    &{header}=                     Create Dictionary                   cookie=${USER_COOKIE}
     ${team_response}=              GET  url=${TEAM_API}=${team_id1}    headers=${header}       expected_status=200 
     @{player_details}              Get the droppable player and free-agent player id           ${team_id1}            ${team_response}              ${free_agent_response}
     Set Global Variable            @{player_details}
@@ -63,7 +61,6 @@ Update payload ${payload} with ${scoring_period_id}, ${drop_player_id} and ${fre
      
 A POST request to ${endpoint} with ${payload} to add and drop a player should respond with ${status}
     [Documentation]     Post request for adding and dropping a player as a Team Owner in my team
-    &{header}=          Create Dictionary          cookie=${USER_COOKIE}
     ${response}=        POST  url=${endpoint}      headers=${header}       json=${payload}     expected_status=${status}           
     [Return]            ${response}
 
@@ -71,8 +68,7 @@ Validate players are added and dropped from ${response}
     [Documentation]    Validation to check whether player is added and dropped in my team
     ${player1s_fromTeamId}         Get value from JSON       ${response.json()}       $.items[0].fromTeamId    
     ${player2s_toTeamId}           Get value from JSON       ${response.json()}       $.items[1].toTeamId  
-    should be equal as integers    ${player1s_fromTeamId}    ${player2s_toTeamId}
-    
+    should be equal as integers    ${player1s_fromTeamId}    ${player2s_toTeamId}  
 
 As League Manager, Update payload ${payload} with ${scoring_period_id}, ${drop_player_id} and ${free_agents_id} for team id ${team_ID}
     [Documentation]     Custom keyword to update the payload with the values from API calls
@@ -92,7 +88,6 @@ As League Manager, Update payload ${payload} with ${scoring_period_id}, ${drop_p
 
 A POST request to ${endpoint} with ${payload} to add and drop a player as LM should respond with ${status}
     [Documentation]     Post request for adding and dropping a player as a League Manager in my team
-    &{header}=          Create Dictionary         cookie=${USER_COOKIE}
     ${response}=        POST  url=${endpoint}     headers=${header}    json=${payload}     expected_status=${status}           
     [Return]            ${response}
 
@@ -119,14 +114,12 @@ Add a player to my team as TO
 A POST request to ${endpoint} drop a player from my team should respond with ${status}
     [Documentation]     Post request for dropping a player from my team
     Drop a player from my team as TO
-    &{header}=        Create Dictionary         cookie=${USER_COOKIE}
     ${response}=      POST  url=${endpoint}     headers=${header}    json=${drop_payload}     expected_status=${status}           
     [Return]          ${response}
 
 A POST request to ${endpoint} add a player to my team should respond with ${status}
     [Documentation]     Post request for adding a player to my team
     Add a player to my team as TO
-    &{header}=         Create Dictionary         cookie=${USER_COOKIE}
     ${response}=       POST  url=${endpoint}     headers=${header}    json=${add_payload}     expected_status=${status}           
     [Return]           ${response}
 
@@ -173,14 +166,12 @@ As League Manager, Add a player to other team ${team_ID}
 A POST request to ${endpoint} drop a player from other team as LM should respond with ${status}
     [Documentation]     Post request for dropping a player from my team
     As League Manager, Drop a player from other team 5
-    &{header}=        Create Dictionary         cookie=${USER_COOKIE}
     ${response}=      POST  url=${endpoint}     headers=${header}         json=${drop_payload1}        expected_status=${status}           
     [Return]          ${response}
 
 A POST request to ${endpoint} add a player to other team as LM should respond with ${status}
     [Documentation]     Post request for adding a player to my team
     As League Manager, Add a player to other team 5
-    &{header}=       Create Dictionary         cookie=${USER_COOKIE}
     ${response}=     POST  url=${endpoint}     headers=${header}    json=${add_payload1}     expected_status=${status}           
     [Return]         ${response}
 
@@ -209,7 +200,6 @@ A POST request ${endpoint} not to add a player to my team if my roaster is full 
     Updating header and filter for response with json file resource/JSON/freeAgentFilter.json
     ${free_agent_player_id}                  Get the free-agent player id                    ${player_response}
     Updating payload for the Post request    ${free_agent_player_id}
-    &{header}=                               Create Dictionary                               cookie=${USER_COOKIE}
     ${response}=                             POST  url=${endpoint}                           headers=${header}        json=${payload}          expected_status=${status}           
     [Return]                                 ${response}
 
@@ -218,7 +208,6 @@ A POST request ${endpoint} to add a player at position C to my team should respo
     Updating header and filter for response with json file resource/JSON/freeAgentFilter.json
     ${free_agent_player_id}                  Get the Position C player id        ${player_response}
     Updating payload for the Post request    ${free_agent_player_id}
-    &{header}=                               Create Dictionary                   cookie=${USER_COOKIE}
     ${response}=                             POST  url=${endpoint}               headers=${header}                        json=${payload}                  expected_status=${status}           
     [Return]                                 ${response}
  
@@ -227,7 +216,6 @@ A POST request ${endpoint} to add an On Waiver player in my team should respond 
     Updating header and filter for response with json file resource/JSON/onWaiverFilter.json
     ${on_Waiver_player_id}                   Get the On Waivers player id        ${player_response}
     Updating payload for the Post request    ${on_Waiver_player_id}
-    &{header}=                               Create Dictionary                   cookie=${USER_COOKIE}
     ${response}=                             POST  url=${endpoint}               headers=${header}                      json=${payload}                  expected_status=${status}           
     [Return]                                 ${response}
 
@@ -236,14 +224,12 @@ A POST request ${endpoint} to add an On Roaster player in my team should respond
     Updating header and filter for response with json file resource/JSON/onRoastersFilter.json
     ${on_team_player_id}                     Get the On Roasters player id        ${player_response}
     Updating payload for the Post request    ${on_team_player_id}
-    &{header}=                               Create Dictionary                    cookie=${USER_COOKIE}
     ${response}=                             POST  url=${endpoint}                headers=${header}                      json=${payload}                      expected_status=${status}           
     [Return]                                 ${response}
 
 A POST request ${endpoint} to add player with wrong scoring period id should respond with ${status}
     [Documentation]    POST request to add player with wrong scoring period id
     &{wrong_scoring_periodId_payload}=                  Load JSON from file                  resource/JSON/wrongScoringPeriodId.json        
-    &{header}=                                          Create Dictionary                    cookie=${USER_COOKIE}
     ${response}=                                        POST  url=${endpoint}                headers=${header}                      json=${wrong_scoring_periodId_payload}                      expected_status=${status}           
     [Return]                                            ${response}
 
@@ -253,7 +239,6 @@ A POST request ${endpoint} to add a player with proper ${payload} should respond
     ${invalid_team_json}                                Load JSON from file                  ${payload}                              
     ${scoring_periodId_updated}                         Update value to JSON                 ${invalid_team_json}                           $.scoringPeriodId                                  ${scoring_period_id}
     Save JSON to file                                   ${scoring_periodId_updated}          ${payload}           2
-    &{header}=                                          Create Dictionary                    cookie=${USER_COOKIE}
     ${response}=                                        POST  url=${endpoint}                headers=${header}                             json=${invalid_team_json}                         expected_status=${status}           
     [Return]                                            ${response}
 
