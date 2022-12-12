@@ -5,7 +5,7 @@ class DetailsSchema(Schema):
     shortMessage       = fields.String(required=True)
     resolution         = fields.String(allow_none=True, required=True)
     type               = fields.String(required=True)
-    metaData           = fields.String(allow_none=True, required=True)
+    metaData           = fields.Raw(allow_none=True, required=True)
 
 class InvalidSchema(Schema):
     class Meta:
