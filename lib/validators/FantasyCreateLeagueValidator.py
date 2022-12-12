@@ -1,6 +1,7 @@
 from lib.schemas import *
 from lib.schemas.FantasyMemberInviteSchema import FantasyMemberInviteSchema
 from lib.schemas.FantasyTeamSchema import FantasyTeamSchema
+from lib.schemas.InvalidSchema import InvalidSchema
 from marshmallow import ValidationError
 from robot.api.deco import keyword, library
 from robot.api.exceptions import Failure
@@ -38,6 +39,15 @@ class FantasyCreateLeagueValidator(object):
     def fantasy_teams_schema(self, response) -> bool:
         try:
             data = FantasyTeamSchema().load(response.json())
+
+        except ValidationError as ve:
+            raise Failure(f'Schema Data failed validation: {ve.messages}')
+        return True
+
+    @keyword('Invalid Schema from ${response} should be valid', types={'response': requests.Response})
+    def fantasy_invalid_schema(self, response) -> bool:
+        try:
+            data = InvalidSchema().load(response.json())
 
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
