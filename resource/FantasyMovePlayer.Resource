@@ -31,8 +31,8 @@ A post request to ${endpoint} using ${header} and ${payload} should respond with
     ${response}     POST    url=${endpoint}   headers=${header}     json=${payload}    expected_status=${status}
     [Return]        ${response}
 
-Get the league details from League_info_url
-    set test variable    ${League_info_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}?${teaminfo_query_param}
+Get the league details
+    set test variable    ${League_info_url}   ${FANTASY_URL}/apis/v3/games/${BASKETBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}?${teaminfo_query_param}
     ${league_info_response}         GET   url=${League_info_url}     headers=${header_value}
     ${current_scoringPeriodId}      get from dictionary  ${league_info_response.json()}      scoringPeriodId
     ${final_scoringPeriodId}        get value from json  ${league_info_response.json()}      $. status.finalScoringPeriod
@@ -42,12 +42,12 @@ Get the league details from League_info_url
     [Return]        ${league_info_response}
 
 Get the team details in ${future_scoring_period}
-     set test variable    ${team_details_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}?scoringPeriodId=${future_scoring_period}&view=mRoster
+     set test variable    ${team_details_url}   ${FANTASY_URL}/apis/v3/games/${BASKETBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}?scoringPeriodId=${future_scoring_period}&view=mRoster
      ${team_details_response}         GET   url=${team_details_url}     headers=${header_value}
      [Return]        ${team_details_response}
 
 Get any different team_id
-    ${league_info_response}     Get the league details from League_info_url
+    ${league_info_response}     Get the league details
     ${team_id}                  get any different team id from response   ${league_info_response.json()}    ${SWID}
     [Return]    ${team_id}
 
@@ -233,7 +233,6 @@ create a payload to move players of different team ${team_id} as a team owner us
         save json to file    ${scoring_period}                    resource/JSON/Invalid_move_player_template.json    2
         save json to file    ${type}                              resource/JSON/Invalid_move_player_template.json    2
         save json to file    ${team}                              resource/JSON/Invalid_move_player_template.json    2
-        set test variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions
         ${team_owner_move_player_other_team_response}    A post request to ${MovePlayer_url} using ${team_owner_cookie} and ${player_not_on_team_payload} should respond with 401
         Invalid Move Player Schema from ${team_owner_move_player_other_team_response} should be valid
         validate the ${team_owner_move_player_other_team_response} to contain ${Not_auth_error_type}
@@ -242,91 +241,91 @@ create a payload to move players of different team ${team_id} as a team owner us
     END
 
 Move the players of any team ${team_id} as a team owner and validate the response
-    ${league_info_response}              Get the league details from League_info_url
+    ${league_info_response}              Get the league details
     @{Players_details_list}              Get any lineup player details of team ${team id} from ${league_info_response.json()}
     ${random_number}                     generate random string    1    012
     &{any_other_team_owner_cookie}       create dictionary    cookie=${user_cookies}[${random_number}]
     create a payload to move players of different team ${team_id} as a team owner using ${Players_details_list} and ${any_other_team_owner_cookie},send post request and validate the response along with error type
 
 Move any invalid player to team ${team_id} and validate the response
-    ${league_info_response}     Get the league details from League_info_url
+    ${league_info_response}     Get the league details
     @{Players_details_list}     Get any lineup player details of team ${team id} from ${league_info_response.json()}
     create a payload to move any invalid player using ${Players_details_list} in team ${team_id},send post request and validate the response along with error type
 
 Swap the position of players of team ${team_id} in a current scoring period and validate the response
-    ${league_info_response}     Get the league details from League_info_url
+    ${league_info_response}     Get the league details
     @{Players_details_list}     Get the Eligible players details who can swap their positions from response  ${team_id}    ${league_info_response.json()}
     Create a Payload to Swap the position of players using ${Players_details_list} on ROSTER for the team ${team_id} in the ${current_scoringPeriodId},send a post request and validate the response
 
 Move any lineup player to bench of ${team_id} in current scoring and validate the response
-    ${league_info_response}        Get the league details from League_info_url
+    ${league_info_response}        Get the league details
     @{Players_details_list}        Get any lineup player details of team ${team_id} from ${league_info_response.json()}
     Create a Payload to move any lineup player to bench using ${Players_details_list} on ROSTER for the team ${team_id} in the ${current_scoringPeriodId},send a post request and validate the response
 
 Move the eligible Bench Player of ${team_id} to lineup in current scoring and validate the response
-    ${league_info_response}        Get the league details from League_info_url
+    ${league_info_response}        Get the league details
     @{Bench_players_details}       Get the bench players details of team ${team_id} from ${league_info_response.json()}
     @{Players_details_list}        check for ${Bench_players_details} eligibility of team ${team_id} for moving to lineup from ${league_info_response.json()}
     Create a Payload to move any eligible Bench Player to lineup using ${Players_details_list} on ROSTER for the team ${team_id} in ${current_scoringPeriodId},send a post request and validate the response
 
 Swap the position of players of team ${team_id} in a future scoring period and validate the response
     ${future_scoring_period_id}    Generate a random future scoring period between ${current_scoringPeriodId} and ${final_scoringPeriodId}
-    ${league_info_response}        Get the league details from League_info_url
+    ${league_info_response}        Get the league details
     ${team_info_response}          Get the team details in ${future_scoring_period_id}
     @{Players_details_list}        Get the Eligible players details who can swap their positions from response  ${team_id}    ${team_info_response.json()}
     Create a Payload to Swap the position of players using ${Players_details_list} on FUTURE_ROSTER for the team ${team_id} in the ${future_scoring_period_id},send a post request and validate the response
 
 Move any lineup player to bench of ${team_id} in future scoring and validate the response
     ${future_scoring_period_id}     Generate a random future scoring period between ${current_scoringPeriodId} and ${final_scoringPeriodId}
-    ${league_info_response}         Get the league details from League_info_url
+    ${league_info_response}         Get the league details
     ${team_info_response}          Get the team details in ${future_scoring_period_id}
     @{Players_details_list}         Get any lineup player details of team ${team_id} from ${team_info_response.json()}
     Create a Payload to move any lineup player to bench using ${Players_details_list} on FUTURE_ROSTER for the team ${team_id} in the ${future_scoring_period_id},send a post request and validate the response
 
 Move the eligible Bench Player of ${team_id} to lineup in future scoring and validate the response
     ${future_scoring_period_id}      Generate a random future scoring period between ${current_scoringPeriodId} and ${final_scoringPeriodId}
-    ${league_info_response}          Get the league details from League_info_url
+    ${league_info_response}          Get the league details
     ${team_info_response}          Get the team details in ${future_scoring_period_id}
     @{Bench_players_details}         Get the bench players details of team ${team_id} from ${league_info_response.json()}
     @{Players_details_list}          check for ${Bench_players_details} eligibility of team ${team_id} for moving to lineup from ${team_info_response.json()}
     Create a Payload to move any eligible Bench Player to lineup using ${Players_details_list} on FUTURE_ROSTER for the team ${team_id} in ${future_scoring_period_id},send a post request and validate the response
 
 Move any Player of team ${team_id} to same slot and validate the response
-    ${league_info_response}    Get the league details from League_info_url
+    ${league_info_response}    Get the league details
     @{Players_details_list}    Get any Lineup Player id along with ineligible slot of a player of team ${team id} from the ${league_info_response.json()}
     ${same_slot}               get from list    ${Players_details_list}     1
     Create a Payload using ${Players_details_list} and ${same_slot} for team ${team_id},send a post request which will respond with 409 and validate the response along with ${SAME_SLOT_ERROR_TYPE}
 
 Move any Player of team ${team_id} to ineligible slot and validate the response
-    ${league_info_response}    Get the league details from League_info_url
+    ${league_info_response}    Get the league details
     @{Players_details_list}    Get any Lineup Player id along with ineligible slot of a player of team ${team id} from the ${league_info_response.json()}
     ${ineligible_slot}         get from list    ${Players_details_list}     2
     Create a Payload using ${Players_details_list} and ${ineligible_slot} for team ${team_id},send a post request which will respond with 409 and validate the response along with ${INELIGIBLE_SLOT_ERROR_TYPE}
 
 Move any Player of team ${team_id} in a current scoring period by providing incorrect type in json payload and validate the response
-    ${league_info_response}     Get the league details from League_info_url
+    ${league_info_response}     Get the league details
     @{Players_details_list}     Get any lineup player details of team ${team id} from ${league_info_response.json()}
     Create a Payload for FUTURE_ROSTER using ${Players_details_list} for team ${team_id} in ${current_scoringPeriodId} send a post request and validate the response along with ${INCORRECT_TYPE_FOR_CURRENT_SCORING}
 
 Move any Player of team ${team_id} in a future scoring period by providing incorrect type in json payload and validate the response
-    ${league_info_response}        Get the league details from League_info_url
+    ${league_info_response}        Get the league details
     ${future_scoring_period_id}    Generate a random future scoring period between ${current_scoringPeriodId} and ${final_scoringPeriodId}
     @{Players_details_list}        Get any lineup player details of team ${team id} from ${league_info_response.json()}
     Create a Payload for ROSTER using ${Players_details_list} for team ${team_id} in ${future_scoring_period_id} send a post request and validate the response along with ${INCORRECT_TYPE_FOR_FUTURE_SCORING}
 
 Move the player not available on team ${team_id} and validate the response
-    ${league_info_response}        Get the league details from League_info_url
+    ${league_info_response}        Get the league details
     @{Players_details_list}        Get any lineup player details of team ${team id} from ${league_info_response.json()}
     ${different_team_id}           Get any different team_id
     Create a Payload using ${Players_details_list} and ${different_team_id},send a post request and validate the response along with ${PLAYER_NOT_ON_TEAM_ERROR_TYPE}
 
 Move any player to an invalid team ${team_id} and validate the response
-    ${league_info_response}     Get the league details from League_info_url
+    ${league_info_response}     Get the league details
     @{Players_details_list}     Get any lineup player details of team ${team id} from ${league_info_response.json()}
     Create a Payload using ${Players_details_list} and ${INVALID_TEAM_ID} ,send a post request and validate the response along with ${TEAM_NOT_FOUND_ERROR_TYPE}
 
 Move any player of team ${team_id} to invalid slot and validate the response
-    ${league_info_response}     Get the league details from League_info_url
+    ${league_info_response}     Get the league details
     @{Players_details_list}     Get any lineup player details of team ${team id} from ${league_info_response.json()}
     Create a Payload using ${Players_details_list} and ${INVALID_SLOT} for team ${team_id},send a post request which will respond with 500 and validate the response along with ${GENERAL_UNKNOWN_ERROR_TYPE}
 

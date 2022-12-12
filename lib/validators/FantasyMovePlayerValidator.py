@@ -190,6 +190,7 @@ class FantasyMovePlayerValidator(object):
             return team_id[random_team_id]
         except ValidationError as ve:
             raise Failure(f'Data validation failed: {ve.messages}')
+    
     @keyword('Get any Lineup Player id along with ineligible slot of a player of team ${team_id} from the ${response}')
     def get_any_player_id_along_with_ineligible_slot(self,team_id,response) -> list or None:
         try:
