@@ -1,15 +1,12 @@
 from pprint import pprint
 import requests
 from marshmallow import Schema, fields, RAISE, ValidationError
-from lib.schemas.common import *
-
 
 class DetailsSchema(Schema):
     message            = fields.String(required=True)
     shortMessage       = fields.String(required=True)
     resolution         = fields.String(allow_none=True, required=True)
     type               = fields.String(required=True)
-    #metaData           = metaDataCustom(required=True, allow_none=True)
     metaData           = fields.Raw(required=False, allow_none=True)
 
 class InvalidAddPlayerSchema(Schema):
