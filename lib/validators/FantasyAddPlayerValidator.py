@@ -26,11 +26,29 @@ class FantasyAddPlayerValidator(object):
           Fantasy Games Schema from ${response} should be valid
         """
         try:
-            data = AddPlayerSchema().load(response.json())
+            valid_schema = AddPlayerSchema().load(response.json())
 
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
+        return True
 
+    @keyword('Invalid Add Player Schema from ${response} should be valid', tags=['schema checks', 'functional', 'CoreV3'],
+             types={'response': requests.Response})
+    def invalid_add_player_should_be_valid(self, response) -> bool:
+        """
+                    Schema for the endpoint: apis/v3/games/fba/seasons/2023/segments/0/leagues/${league_id}/transactions/
+
+                    Expects to receive an embedded python requests object as 'response'
+                    and validates the json against the FantasyLeague class.
+
+                  Examples:
+                  'Add Player Schema from ${response} should be valid
+                """
+        try:
+           Invalid_schema = InvalidSchema().load(response.json())
+
+        except ValidationError as ve:
+            raise Failure(f'Schema Data failed validation: {ve.messages}')
         return True
 
     @keyword('Get the droppable player and free-agent player id')
@@ -70,3 +88,51 @@ class FantasyAddPlayerValidator(object):
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
         return player_id_details   
+
+    @keyword('Get the free-agent player id')
+    def get_freeAgents_player_id(self, free_agent_response) -> int:
+        try:
+            no_of_free_agents = len(free_agent_response.json()['players'])
+            for agent in range(0, (no_of_free_agents)-1):   
+                free_agents_position_id = free_agent_response.json()['players'][agent]['player']['defaultPositionId']
+                if free_agents_position_id != 5:
+                    free_agents_id = free_agent_response.json()['players'][agent]['id']
+                else:
+                    continue
+        except ValidationError as ve:
+             raise Failure(f'Parsing failed :{ve.messages}')
+        return free_agents_id 
+  
+    @keyword('Get the Position C player id')
+    def get_Position_C_player_id(self, free_agent_response) -> int:
+        try:
+            no_of_free_agents = len(free_agent_response.json()['players'])
+            for agent in range(0, (no_of_free_agents)-1):   
+                free_agents_position_id = free_agent_response.json()['players'][agent]['player']['defaultPositionId']
+                if free_agents_position_id == 5:
+                    free_agents_id = free_agent_response.json()['players'][agent]['id']
+                else:
+                    continue
+        except ValidationError as ve:
+             raise Failure(f'Parsing failed :{ve.messages}')
+        return free_agents_id 
+
+    @keyword('Get the On Waivers player id')
+    def get_On_Waivers_player_id(self, on_Waivers_response) -> int:
+        try:
+            no_of_On_Waivers_player = len(on_Waivers_response.json()['players'])
+            for waivers in range(0, (no_of_On_Waivers_player)-1):   
+                on_Waivers_player_id = on_Waivers_response.json()['players'][waivers]['id']
+        except ValidationError as ve:
+             raise Failure(f'Parsing failed :{ve.messages}')
+        return on_Waivers_player_id 
+
+    @keyword('Get the On Roasters player id')
+    def get_On_Roasters_player_id(self, on_Team_response) -> int:
+        try:
+            no_of_On_Teams_player = len(on_Team_response.json()['players'])
+            for onTeam in range(0, (no_of_On_Teams_player)-1):   
+                on_Team_player_id = on_Team_response.json()['players'][onTeam]['id']
+        except ValidationError as ve:
+             raise Failure(f'Parsing failed :{ve.messages}')
+        return on_Team_player_id 
