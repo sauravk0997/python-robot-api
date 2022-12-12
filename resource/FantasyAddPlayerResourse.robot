@@ -242,7 +242,7 @@ A POST request ${endpoint} to add a player with proper ${payload} should respond
     ${response}=                                        POST  url=${endpoint}                headers=${header}                             json=${invalid_team_json}                         expected_status=${status}           
     [Return]                                            ${response}
 
-Validate negative scenario for adding player ${response} with message ${error_type}
+Validate the response ${response} and response should contain error message ${error_type}
     [Documentation]        Validating whether invalid player can be added to  invalid team
     ${response_type}               Get value from JSON       ${response.json()}                $.details[0].type  
     Should Be Equal As Strings     ${response_type}          ${error_type}

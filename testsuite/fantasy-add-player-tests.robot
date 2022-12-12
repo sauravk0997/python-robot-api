@@ -49,14 +49,14 @@ As a Team Owner, I should not be able to add a new player in my team, if my roas
     [Documentation]     Simple validation of the base level schema url and adding a player in my team as a Team Owner when my roaster is full for Fantasy Games API.
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
     ${free_agent_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} not to add a player to my team if my roaster is full should respond with 409
-    Validate negative scenario for adding player ${free_agent_response} with message TRAN_ROSTER_LIMIT_EXCEEDED_ONE
+    Validate the response ${free_agent_response} and response should contain error message TRAN_ROSTER_LIMIT_EXCEEDED_ONE
     Invalid Add Player Schema from ${free_agent_response} should be valid
 
 As a Team Owner, I should not be able to add more than 4 players at 'Position C' in my team.
     [Documentation]     Simple validation of the base level schema url and adding a Position C player in my team when I already have 4 Position C player in my team as a Team Owner for Fantasy Games API.
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
     ${free_agent_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player at position C to my team should respond with 409
-    Validate negative scenario for adding player ${free_agent_response} with message TRAN_ROSTER_POSITION_LIMIT_EXCEEDED
+    Validate the response ${free_agent_response} and response should contain error message TRAN_ROSTER_POSITION_LIMIT_EXCEEDED
     Invalid Add Player Schema from ${free_agent_response} should be valid
 
 Drop and add a player in my team as a Team Owner
@@ -83,40 +83,40 @@ As a Team Owner, I should not be able to add an On Waivers player in my team.
     [Documentation]     Simple validation of the base level schema url and adding a waiver player in my team as a Team Owner for Fantasy Games API.
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
     ${on_Waiver_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add an On Waiver player in my team should respond with 409
-    Validate negative scenario for adding player ${on_Waiver_response} with message TRAN_PLAYER_NOT_FREEAGENT
+    Validate the response ${on_Waiver_response} and response should contain error message TRAN_PLAYER_NOT_FREEAGENT
     Invalid Add Player Schema from ${on_Waiver_response} should be valid
 
-As a Team Owner, I should not be able to add an On Roaster player in my team.
-    [Documentation]     Simple validation of the base level schema url and adding a roaster player in my team as a Team Owner for Fantasy Games API.
+As a Team Owner, I should not be able to add an On Roster player in my team.
+    [Documentation]     Simple validation of the base level schema url and adding a rosters player in my team as a Team Owner for Fantasy Games API.
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
-    ${on_raster_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add an On Roaster player in my team should respond with 409
-    Validate negative scenario for adding player ${on_raster_response} with message TRAN_PLAYER_NOT_AVAILABLE
-    Invalid Add Player Schema from ${on_raster_response} should be valid
+    ${on_roster_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add an On Roaster player in my team should respond with 409
+    Validate the response ${on_roster_response} and response should contain error message TRAN_PLAYER_NOT_AVAILABLE
+    Invalid Add Player Schema from ${on_roster_response} should be valid
 
 As a Team Owner, I should not be able to add a player with wrong scoring period Id
     [Documentation]    Simple validation of the base level schema url and adding a player with wrong scoring period id
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
-    ${wrong_scoring_periodId_reaponse}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add player with wrong scoring period id should respond with 409
-    Validate negative scenario for adding player ${wrong_scoring_periodId_reaponse} with message TRAN_INVALID_SCORINGPERIOD_NOT_CURRENT
-    Invalid Add Player Schema from ${wrong_scoring_periodId_reaponse} should be valid
+    ${wrong_scoring_periodId_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add player with wrong scoring period id should respond with 409
+    Validate the response ${wrong_scoring_periodId_response} and response should contain error message TRAN_INVALID_SCORINGPERIOD_NOT_CURRENT
+    Invalid Add Player Schema from ${wrong_scoring_periodId_response} should be valid
 
 As a League Manager, add a valid player to invalid team
     [Documentation]    Simple validation of the base level schema and adding a valid player to invlaid team
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
-    ${invalid_team_reaponse}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/invalidTeam.json should respond with 409
-    Validate negative scenario for adding player ${invalid_team_reaponse} with message TEAM_NOT_FOUND
-    Invalid Add Player Schema from ${invalid_team_reaponse} should be valid
+    ${invalid_team_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/invalidTeam.json should respond with 409
+    Validate the response ${invalid_team_response} and response should contain error message TEAM_NOT_FOUND
+    Invalid Add Player Schema from ${invalid_team_response} should be valid
 
-As a Team Owner, add a invalid player to my team
+As a Team Owner, add an invalid player to my team
     [Documentation]    Simple validation of the base level schema url and adding a invalid player to my team
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
-    ${invalid_player_reaponse}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/invalidPlayer.json should respond with 400
-    Validate negative scenario for adding player ${invalid_player_reaponse} with message PLAYER_NOT_EXISTS
-    Invalid Add Player Schema from ${invalid_player_reaponse} should be valid    
+    ${invalid_player_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/invalidPlayer.json should respond with 400
+    Validate the response ${invalid_player_response} and response should contain error message PLAYER_NOT_EXISTS
+    Invalid Add Player Schema from ${invalid_player_response} should be valid    
 
 As a League Manager, add an invalid player to my team
     [Documentation]    Simple validation of the base level schema url and adding an invalid player as LM to my team
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
-    ${invalid_player_reaponse}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/invlaidPlayerasLM.json should respond with 400
-    Validate negative scenario for adding player ${invalid_player_reaponse} with message PLAYER_NOT_EXISTS
-    Invalid Add Player Schema from ${invalid_player_reaponse} should be valid
+    ${invalid_player_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/invlaidPlayerasLM.json should respond with 400
+    Validate the response ${invalid_player_response} and response should contain error message PLAYER_NOT_EXISTS
+    Invalid Add Player Schema from ${invalid_player_response} should be valid
