@@ -25,7 +25,7 @@ class FantasyMovePlayerValidator(object):
                   'Move Player Schema from ${response} should be valid
                 """
         try:
-            schema = MovePlayerSchema().load(response.json())
+            Valid_schema = MovePlayerSchema().load(response.json())
 
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
@@ -44,7 +44,7 @@ class FantasyMovePlayerValidator(object):
                   'Invalid Move Player Schema from ${response} should be valid
                 """
         try:
-            schema = InvalidSchema().load(response.json())
+           Invalid_schema = InvalidSchema().load(response.json())
 
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
