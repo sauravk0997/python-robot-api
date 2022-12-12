@@ -25,7 +25,26 @@ class FantasyMovePlayerValidator(object):
                   'Move Player Schema from ${response} should be valid
                 """
         try:
-            schema = MovePlayerSchema().load(response.json())
+            Valid_schema = MovePlayerSchema().load(response.json())
+
+        except ValidationError as ve:
+            raise Failure(f'Schema Data failed validation: {ve.messages}')
+        return True
+
+    @keyword('Invalid Move Player Schema from ${response} should be valid', tags=['schema checks', 'functional', 'CoreV3'],
+             types={'response': requests.Response})
+    def invalid_move_player_should_be_valid(self, response) -> bool:
+        """
+                    Schema for the endpoint: apis/v3/games/fba/seasons/2023/segments/0/leagues/${league_id}/transactions/
+
+                    Expects to receive an embedded python requests object as 'response'
+                    and validates the json against the FantasyLeague class.
+
+                  Examples:
+                  'Invalid Move Player Schema from ${response} should be valid
+                """
+        try:
+           Invalid_schema = InvalidSchema().load(response.json())
 
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
@@ -135,18 +154,22 @@ class FantasyMovePlayerValidator(object):
         except ValidationError as ve:
             raise Failure(f'Data validation failed: {ve.messages}')
 
-    @keyword('Get any lineup player details of team ${team_id} from ${response} to move on bench')
+    @keyword('Get any lineup player details of team ${team_id} from ${response}')
     def get_any_lineup_player_details(self, team_id, teams_response) -> list:
         try:
             for players in range(0, 13):
-                lineup_slot_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].lineupSlotId')
+                lineup_slot_id = JSON().get_value_from_json(teams_response,
+                                                            f'$.teams[{team_id - 1}].roster.entries[{players}].lineupSlotId')
                 if lineup_slot_id == 12:  # Bench players line up slot id is 12
                     continue
                 else:
-                    line_up_status = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].playerPoolEntry.lineupLocked')
+                    line_up_status = JSON().get_value_from_json(teams_response,
+                                                                f'$.teams[{team_id - 1}].roster.entries[{players}].playerPoolEntry.lineupLocked')
                     if line_up_status is False:
-                        player_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].playerId')
-                        lineup_slot_id = JSON().get_value_from_json(teams_response, f'$.teams[{team_id-1}].roster.entries[{players}].lineupSlotId')
+                        player_id = JSON().get_value_from_json(teams_response,
+                                                               f'$.teams[{team_id - 1}].roster.entries[{players}].playerId')
+                        lineup_slot_id = JSON().get_value_from_json(teams_response,
+                                                                    f'$.teams[{team_id - 1}].roster.entries[{players}].lineupSlotId')
                         return [player_id, lineup_slot_id]
             logging.info('currently no lineup player can be moved to Bench as lineup is locked')
         except ValidationError as ve:
@@ -165,5 +188,31 @@ class FantasyMovePlayerValidator(object):
                     team_id += [team]
             random_team_id = random.randint(0, (len(team_id)-1))
             return team_id[random_team_id]
+        except ValidationError as ve:
+            raise Failure(f'Data validation failed: {ve.messages}')
+    
+    @keyword('Get any Lineup Player id along with ineligible slot of a player of team ${team_id} from the ${response}')
+    def get_any_player_id_along_with_ineligible_slot(self,team_id,response) -> list or None:
+        try:
+            for players in range(0, 13):
+                line_up_status = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{players}].playerPoolEntry.lineupLocked')
+                if line_up_status is False:
+                    player_id = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{players}].playerId')
+                    default_position_id = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{players}].playerPoolEntry.player.defaultPositionId')
+                    player_lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{players}].lineupSlotId')
+                else:
+                    continue
+                for compare_players in range(0, 13):
+                    lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{compare_players}].lineupSlotId')
+                    if compare_players == players or lineup_slot_id == 12:
+                        continue
+                    else:
+                        default_position_id1 = JSON().get_value_from_json(response, f'$.teams[{team_id - 1}].roster.entries[{compare_players}].playerPoolEntry.player.defaultPositionId')
+                        if default_position_id != default_position_id1:
+                            lineup_slot_id = JSON().get_value_from_json(response, f'$.teams[{team_id-1}].roster.entries[{compare_players}].lineupSlotId')
+                            return [player_id, player_lineup_slot_id, lineup_slot_id]
+                        else:
+                            continue
+            return None
         except ValidationError as ve:
             raise Failure(f'Data validation failed: {ve.messages}')

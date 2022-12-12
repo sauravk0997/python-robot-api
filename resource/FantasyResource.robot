@@ -8,7 +8,7 @@ Library             Collections
 Library             String
 Library             lib/validators/FantasyCreateLeagueValidator.py
 Library             lib/fantasyUI/FantasyUtils.py
-Resource            testsuite/sel-based-login.robot
+Resource            resource/sel-based-login.robot
 
 
 *** Variables ***
@@ -56,6 +56,18 @@ Create a League and validate the response schema
     ${response}=    Validate Fantasy create league endpoint responds with status code 200
     Fantasy Create League Schema from ${response} should be valid
 
+Create a League with an invalid team count
+    [Documentation]    Invokes League create API endpoint with an invalid team count value in payload
+    Validate Fantasy create league endpoint with invalid team count responds with status code 409
+
+Create a League with an invalid fantasy team name
+    [Documentation]    Invokes League create API endpoint with an invalid team count value in payload
+    Validate Fantasy create league endpoint with invalid fantasy team name responds with status code 400
+
+Create a league as a non-league creator user
+    [Documentation]    Invokes League create API endpoint with an invalid team count value in payload
+    Validate Fantasy create league endpoint as non-league creator user responds with status code 400
+
 Assign League Manager Roles to Team2, Team3 and Team4 owners
     [Documentation]    Assigns League Manager Roles to Team2, Team3 and Team4 owners
     FOR    ${index}    IN RANGE    1    4
@@ -71,15 +83,43 @@ Assign League Manager Roles to Team2, Team3 and Team4 owners
         ${lm_response}=     PUT    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/members/%7B${member_ids}[${decremented_index}]%7D  headers=${header_value}    json=${lm_json_template}     expected_status=200      
     END
 
+Assign League Manager Roles to invalid users
+    [Documentation]    Assigns League Manager Roles to invalid user display names
+    #${random_string}=    Generate Random String    25    0123456789
+    FOR    ${index}    IN RANGE    1    4
+        &{lm_json_template}=     Load JSON from file    resource/JSON/leagueManagerPowerAccess.json
+        ${decremented_index}=    Evaluate    ${index}-1
+        ${display_name_updated}=    Update value to JSON    ${lm_json_template}    $.displayName   ${display_name}[${decremented_index}]
+        #${display_name_updated}=    Update value to JSON    ${lm_json_template}    $.displayName   None
+        Save JSON to file    ${display_name_updated}    resource/JSON/leagueManagerPowerAccess.json    2
+        ${first_name_updated}=    Update value to JSON    ${lm_json_template}    $.firstName    User${index}
+        Save JSON to file    ${first_name_updated}    resource/JSON/leagueManagerPowerAccess.json    2
+        ${id_updated}=    Update value to JSON    ${lm_json_template}    $.id    {${member_ids}[${decremented_index}]}
+        Save JSON to file    ${id_updated}    resource/JSON/leagueManagerPowerAccess.json    2
+        #&{header_value}=    create dictionary     cookie=${espn_cookie}
+        ${lm_response}=     PUT    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/members/%7B${member_ids}[${decremented_index}]%7D    json=${lm_json_template}     expected_status=401
+        Invalid Schema from ${lm_response} should be valid     
+    END
+
 Send Invitations, Accept Invitation send by inviter and Create teams
     [Documentation]    Invokes Members Accept API endpoint.
     Validate Invitation Accept, Team Creation endpoints responds with successful status code
+
+Send Invitations, Accept Invitation send by inviter and Create teams within the league with more than accepted characters for the name, abbreviation, and location fields
+    [Documentation]    Invokes Members Accept API endpoint.
+    Validate Invitation Accept, Team Creation within the league with more than accepted characters for the name, abbreviation, and location fields
 
 Delete the created league
     [Documentation]    Invoke delete API endpoint to delete the created league
     &{header_value}=    create dictionary     cookie=${espn_cookie}
     #Delete call to delete the created league
     ${delete_response}=     DELETE    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}  headers=${header_value}     expected_status=204
+
+Delete the invalid league
+    [Documentation]    Invoke delete API endpoint to delete the invalid league
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    ${delete_response}=     DELETE    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/123456789  headers=${header_value}     expected_status=404
+    Invalid Schema from ${delete_response} should be valid
 
 Schedule Offline Draft
     [Documentation]    Draft settings Changes to start Online drafting
@@ -95,6 +135,23 @@ Schedule Offline Draft
     #Post call for draft settings changes
     ${schedule_draft_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_SETTINGS_SLUG}  headers=${header_value}    json=${draft_json_template}     expected_status=200
 
+Schedule Offline Draft with invalid payload
+    [Documentation]    Draft settings Changes to start Online drafting
+    #Get unix time stamp time
+    #${unixtimestamp}=    Get unixtimestamp time
+    #Load Draft settings payload
+    &{draft_json_template}=     Load JSON from file    resource/JSON/draftSettings.json
+    ${positive_value}=    Convert To Integer    1234567
+    #update draft settings date to current unix timestamp
+    ${date_updated}=    Update value to JSON    ${draft_json_template}    $.draftSettings.date    dummyValue
+    #Save the draft setting changes
+    Save JSON to file    ${date_updated}    resource/JSON/draftSettings.json    2
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    #Post call for draft settings changes
+    ${schedule_draft_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_SETTINGS_SLUG}  headers=${header_value}    json=${draft_json_template}     expected_status=400
+    ${date_reupdated}=    Update value to JSON    ${draft_json_template}    $.draftSettings.date    ${positive_value}
+    Save JSON to file    ${date_reupdated}    resource/JSON/draftSettings.json    2
+
 Begin Offline Draft
     [Documentation]    Start Offline Drafting
     #Load payload
@@ -102,6 +159,20 @@ Begin Offline Draft
     &{header_value}=    create dictionary     cookie=${espn_cookie}
     #Post call to start offline drafting
     ${begin_offline_draft_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${begin_offline_draft_json_template}     expected_status=200
+
+Begin Offline Draft with an invalid payload
+    [Documentation]    Start Offline Drafting with an invalid payload
+    #Load payload
+    &{begin_offline_draft_json_template}=     Load JSON from file    resource/JSON/beginOfflineDraft.json
+    ${true}=     Convert To Boolean    true
+    ${inProgress_updated}=    Update value to JSON    ${begin_offline_draft_json_template}    $.inProgress    dummyValue
+    Save JSON to file    ${inProgress_updated}    resource/JSON/beginOfflineDraft.json    2
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    #Post call to start offline drafting
+    ${begin_offline_draft_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${begin_offline_draft_json_template}     expected_status=400
+    Invalid Schema from ${begin_offline_draft_response} should be valid
+    ${inProgress_reupdated}=    Update value to JSON    ${begin_offline_draft_json_template}    $.inProgress    ${true}
+    Save JSON to file    ${inProgress_reupdated}    resource/JSON/beginOfflineDraft.json    2
 
 Add players to all teams as league creator user and save the roster
     [Documentation]    Add players to all teams as league creator user
@@ -117,6 +188,39 @@ Add players to all teams as league creator user and save the roster
     END
     #Post call to add players to the teams
     ${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=200
+
+Add players to all teams as league creator user and save the roster before draft begin
+    [Documentation]    Add players to all teams as league creator user
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    &{offline_draft_save_json_template}=     Load JSON from file    resource/JSON/offlineDraftSave.json
+    # Loop to iterate for Team1, Team2, Team3 and Team4
+    FOR    ${index}    IN RANGE    1    5
+        &{offline_draft_teams_json_template}=     Load JSON from file    resource/JSON/offlineDraftTeam${index}.json
+        ${offline_draft_team_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_teams_json_template}     expected_status=409
+        Invalid Schema from ${offline_draft_team_response} should be valid
+    END
+
+Add players to all teams as league creator user and save the roster with invalid payload
+    [Documentation]    Add players to all teams as league creator user
+    ${false}=    Convert To Boolean    false
+    ${true}=     Convert To Boolean    true
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    &{offline_draft_save_json_template}=     Load JSON from file    resource/JSON/offlineDraftSave.json
+    FOR    ${index}    IN RANGE    1    5
+        &{offline_draft_teams_json_template}=     Load JSON from file    resource/JSON/offlineDraftTeam${index}.json
+        ${offline_draft_team_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_teams_json_template}     expected_status=200  
+    END
+    ${drafted_updated}=    Update value to JSON    ${offline_draft_save_json_template}    $.drafted    dummyValue
+    Save JSON to file    ${drafted_updated}    resource/JSON/offlineDraftSave.json    2
+    ${inProgress_updated}=    Update value to JSON    ${offline_draft_save_json_template}    $.inProgress    dummyValue
+    Save JSON to file    ${inProgress_updated}    resource/JSON/offlineDraftSave.json    2
+    ${offline_draft_save_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${DRAFT_DETAILS_SLUG}  headers=${header_value}    json=${offline_draft_save_json_template}     expected_status=400
+    Invalid Schema from ${offline_draft_save_response} should be valid
+    #Resave the JSON
+    ${drafted_updated}=    Update value to JSON    ${offline_draft_save_json_template}    $.drafted    ${true}
+    Save JSON to file    ${drafted_updated}    resource/JSON/offlineDraftSave.json    2
+    ${inProgress_updated}=    Update value to JSON    ${offline_draft_save_json_template}    $.inProgress    ${false}
+    Save JSON to file    ${inProgress_updated}    resource/JSON/offlineDraftSave.json    2
 
 Add players to team ${team_id} as team owner ${team_owner_id}
     [Documentation]    Generic method to add team players to respective teams as team owners
@@ -165,6 +269,57 @@ Validate Fantasy create league endpoint responds with status code 200
     Log    ${league_id}    console=${True}
     [Return]    ${league_response}
 
+Validate Fantasy create league endpoint with invalid team count responds with status code 409
+    [Documentation]    create a league, make league id and invite id as global and returns the league response to the called keyword
+    &{league_create_json_template}=    Load JSON from file    resource/JSON/leagueCreateTemplate.json
+    ${random_string}=    Generate Random String    4    0123456789
+    ${SWID}=    Get SWID from cookie ${espn_cookie}
+    ${member_id_updated}=    Update value to JSON    ${league_create_json_template}    $.members[0].id   ${SWID}
+    Save JSON to file    ${member_id_updated}    resource/JSON/leagueCreateTemplate.json    2
+    ${league_updated}=    Update value to JSON    ${league_create_json_template}    $.settings.name    My-Fantasy-League-${random_string}
+    Save JSON to file    ${league_updated}    resource/JSON/leagueCreateTemplate.json    2
+    ${size_updated}=    Update value to JSON    ${league_create_json_template}    $.settings.size    ${random_string}
+    Save JSON to file    ${size_updated}    resource/JSON/leagueCreateTemplate.json    2
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    ${league_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUE_CREATE_SLUG}  headers=${header_value}     json=${league_create_json_template}   expected_status=409
+    Invalid Schema from ${league_response} should be valid
+    ${size_re_updated}=    Update value to JSON    ${league_create_json_template}    $.settings.size    4
+    Save JSON to file    ${size_re_updated}    resource/JSON/leagueCreateTemplate.json    2
+
+Validate Fantasy create league endpoint with invalid fantasy team name responds with status code 400
+    [Documentation]    create a league, make league id and invite id as global and returns the league response to the called keyword
+    &{league_create_json_template}=    Load JSON from file    resource/JSON/leagueCreateTemplate.json
+    ${random_string}=    Generate Random String    25    0123456789
+    ${SWID}=    Get SWID from cookie ${espn_cookie}
+    ${member_id_updated}=    Update value to JSON    ${league_create_json_template}    $.members[0].id   ${SWID}
+    Save JSON to file    ${member_id_updated}    resource/JSON/leagueCreateTemplate.json    2
+    ${league_updated}=    Update value to JSON    ${league_create_json_template}    $.settings.name    My-Fantasy-League-${random_string}
+    Save JSON to file    ${league_updated}    resource/JSON/leagueCreateTemplate.json    2
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    ${team_response}=    POST    url= ${FANTASY_BASE_URL}/${LEAGUE_CREATE_SLUG}  headers=${header_value}     json=${league_create_json_template}   expected_status=400
+    Invalid Schema from ${team_response} should be valid
+
+Validate Fantasy create league endpoint as non-league creator user responds with status code 400
+    [Documentation]    create a league, make league id and invite id as global and returns the league response to the called keyword
+    ${false}=    Convert To Boolean    false
+    ${true}=     Convert To Boolean    true
+    &{league_create_json_template}=    Load JSON from file    resource/JSON/leagueCreateTemplate.json
+    ${random_string}=    Generate Random String    4    0123456789
+    ${SWID}=    Get SWID from cookie ${espn_cookie}
+    ${member_id_updated}=    Update value to JSON    ${league_create_json_template}    $.members[0].id   ${SWID}
+    Save JSON to file    ${member_id_updated}    resource/JSON/leagueCreateTemplate.json    2
+    ${isLeagueCreator_updated}=    Update value to JSON    ${league_create_json_template}    $.members[0].isLeagueCreator   ${false}
+    Save JSON to file    ${isLeagueCreator_updated}    resource/JSON/leagueCreateTemplate.json    2
+    ${league_updated}=    Update value to JSON    ${league_create_json_template}    $.settings.name    My-Fantasy-League-${random_string}
+    Save JSON to file    ${league_updated}    resource/JSON/leagueCreateTemplate.json    2
+    &{header_value}=    create dictionary     cookie=${espn_cookie}
+    ${response}=    POST    url= ${FANTASY_BASE_URL}/${LEAGUE_CREATE_SLUG}  headers=${header_value}     json=${league_create_json_template}   expected_status=400
+    Invalid Schema from ${response} should be valid
+    # Update isLeagueCreator value to true
+    ${isLeagueCreator_reupdated}=    Update value to JSON    ${league_create_json_template}    $.members[0].isLeagueCreator   ${true}
+    #Save content to JSON file with indentation (value:2 Tab Space)
+    Save JSON to file    ${isLeagueCreator_reupdated}    resource/JSON/leagueCreateTemplate.json    2
+
 Validate Invitation Accept, Team Creation endpoints responds with successful status code
     [Documentation]    Accept League Invite sent by inviter, fetch team id, update team information, invoke team creation API endpoint and validate the response schema
     #Member Invitation Accept for all 3 users
@@ -191,6 +346,27 @@ Validate Invitation Accept, Team Creation endpoints responds with successful sta
         ${team_response}=     POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/teams/${team_id}   headers=${header_user_cookie}     json=${team_create_json_template}   expected_status=200
         #Schema validation
         Fantasy Teams Schema from ${team_response} should be valid
+    END
+
+Validate Invitation Accept, Team Creation within the league with more than accepted characters for the name, abbreviation, and location fields
+    [Documentation]    Accept League Invite sent by inviter, fetch team id, update team information, invoke team creation API endpoint and validate the response schema
+    ${random_string}=    Generate Random String    5    0123456789
+    FOR    ${index}    IN RANGE    0    3
+        &{league_invite_accept_json_template}=    Load JSON from file    resource/JSON/leagueInviteAccept.json
+        ${id_updated}=    Update value to JSON    ${league_invite_accept_json_template}    $.id   ${invite_id}
+        Save JSON to file    ${id_updated}    resource/JSON/leagueInviteAccept.json    2
+        &{header_user_cookie}    Create Dictionary    cookie=${user_cookies}[${index}]
+        ${memberInvitationAccepation}=    POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${invite_id}?memberId={${member_ids}[${index}]}&join=true    headers=${header_user_cookie}    json=${league_invite_accept_json_template}       expected_status=201
+        ${team_id}=    Get value from JSON    ${memberInvitationAccepation.json()}    $.teamId
+        &{team_create_json_template}=    Load JSON from file    resource/JSON/teamCreateTemplate.json
+        ${team_abbreviation_updated}=    Update value to JSON    ${team_create_json_template}    $.abbrev   FL${index}${random_string}
+        Save JSON to file    ${team_abbreviation_updated}    resource/JSON/teamCreateTemplate.json    2
+        ${nick_name_updated}=    Update value to JSON    ${team_create_json_template}    $.nickname   FN${index}${random_string}
+        Save JSON to file    ${nick_name_updated}    resource/JSON/teamCreateTemplate.json    2
+        ${location_updated}=    Update value to JSON    ${team_create_json_template}    $.location   FTM${index}${random_string}
+        Save JSON to file    ${location_updated}    resource/JSON/teamCreateTemplate.json    2
+        ${team_response}=     POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/teams/${team_id}   headers=${header_user_cookie}     json=${team_create_json_template}   expected_status=400
+        Invalid Schema from ${team_response} should be valid
     END
 
 Close the current Browser

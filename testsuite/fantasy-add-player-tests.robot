@@ -7,7 +7,7 @@ Library             ../lib/validators/FantasyAddPlayerValidator.py
 Resource            ../resource/FantasyAddPlayerResourse.robot
 Library             OperatingSystem
 Library             RPA.JSON
-Resource            testsuite/sel-based-login.robot
+Resource            resource/sel-based-login.robot
 Suite Setup         Get user cookie
 Suite Teardown      Browser Shutdown
 
