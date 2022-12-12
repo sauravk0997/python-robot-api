@@ -3,11 +3,11 @@
   "teamId": 1,
   "type": "ROSTER",
   "memberId": "{107F4FFD-2902-4067-80ED-1B60E523AEA6}",
-  "scoringPeriodId": 53,
+  "scoringPeriodId": 56,
   "executionType": "EXECUTE",
   "items": [
     {
-      "playerId": 3149673,
+      "playerId": 3907387,
       "type": "DROP",
       "fromTeamId": 1
     }
