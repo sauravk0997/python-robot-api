@@ -8,7 +8,7 @@ Library             OperatingSystem
 Library             lib/validators/FantasyMovePlayerValidator.py
 Resource            resource/FantasyResource.robot
 *** Variables ***
-${fantasy_url}                                https://fantasy.espn.com
+${FANTASY_URL}                                https://fantasy.espn.com
 ${BASEBALL_SPORT}                             fba
 ${SEASON}                                     2023
 ${SEGMENT}                                    0
@@ -24,7 +24,7 @@ Get a Fantasy League details
     Schedule Offline Draft
     Begin Offline Draft
     Add players to all teams as league creator user and save the roster
-    set suite variable    ${MovePlayer_url}   ${fantasy_url}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
+    set suite variable    ${MovePlayer_url}   ${FANTASY_URL}/apis/v3/games/${BASEBALL_SPORT}/seasons/${SEASON}/segments/${SEGMENT}/leagues/${leagueid}/transactions/
 
 Delete League
     Delete the created league

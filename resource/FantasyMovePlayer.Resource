@@ -10,20 +10,20 @@ Resource            resource/FantasyResource.robot
 
 *** Variables ***
 ${teaminfo_query_param}                       view=mDraftDetail&view=mTeam&view=mNav&view=mRoster
-${BenchSlotId}                                12
-${invalid_team_id}                            5
-${invalid_player_id}                          12345
-${invalid_slot}                               18
-${lineup_lock_message}                        Lineup transaction could not be completed, as lineup is locked
+${BENCH_SLOT_ID}                              12
+${INVALID_TEAM_ID}                            5
+${INVALID_PLAYER_ID}                          12345
+${INVALID_SLOT}                               18
+${LINEUP_LOCK_MESSAGE}                        Lineup transaction could not be completed, as lineup is locked
 #error type for negative scenarios
-${same_slot_error_type}                       TRAN_ROSTER_SAME_SLOT
-${ineligible_slot_error_type}                 TRAN_ROSTER_INELIGIBLE_SLOT
-${Incorrect_type_for_current_scoring}         TRAN_INVALID_SCORINGPERIOD_NOT_FUTURE
-${Incorrect_type_for_future_scoring}          TRAN_INVALID_SCORINGPERIOD_NOT_CURRENT
-${player_not_on_team_error_type}              TRAN_ROSTER_PLAYER_NOT_ON_ROSTER
-${Not_auth_error_type}                        AUTH_UNAUTHORIZED_FOR_TEAM
-${team_not_found_error_type}                  TEAM_NOT_FOUND
-${general_unknow_error_type}                  GENERAL_UNKNOWN_ERROR
+${SAME_SLOT_ERROR_TYPE}                       TRAN_ROSTER_SAME_SLOT
+${INELIGIBLE_SLOT_ERROR_TYPE}                 TRAN_ROSTER_INELIGIBLE_SLOT
+${INCORRECT_TYPE_FOR_CURRENT_SCORING}         TRAN_INVALID_SCORINGPERIOD_NOT_FUTURE
+${INCORRECT_TYPE_FOR_FUTURE_SCORING}          TRAN_INVALID_SCORINGPERIOD_NOT_CURRENT
+${PLAYER_NOT_ON_TEAM_ERROR_TYPE}              TRAN_ROSTER_PLAYER_NOT_ON_ROSTER
+${NOT_AUTH_ERROR_TYPE}                        AUTH_UNAUTHORIZED_FOR_TEAM
+${TEAM_NOT_FOUND_ERROR_TYPE}                  TEAM_NOT_FOUND
+${GENERAL_UNKNOWN_ERROR_TYPE}                 GENERAL_UNKNOWN_ERROR
 
 *** Keywords ***
 #Post request for Performing various transactions like move,add,delete,drop..etc
@@ -77,7 +77,7 @@ Create a Payload to Swap the position of players using ${Players_details_list} o
          Move Player Schema from ${swap_player_response} should be valid
          Validate players changed their positions ${swap_player_response}
     ELSE
-        Log     ${lineup_lock_message}
+        Log     ${LINEUP_LOCK_MESSAGE}
     END
 
 Create a Payload to move any lineup player to bench using ${Players_details_list} on ${roster_type} for the team ${team_id} in the ${scoring period},send a post request and validate the response
@@ -98,7 +98,7 @@ Create a Payload to move any lineup player to bench using ${Players_details_list
         Move Player Schema from ${lineup_to_bench_response} should be valid
         Validate player is moved to bench ${lineup_to_bench_response}
     ELSE
-        Log     ${lineup_lock_message}
+        Log     ${LINEUP_LOCK_MESSAGE}
     END
 
 Create a Payload to move any eligible Bench Player to lineup using ${Players_details_list} on ${roster_type} for the team ${team_id} in ${scoring period},send a post request and validate the response
@@ -122,7 +122,7 @@ Create a Payload to move any eligible Bench Player to lineup using ${Players_det
          Move Player Schema from ${bench_to_lineup_response} should be valid
          Validate players changed their positions ${bench_to_lineup_response}
     ELSE
-        Log     ${lineup_lock_message}
+        Log     ${LINEUP_LOCK_MESSAGE}
     END
 
 Create a Payload using ${Players_details_list} and ${incorrect_slot} for team ${team_id},send a post request which will respond with ${status} and validate the response along with ${error_type}
@@ -145,7 +145,7 @@ Create a Payload using ${Players_details_list} and ${incorrect_slot} for team ${
         Invalid Move Player Schema from ${invalid_slot_response} should be valid
         Validate the ${invalid_slot_response} to contain ${error_type}
     ELSE
-        Log     ${lineup_lock_message}
+        Log     ${LINEUP_LOCK_MESSAGE}
     END
 
 Create a Payload for ${invalid_type} using ${Players_details_list} for team ${team_id} in ${scoring period} send a post request and validate the response along with ${error_type}
@@ -168,7 +168,7 @@ Create a Payload for ${invalid_type} using ${Players_details_list} for team ${te
         Invalid Move Player Schema from ${incorrect_type_response} should be valid
         Validate the ${incorrect_type_response} to contain ${error_type}
     ELSE
-        Log     ${lineup_lock_message}
+        Log     ${LINEUP_LOCK_MESSAGE}
     END
 
 Create a Payload using ${Players_details_list} and ${incorrect_team},send a post request and validate the response along with ${error_type}
@@ -191,14 +191,14 @@ Create a Payload using ${Players_details_list} and ${incorrect_team},send a post
         Invalid Move Player Schema from ${invalid_team_response} should be valid
         Validate the ${invalid_team_response} to contain ${error_type}
     ELSE
-        Log     ${lineup_lock_message}
+        Log     ${LINEUP_LOCK_MESSAGE}
     END
 
 create a payload to move any invalid player using ${Players_details_list} in team ${team_id},send post request and validate the response along with error type
     ${player_details}               get length    ${Players_details_list}
     IF    ${player_details} != 0
         &{incorrect_type_current_scoring_payload}        load json from file    resource/JSON/Invalid_move_player_template.json
-        ${player_id}                    Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].playerId                      ${invalid_player_id}
+        ${player_id}                    Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].playerId                      ${INVALID_PLAYER_ID}
         ${from_lineup_slot_id}          Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].fromLineupSlotId              ${Players_details_list}[1]
         ${to_lineup_slot_id}            Update value to JSON   ${incorrect_type_current_scoring_payload}         $.items[0].toLineupSlotId                ${Players_details_list}[1]
         ${type}                         Update value to JSON   ${incorrect_type_current_scoring_payload}         $.type                                   ROSTER
@@ -212,9 +212,9 @@ create a payload to move any invalid player using ${Players_details_list} in tea
         save json to file    ${team}                              resource/JSON/Invalid_move_player_template.json    2
         ${invalid_player_response}     A post request to ${MovePlayer_url} using ${header_value} and ${incorrect_type_current_scoring_payload} should respond with 500
         Invalid Move Player Schema from ${invalid_player_response} should be valid
-        Validate the ${invalid_player_response} to contain ${general_unknow_error_type}
+        Validate the ${invalid_player_response} to contain ${GENERAL_UNKNOWN_ERROR_TYPE}
     ELSE
-        Log     ${lineup_lock_message}
+        Log     ${LINEUP_LOCK_MESSAGE}
     END
 
 create a payload to move players of different team ${team_id} as a team owner using ${Players_details_list} and ${team_owner_cookie},send post request and validate the response along with error type
@@ -238,7 +238,7 @@ create a payload to move players of different team ${team_id} as a team owner us
         Invalid Move Player Schema from ${team_owner_move_player_other_team_response} should be valid
         validate the ${team_owner_move_player_other_team_response} to contain ${Not_auth_error_type}
     ELSE
-        Log     ${lineup_lock_message}
+        Log     ${LINEUP_LOCK_MESSAGE}
     END
 
 Move the players of any team ${team_id} as a team owner and validate the response
@@ -293,42 +293,42 @@ Move the eligible Bench Player of ${team_id} to lineup in future scoring and val
 
 Move any Player of team ${team_id} to same slot and validate the response
     ${league_info_response}    Get the league details from League_info_url
-    @{Players_details_list}    Get any lineup player details of team ${team id} from ${league_info_response.json()}
+    @{Players_details_list}    Get any Lineup Player id along with ineligible slot of a player of team ${team id} from the ${league_info_response.json()}
     ${same_slot}               get from list    ${Players_details_list}     1
-    Create a Payload using ${Players_details_list} and ${same_slot} for team ${team_id},send a post request which will respond with 409 and validate the response along with ${same_slot_error_type}
+    Create a Payload using ${Players_details_list} and ${same_slot} for team ${team_id},send a post request which will respond with 409 and validate the response along with ${SAME_SLOT_ERROR_TYPE}
 
 Move any Player of team ${team_id} to ineligible slot and validate the response
     ${league_info_response}    Get the league details from League_info_url
     @{Players_details_list}    Get any Lineup Player id along with ineligible slot of a player of team ${team id} from the ${league_info_response.json()}
     ${ineligible_slot}         get from list    ${Players_details_list}     2
-    Create a Payload using ${Players_details_list} and ${ineligible_slot} for team ${team_id},send a post request which will respond with 409 and validate the response along with ${ineligible_slot_error_type}
+    Create a Payload using ${Players_details_list} and ${ineligible_slot} for team ${team_id},send a post request which will respond with 409 and validate the response along with ${INELIGIBLE_SLOT_ERROR_TYPE}
 
 Move any Player of team ${team_id} in a current scoring period by providing incorrect type in json payload and validate the response
     ${league_info_response}     Get the league details from League_info_url
     @{Players_details_list}     Get any lineup player details of team ${team id} from ${league_info_response.json()}
-    Create a Payload for FUTURE_ROSTER using ${Players_details_list} for team ${team_id} in ${current_scoringPeriodId} send a post request and validate the response along with ${Incorrect_type_for_current_scoring}
+    Create a Payload for FUTURE_ROSTER using ${Players_details_list} for team ${team_id} in ${current_scoringPeriodId} send a post request and validate the response along with ${INCORRECT_TYPE_FOR_CURRENT_SCORING}
 
 Move any Player of team ${team_id} in a future scoring period by providing incorrect type in json payload and validate the response
     ${league_info_response}        Get the league details from League_info_url
     ${future_scoring_period_id}    Generate a random future scoring period between ${current_scoringPeriodId} and ${final_scoringPeriodId}
     @{Players_details_list}        Get any lineup player details of team ${team id} from ${league_info_response.json()}
-    Create a Payload for ROSTER using ${Players_details_list} for team ${team_id} in ${future_scoring_period_id} send a post request and validate the response along with ${Incorrect_type_for_future_scoring}
+    Create a Payload for ROSTER using ${Players_details_list} for team ${team_id} in ${future_scoring_period_id} send a post request and validate the response along with ${INCORRECT_TYPE_FOR_FUTURE_SCORING}
 
 Move the player not available on team ${team_id} and validate the response
     ${league_info_response}        Get the league details from League_info_url
     @{Players_details_list}        Get any lineup player details of team ${team id} from ${league_info_response.json()}
     ${different_team_id}           Get any different team_id
-    Create a Payload using ${Players_details_list} and ${different_team_id},send a post request and validate the response along with ${player_not_on_team_error_type}
+    Create a Payload using ${Players_details_list} and ${different_team_id},send a post request and validate the response along with ${PLAYER_NOT_ON_TEAM_ERROR_TYPE}
 
 Move any player to an invalid team ${team_id} and validate the response
     ${league_info_response}     Get the league details from League_info_url
     @{Players_details_list}     Get any lineup player details of team ${team id} from ${league_info_response.json()}
-    Create a Payload using ${Players_details_list} and ${invalid_team_id},send a post request and validate the response along with ${team_not_found_error_type}
+    Create a Payload using ${Players_details_list} and ${INVALID_TEAM_ID} ,send a post request and validate the response along with ${TEAM_NOT_FOUND_ERROR_TYPE}
 
 Move any player of team ${team_id} to invalid slot and validate the response
     ${league_info_response}     Get the league details from League_info_url
     @{Players_details_list}     Get any lineup player details of team ${team id} from ${league_info_response.json()}
-    Create a Payload using ${Players_details_list} and ${invalid_slot} for team ${team_id},send a post request which will respond with 500 and validate the response along with ${general_unknow_error_type}
+    Create a Payload using ${Players_details_list} and ${INVALID_SLOT} for team ${team_id},send a post request which will respond with 500 and validate the response along with ${GENERAL_UNKNOWN_ERROR_TYPE}
 
 #validation to check whether the players positions are swapped
 Validate players changed their positions ${response}
@@ -343,7 +343,7 @@ Validate players changed their positions ${response}
 Validate player is moved to bench ${response}
     [Documentation]    whenever any player is moved to bench "toLineupSlotId" attribute value will be ${BenchSlotId}
     ${toLineupSlotId}    Get value from JSON    ${response.json()}    $.items[0].toLineupSlotId
-    should be equal as integers    ${toLineupSlotId}    ${BenchSlotId}
+    should be equal as integers    ${toLineupSlotId}    ${BENCH_SLOT_ID}
 
 Validate the ${response} to contain ${error type}
      [Documentation]    whenever any send incorrect data in json payload response will throw error
