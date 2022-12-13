@@ -7,19 +7,19 @@ Library             ../lib/validators/FantasyDropValidator.py
 Resource            resource/FantasyResource.robot
 
 *** Variables ***
-${FANTASY_BASE_URL}=            https://fantasy.espn.com
-${GAME}=                        fba
-${SEASON}=                      2023
-${QUERY_PARAMS}=                 view=mDraftDetail&view=mTeam&view=mNav&view=mRoster
-${TEAMS_SLUG}=                   apis/v3/games/${GAME}/seasons/${SEASON}/segments/0/leagues
-${TRANSACTIONS_BASE_URL}=       https://lm-api-writes.fantasy.espn.com
-${TRANSACTION_SLUG}=           apis/v3/games/${GAME}/seasons/${SEASON}/segments/0/leagues
-${DROP_API}=                  ${TRANSACTIONS_BASE_URL}/${TRANSACTION_SLUG}
-${ERROR_UNDROPPABLE}    TRAN_ROSTER_PLAYER_NOT_DROPPABLE
-${ERROR_INVALID_TYPE}    TRAN_INVALID_SCORINGPERIOD_NOT_FUTURE
-${ERROR_INVALID_PLAYER}    TRAN_PLAYER_NOT_ON_TEAM
-${ERROR_INVALID_TEAM}    TEAM_NOT_FOUND
-${ERROR_INVALID_SCORING_PERIOD}    TRAN_INVALID_SCORINGPERIOD_NOT_CURRENT
+${FANTASY_BASE_URL}=                https://fantasy.espn.com
+${GAME}=                            fba
+${SEASON}=                          2023
+${QUERY_PARAMS}=                    view=mDraftDetail&view=mTeam&view=mNav&view=mRoster
+${TEAMS_SLUG}=                      apis/v3/games/${GAME}/seasons/${SEASON}/segments/0/leagues
+${TRANSACTIONS_BASE_URL}=           https://lm-api-writes.fantasy.espn.com
+${TRANSACTION_SLUG}=                apis/v3/games/${GAME}/seasons/${SEASON}/segments/0/leagues
+${DROP_API}=                        ${TRANSACTIONS_BASE_URL}/${TRANSACTION_SLUG}
+${ERROR_UNDROPPABLE}                TRAN_ROSTER_PLAYER_NOT_DROPPABLE
+${ERROR_INVALID_TYPE}               TRAN_INVALID_SCORINGPERIOD_NOT_FUTURE
+${ERROR_INVALID_PLAYER}             TRAN_PLAYER_NOT_ON_TEAM
+${ERROR_INVALID_TEAM}               TEAM_NOT_FOUND
+${ERROR_INVALID_SCORING_PERIOD}     TRAN_INVALID_SCORINGPERIOD_NOT_CURRENT
 
 
 *** Keywords ***

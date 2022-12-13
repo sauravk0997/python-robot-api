@@ -1,11 +1,11 @@
 *** Settings ***
 Documentation       Test suite to demontrate  move player functionality in FLM
 
-Library    RequestsLibrary
-Library    lib/validators/FantasyDropValidator.py
-Resource   resource/suite_setup_teardown_moveplayer.resource
-Resource   ../resource/FantasyDropResource.robot
-Library    RPA.JSON
+Library              RequestsLibrary
+Library              lib/validators/FantasyDropValidator.py
+Resource             resource/suite_setup_teardown_moveplayer.resource
+Resource             ../resource/FantasyDropResource.robot
+Library              RPA.JSON
 Suite Setup          Get a Fantasy League details
 Suite Teardown       Delete League
 
@@ -101,7 +101,7 @@ Drop a player from the list of undroppable players of a team as a team manager
 
 Drop a player from a team as a team owner using invalid type
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-28629
+    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player_invalid_type.json
     ${myteamid}    Set Variable    3
     ${league_manager}    Set Variable    False
@@ -112,7 +112,7 @@ Drop a player from a team as a team owner using invalid type
 
 Drop an invalid player from a team as a team owner
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-28629
+    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    3
     ${league_manager}    Set Variable    False
@@ -123,7 +123,7 @@ Drop an invalid player from a team as a team owner
 
 Drop an invalid player from a team as a league owner
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-28629
+    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    3
     ${league_manager}    Set Variable    True
@@ -134,7 +134,7 @@ Drop an invalid player from a team as a league owner
 
 Drop a player from an invalid team as a league owner
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-28629
+    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    0
     ${league_manager}    Set Variable    True
