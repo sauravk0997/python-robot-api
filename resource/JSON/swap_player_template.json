@@ -1,22 +1,22 @@
 {
   "isLeagueManager": false,
   "teamId": 1,
-  "type": "ROSTER",
+  "type": "FUTURE_ROSTER",
   "memberId": "{95096766-E11A-4C94-BB21-2BA8F8C0D3EF}",
-  "scoringPeriodId": 31,
+  "scoringPeriodId": 110,
   "executionType": "EXECUTE",
   "items": [
     {
-      "playerId": 4871143,
+      "playerId": 4277905,
       "type": "LINEUP",
-      "fromLineupSlotId": 6,
+      "fromLineupSlotId": 5,
       "toLineupSlotId": 11
     },
     {
-      "playerId": 3934719,
+      "playerId": 4066259,
       "type": "LINEUP",
       "fromLineupSlotId": 11,
-      "toLineupSlotId": 6
+      "toLineupSlotId": 5
     }
   ]
 }

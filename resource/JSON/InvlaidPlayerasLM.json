@@ -1,0 +1,17 @@
+{
+  "isLeagueManager": true,
+  "teamId": 1,
+  "type": "FREEAGENT",
+  "memberId": "{107F4FFD-2902-4067-80ED-1B60E523AEA6}",
+  "scoringPeriodId": 57,
+  "executionType": "EXECUTE",
+  "items": [
+    {
+      "playerId": 17,
+      "type": "ADD",
+      "toTeamId": 1
+    }
+  ],
+  "isActingAsTeamOwner": false,
+  "skipTransactionCounters": false
+}
