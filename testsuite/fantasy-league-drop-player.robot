@@ -21,8 +21,8 @@ Drop a player from any team as a league manager
     ${league_manager}    Set Variable    True
     ${spid}    ${teamid}    ${playerid}    Fetch payload details to drop a player ${myteamid}
     Log To Console     ${playerid}
-    ${final_payload}    Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
-    ${drop_api_response}    A POST request to ${DROP_API} with ${final_payload} should respond with 200
+    Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
+    ${drop_api_response}    A POST request to ${DROP_API} with ${payload} should respond with 200
     Fantasy Drop Schema from ${drop_api_response} should be valid
     should be equal as integers    ${drop_api_response.json()["items"][0]["fromTeamId"]}    ${teamid}    
     should be equal as integers    ${drop_api_response.json()["items"][0]["toTeamId"]}    ${droppedteamid}
@@ -34,8 +34,8 @@ Drop a player from my team as a team manager
     ${myteamid}    Set Variable    3
     ${league_manager}    Set Variable    False
     ${spid}    ${teamid}    ${playerid}    Fetch payload details to drop a player ${myteamid}    
-    ${final_payload}    Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
-    ${drop_api_response}    A POST request to ${DROP_API} with ${final_payload} should respond with 200
+    Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
+    ${drop_api_response}    A POST request to ${DROP_API} with ${payload} should respond with 200
     Fantasy Drop Schema from ${drop_api_response} should be valid
     should be equal as integers    ${drop_api_response.json()["items"][0]["fromTeamId"]}    ${teamid}    
     should be equal as integers    ${drop_api_response.json()["items"][0]["toTeamId"]}    ${droppedteamid}
@@ -47,8 +47,8 @@ Drop a player from the list of droppable players of a team as a team manager
     ${myteamid}    Set Variable    4
     ${league_manager}    Set Variable    False
     ${spid}    ${teamid}    ${playerid}    Get droppable players ${myteamid}
-    ${final_payload}    Update payload ${initial_payload} with ${teamid} ${playerid[0]} ${spid} and ${league_manager}
-    ${drop_api_response}    A POST request to ${DROP_API} with ${final_payload} should respond with 200
+    Update payload ${initial_payload} with ${teamid} ${playerid[0]} ${spid} and ${league_manager}
+    ${drop_api_response}    A POST request to ${DROP_API} with ${payload} should respond with 200
     Fantasy Drop Schema from ${drop_api_response} should be valid
     should be equal as integers    ${drop_api_response.json()["items"][0]["fromTeamId"]}    ${teamid}    
     should be equal as integers    ${drop_api_response.json()["items"][0]["toTeamId"]}    ${droppedteamid}
@@ -60,8 +60,8 @@ Drop a player from the list of undroppable players of a team as a league manager
     ${myteamid}    Set Variable    1
     ${league_manager}    Set Variable    True
     ${spid}    ${teamid}    ${playerid}    Get undroppable players ${myteamid} ${league_manager}
-    ${final_payload}    Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
-    ${drop_api_response}    A POST request to ${DROP_API} with ${final_payload} should respond with 200
+    Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
+    ${drop_api_response}    A POST request to ${DROP_API} with ${payload} should respond with 200
     Fantasy Drop Schema from ${drop_api_response} should be valid
 
 Drop a player from the list of injured players of a team as a team manager
@@ -71,8 +71,8 @@ Drop a player from the list of injured players of a team as a team manager
     ${myteamid}    Set Variable    4
     ${league_manager}    Set Variable    False
     ${spid}    ${teamid}    ${playerid}    ${status}   Get injured players ${myteamid}
-    ${final_payload}     Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
-    ${drop_api_response}    A POST request to ${DROP_API} with ${final_payload} should respond with ${status}
+    Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
+    ${drop_api_response}    A POST request to ${DROP_API} with ${payload} should respond with ${status}
     IF    ${status} == 200
             Fantasy Drop Schema from ${drop_api_response} should be valid
     END
@@ -84,8 +84,8 @@ Drop a player from any team in a different scoringPeriodId as a team manager
     ${myteamid}    Set Variable    0
     ${league_manager}    Set Variable    False
     ${spid}    ${teamid}    ${playerid}    Fetch payload details to drop a player ${myteamid}
-    ${final_payload}    Update payload ${initial_payload} with ${teamid} ${playerid} 20 and ${league_manager}
-    ${drop_api_response}    A POST request to ${DROP_API} with ${final_payload} should respond with 409
+    Update payload ${initial_payload} with ${teamid} ${playerid} 20 and ${league_manager}
+    ${drop_api_response}    A POST request to ${DROP_API} with ${payload} should respond with 409
     Invalid scoring period error response ${drop_api_response} along with schema should be valid
 
 Drop a player from the list of undroppable players of a team as a team manager
@@ -95,8 +95,8 @@ Drop a player from the list of undroppable players of a team as a team manager
     ${myteamid}    Set Variable    1
     ${league_manager}    Set Variable    False
     ${spid}    ${teamid}    ${playerid}    Get undroppable players ${myteamid} ${league_manager}
-    ${final_payload}    Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
-    ${drop_api_response}    A POST request to ${DROP_API} with ${final_payload} should respond with 409
+    Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
+    ${drop_api_response}    A POST request to ${DROP_API} with ${payload} should respond with 409
     Undroppable error response ${drop_api_response} along with schema should be valid
 
 Drop a player from a team as a team owner using invalid type
@@ -106,8 +106,8 @@ Drop a player from a team as a team owner using invalid type
     ${myteamid}    Set Variable    3
     ${league_manager}    Set Variable    False
     ${spid}    ${teamid}    ${playerid}    Fetch payload details to drop a player ${myteamid}    
-    ${final_payload}    Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
-    ${drop_api_response}    A POST request to ${DROP_API} with ${final_payload} should respond with 409
+    Update payload ${initial_payload} with ${teamid} ${playerid} ${spid} and ${league_manager}
+    ${drop_api_response}    A POST request to ${DROP_API} with ${payload} should respond with 409
     Invalid type error response ${drop_api_response} along with schema should be valid
 
 Drop an invalid player from a team as a team owner
@@ -117,8 +117,8 @@ Drop an invalid player from a team as a team owner
     ${myteamid}    Set Variable    3
     ${league_manager}    Set Variable    False
     ${spid}    ${teamid}    ${playerid}    Fetch payload details to drop a player ${myteamid}    
-    ${final_payload}    Update payload ${initial_payload} with ${teamid} 3945274 ${spid} and ${league_manager}
-    ${drop_api_response}    A POST request to ${DROP_API} with ${final_payload} should respond with 409
+    Update payload ${initial_payload} with ${teamid} 3945274 ${spid} and ${league_manager}
+    ${drop_api_response}    A POST request to ${DROP_API} with ${payload} should respond with 409
     Invalid player error response ${drop_api_response} along with schema should be valid
 
 Drop an invalid player from a team as a league owner
@@ -128,8 +128,8 @@ Drop an invalid player from a team as a league owner
     ${myteamid}    Set Variable    3
     ${league_manager}    Set Variable    True
     ${spid}    ${teamid}    ${playerid}    Fetch payload details to drop a player ${myteamid}    
-    ${final_payload}    Update payload ${initial_payload} with ${teamid} 3945274 ${spid} and ${league_manager}
-    ${drop_api_response}    A POST request to ${DROP_API} with ${final_payload} should respond with 409
+    Update payload ${initial_payload} with ${teamid} 3945274 ${spid} and ${league_manager}
+    ${drop_api_response}    A POST request to ${DROP_API} with ${payload} should respond with 409
     Invalid player error response ${drop_api_response} along with schema should be valid
 
 Drop a player from an invalid team as a league owner
@@ -139,6 +139,6 @@ Drop a player from an invalid team as a league owner
     ${myteamid}    Set Variable    0
     ${league_manager}    Set Variable    True
     ${spid}    ${teamid}    ${playerid}    Fetch payload details to drop a player ${myteamid}    
-    ${final_payload}    Update payload ${initial_payload} with 0 ${playerid} ${spid} and ${league_manager}
-    ${drop_api_response}    A POST request to ${DROP_API} with ${final_payload} should respond with 409
+    Update payload ${initial_payload} with 0 ${playerid} ${spid} and ${league_manager}
+    ${drop_api_response}    A POST request to ${DROP_API} with ${payload} should respond with 409
     Invalid team error response ${drop_api_response} along with schema should be valid

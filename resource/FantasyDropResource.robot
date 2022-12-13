@@ -5,6 +5,7 @@ Library             RequestsLibrary
 Library             Collections
 Library             ../lib/validators/FantasyDropValidator.py
 Resource            resource/FantasyResource.robot
+Resource            resource/FantasyMovePlayer.Resource
 
 *** Variables ***
 ${FANTASY_BASE_URL}=                https://fantasy.espn.com
@@ -80,45 +81,29 @@ Update payload ${payload} with ${teamid} ${playerid} ${scoring_period_id} and ${
     Set To Dictionary       ${payload["items"][0]}    fromTeamId=${teamid}
     Set To Dictionary       ${payload}    scoringPeriodId    ${scoring_period_id}
     Set To Dictionary       ${payload}    isLeagueManager    ${league_manager}
-    set global variable     ${payload}    
-    [Return]                ${payload}
+    set global variable     ${payload}
 
 Undroppable error response ${drop_api_response} along with schema should be valid
     [Documentation]         Custom keyword to validate error response and schema
     invalid drop response ${drop_api_response} schema should be valid
-    ${responsebool}    error response ${drop_api_response} should contain ${ERROR_UNDROPPABLE}
-    IF    ${responsebool} == True
-    Log To Console    "Error message is as expected"
-    END
+    validate the ${drop_api_response} to contain ${ERROR_UNDROPPABLE}
 
 Invalid type error response ${drop_api_response} along with schema should be valid
     [Documentation]         Custom keyword to validate error response and schema
     invalid drop response ${drop_api_response} schema should be valid
-    ${responsebool}    error response ${drop_api_response} should contain ${ERROR_INVALID_TYPE}
-    IF    ${responsebool} == True
-    Log To Console    "Error message is as expected"
-    END
+    validate the ${drop_api_response} to contain ${ERROR_INVALID_TYPE}
 
 Invalid player error response ${drop_api_response} along with schema should be valid
     [Documentation]         Custom keyword to validate error response and schema
     invalid drop response ${drop_api_response} schema should be valid
-    ${responsebool}    error response ${drop_api_response} should contain ${ERROR_INVALID_PLAYER}
-    IF    ${responsebool} == True
-    Log To Console    "Error message is as expected"
-    END
+    validate the ${drop_api_response} to contain ${ERROR_INVALID_PLAYER}
 
 Invalid team error response ${drop_api_response} along with schema should be valid
     [Documentation]         Custom keyword to validate error response and schema
     invalid drop response ${drop_api_response} schema should be valid
-    ${responsebool}    error response ${drop_api_response} should contain ${ERROR_INVALID_TEAM}
-    IF    ${responsebool} == True
-    Log To Console    "Error message is as expected"
-    END
+    validate the ${drop_api_response} to contain ${ERROR_INVALID_TEAM}
 
 Invalid scoring period error response ${drop_api_response} along with schema should be valid
     [Documentation]         Custom keyword to validate error response and schema
     invalid drop response ${drop_api_response} schema should be valid
-    ${responsebool}    error response ${drop_api_response} should contain ${ERROR_INVALID_SCORING_PERIOD}
-    IF    ${responsebool} == True
-    Log To Console    "Error message is as expected"
-    END
+    validate the ${drop_api_response} to contain ${ERROR_INVALID_SCORING_PERIOD}
