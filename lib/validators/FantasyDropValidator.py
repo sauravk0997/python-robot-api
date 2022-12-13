@@ -140,10 +140,3 @@ class FantasyDropValidator(object):
             else:
                 continue
         return scoring_period_id, team_id, drop_player_list
-
-    @keyword('error response ${response} should contain ${ERROR_UNDROPPABLE}', tags=['drop-player', 'functional', 'CoreV3'],
-             types={'response': requests.Response})
-    def validate_error_msg(self, response, errormsg):
-        type = response.json()['details'][0]['type']
-        if type == errormsg:
-            return True
