@@ -12,6 +12,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import *
 from time import sleep
 from selenium.webdriver.chrome.options import Options as ChromeOptions
+import os
+from dotenv import load_dotenv
 
 
 class FantasyLoginManager(object):
@@ -83,19 +85,24 @@ class FantasyLoginManager(object):
     def login_fantasy_user(self, username="", password="", expected_profile_name_span_value="", url="https://www.espn.com/fantasy/"):
         # TODO: complete method documentation
 
+        #Load environment file
+        load_dotenv()
+        
         #variable which defines local or Sauce run
         sauce_run = "True"
         
         if sauce_run == "True": 
             options = ChromeOptions()
-            options.browser_version = 'latest'
-            options.platform_name = 'Windows 10'
+            options.browser_version = os.getenv('BROWSER_VERSION')
+            options.platform_name = os.getenv('PLATFORM_NAME')
             sauce_options = {}
-            sauce_options['build'] = '1234'
-            sauce_options['name'] = 'demo run'
-            sauce_options['screenResolution'] = '1400x1050'
+            sauce_options['build'] = os.getenv('SAUCE_BUILD')
+            sauce_options['name'] = os.getenv('SAUCE_NAME')
+            sauce_options['screenResolution'] = os.getenv('SAUCE_SCREEN_RESOLUTION')
             options.set_capability('sauce:options', sauce_options)
-            sauce_url = "https://Kantha:9a9d01d7-81a7-4f8d-8de4-91a1e5586128@ondemand.apac-southeast-1.saucelabs.com:443/wd/hub"
+            sauce_username = os.getenv('SAUCE_USERNAME')
+            sauce_accesskey= os.getenv('SAUCE_KEY')
+            sauce_url = f"https://{sauce_username}:{sauce_accesskey}@ondemand.apac-southeast-1.saucelabs.com:443/wd/hub"
             self.driver = webdriver.Remote(command_executor=sauce_url, options=options)
         else:
             self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
