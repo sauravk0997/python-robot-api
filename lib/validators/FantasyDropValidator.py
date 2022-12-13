@@ -45,7 +45,7 @@ class FantasyDropValidator(object):
           Fantasy Games Schema from ${response} should be valid
         """
         try:
-            schema = InvalidDropPlayerSchema().load(response.json())
+            schema = InvalidSchema().load(response.json())
 
         except ValidationError as ve:
             raise Failure(f'Schema Data failed validation: {ve.messages}')
