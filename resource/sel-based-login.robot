@@ -2,20 +2,20 @@
 Library   Collections
 Library   OperatingSystem
 Library   RequestsLibrary
-Library  ../lib/fantasyUI/FantasyLoginManager.py    driver=${BROWSER}    xpaths=${CURDIR}/JSON/xpaths.json    WITH NAME  FLM
+Library  lib/fantasyUI/FantasyLoginManager.py
 
 *** Variables ***
 ${HOMEPAGE}     https://www.espn.com/fantasy/
 ${BROWSER}      Chrome
-${user}         test_api_user0@test.com
+${user}         test_api_user@test.com
 ${password}     APIuser@ESPN
 ${greeting}     API!
 
 *** Keywords ***
 Auth with Cookie Capture
-    FLM.Login Fantasy User    username=${user}    password=${password}  expected_profile_name_span_value=${greeting}   url=${HOMEPAGE}
-    ${espn_cookie}=     FLM.Fantasy API Cookie
+    Login Fantasy User    username=${user}    password=${password}  expected_profile_name_span_value=${greeting}   url=${HOMEPAGE}
+    ${espn_cookie}=     Fantasy API Cookie
     [Return]    ${espn_cookie}
 
- Browser Shutdown
-    FLM.Browser shutdown
+ Close the current active browser
+    Browser shutdown

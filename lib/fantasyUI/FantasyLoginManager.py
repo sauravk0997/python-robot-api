@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import *
 from time import sleep
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 
 class FantasyLoginManager(object):
@@ -32,64 +33,20 @@ class FantasyLoginManager(object):
     # scopes the class to the Test level so that it's instantiated once during each test case run
     ROBOT_LIBRARY_SCOPE = "TEST"
 
-    @not_keyword
-    def __init__(self,
-                 driver="Chrome",
-                 xpaths=None,
-                 cookie_espn_s2=None,
-                 cookie_swid=None,
-                 cookie_combined=None,
-                 verbose=False):
+    #Not required
+    # @not_keyword
+    # def __init__(self,
+    #              driver="Chrome",
+    #              xpaths=None,
+    #              cookie_espn_s2=None,
+    #              cookie_swid=None,
+    #              cookie_combined=None,
+    #              verbose=False):
 
-        self.cookie_espn_s2     = cookie_espn_s2
-        self.cookie_swid        = cookie_swid
-        self.cookie_combined    = cookie_combined
-        self.verbose            = verbose
-
-        if driver != 'Chrome':
-            # TODO: identify other driver types to integrate.
-            self.driver = webdriver.Chrome()
-        else:
-            console("*****Intializing Chrome Driver*****")
-            # Headless run
-            #opt = Options()
-            opt = webdriver.ChromeOptions()
-            opt.add_argument('--headless')
-            opt.add_argument('--no-sandbox')
-            opt.add_argument('--disable-dev-shm-usage')
-            opt.add_argument('--window-size=2560,1600')
-            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), chrome_options=opt)
-
-            # Uncomment this line to run code on Head/Browser UI mode
-            #self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
-
-        self.action_chain = ActionChains(self.driver)
-
-        try:
-            # This check allows the user to overload the init to pass a variety of content into the xpaths variable
-            if type(xpaths) in (dict, ):
-                # assume the dict is in the correct format and move on
-                self.xpath_settings = xpaths
-
-            elif type(xpaths) in (str, ):
-                # we either have a file path or a json string or a malformed item
-                if '{' in xpaths:
-                    # handle the json string
-                    self.xpath_settings = json.loads(xpaths)
-                else:
-                    # handle the file path
-                    with open(xpaths, 'r') as f:
-                        self.xpath_settings     = json.load(f)
-
-            else:
-                # something unexpected came through or the item was None
-                raise ValueError("xpath data was not recognized.")
-
-        except Exception as e:
-            console(f"Error encountered loading xpath: \n{e}")
-
-        if len(self.xpath_settings) == 0:
-            raise ValueError("xpath values were not provided.")
+    #     self.cookie_espn_s2     = cookie_espn_s2
+    #     self.cookie_swid        = cookie_swid
+    #     self.cookie_combined    = cookie_combined
+    #     self.verbose            = verbose
 
     @not_keyword
     def info(self, m: str) -> None:
@@ -125,6 +82,52 @@ class FantasyLoginManager(object):
     @keyword("Login Fantasy User")
     def login_fantasy_user(self, username="", password="", expected_profile_name_span_value="", url="https://www.espn.com/fantasy/"):
         # TODO: complete method documentation
+
+        #variable which defines local or Sauce run
+        sauce_run = "True"
+        
+        if sauce_run == "True": 
+            options = ChromeOptions()
+            options.browser_version = 'latest'
+            options.platform_name = 'Windows 10'
+            sauce_options = {}
+            sauce_options['build'] = '1234'
+            sauce_options['name'] = 'demo run'
+            sauce_options['screenResolution'] = '1400x1050'
+            options.set_capability('sauce:options', sauce_options)
+            sauce_url = "https://Kantha:9a9d01d7-81a7-4f8d-8de4-91a1e5586128@ondemand.apac-southeast-1.saucelabs.com:443/wd/hub"
+            self.driver = webdriver.Remote(command_executor=sauce_url, options=options)
+        else:
+            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+
+        self.action_chain = ActionChains(self.driver)
+
+        try:
+            xpaths= 'resource/JSON/xpaths.json'
+            # This check allows the user to overload the init to pass a variety of content into the xpaths variable
+            if type(xpaths) in (dict, ):
+                # assume the dict is in the correct format and move on
+                self.xpath_settings = xpaths
+
+            elif type(xpaths) in (str, ):
+                # we either have a file path or a json string or a malformed item
+                if '{' in xpaths:
+                    # handle the json string
+                    self.xpath_settings = json.loads(xpaths)
+                else:
+                    # handle the file path
+                    with open(xpaths, 'r') as f:
+                        self.xpath_settings     = json.load(f)
+
+            else:
+                # something unexpected came through or the item was None
+                raise ValueError("xpath data was not recognized.")
+
+        except Exception as e:
+            console(f"Error encountered loading xpath: \n{e}")
+
+        if len(self.xpath_settings) == 0:
+            raise ValueError("xpath values were not provided.")
 
         # Attempt to launch the browser, maximize
         try:
@@ -180,15 +183,18 @@ class FantasyLoginManager(object):
             console(e)
             return False
 
-        # ATTEMPT TO LOCATE AN ERROR MESSAGE AND MOVE ON AFTER 5 SECONDS
-        try:
-            WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_ERROR_DIV"])))
-            console("An unexpected login message appeared during authentication.")
-            return False
+        #This code not required to run on sauce labs
+        # # ATTEMPT TO LOCATE AN ERROR MESSAGE AND MOVE ON AFTER 5 SECONDS
+        # try:
+        #     WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_ERROR_DIV"])))
+        #     console("An unexpected login message appeared during authentication.")
+        #     return False
 
-        except Exception as e:
-            # No error located, move along
-            pass
+        # except Exception as e:
+        #     # No error located, move along
+        #     pass
+
+        sleep(5)
 
         # REOPEN PROFILE MENU AND CONFIRM LOGGED IN
         try:
@@ -238,4 +244,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    #main()
+    pass
