@@ -12,9 +12,6 @@ image: python:latest
 # only cache local items.
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-  SAUCE_NAME: echo "$SAUCE_USER"
-  SAUCE_KEY: echo "$SAUCE_KEY"
-  RP_ENDPOINT: echo "$RP_ENDPOINT"
 
 # Pip's cache doesn't store the python packages
 # https://pip.pypa.io/en/stable/reference/pip_install/#caching
@@ -27,20 +24,10 @@ cache:
     - venv/
 
 before_script:
-  - echo "Hello, $GITLAB_USER_LOGIN!"
-  - echo "HOME, $HOME"
-  - whoami
-  - python --version  # For debugging
+  - python --version
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
-  - echo "$RP_ENDPOINT"
-  - echo "$BROWSER_VERSION"
-  - echo "$PLATFORM_NAME"
-  - echo "$SAUCE_BUILD"
-  - echo "$SAUCE_NAME"
-  - echo "$SAUCE_SCREEN_RESOLUTION"
-  - echo "$SAUCE_USER"
   - export BROWSER_VERSION=${BROWSER_VERSION}
   - export PLATFORM_NAME=${PLATFORM_NAME}
   - export SAUCE_BUILD=${SAUCE_BUILD}
@@ -52,7 +39,6 @@ before_script:
 mergejob:
   script:
     - echo "Executing Merge Job"
-    # an alternative approach is to install and run:
     - pip install -r requirements.txt
     - files=(`git diff-tree --no-commit-id --name-only -r $CI_COMMIT_SHA`)
       echo "files :::::" ${files}
@@ -96,27 +82,3 @@ nightlyjob:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: always
-
-# test:
-#   script:
-#     - echo "test for credentials role access"
-#  #   - python setup.py test
-# #    - pip install tox flake8  # you can also use tox
-# #    - tox -e py36,flake8
-
-# run:
-#   script:
-#     - apt -y update && apt install -y gcc
-#     - apt -y update && apt install -y gunicorn
-#     - pip install -q -r requirements.txt
-#     - echo "running tests"
-# #    - python setup.py bdist_wheel
-#     # an alternative approach is to install and run:
-# #    - pip install dist/*
-#     # run the command here
-#   artifacts:
-#     when: always
-#     paths:
-#       - logs/*
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
