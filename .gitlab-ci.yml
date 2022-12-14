@@ -51,23 +51,23 @@ before_script:
 
 mergejob:
   script:
-    - echo "Do Nothing"
+    - echo "Executing Merge Job"
     # an alternative approach is to install and run:
-    # - pip install -r requirements.txt
-    # - files=(`git diff-tree --no-commit-id --name-only -r $CI_COMMIT_SHA`)
-    #   echo "files :::::" ${files}
-    # - suites=()
-    # - for f in ${files[@]}; 
-    #   do if [[ $f =~ testsuite\/ ]]; 
-    #   then echo suite file changed $f; 
-    #   suites+=$f; 
-    #   fi; done
-    # - if [[ ${#suites[@]} -gt 0 ]]; 
-    #   then for s in ${suites[@]}; 
-    #   do python3 -m robot --pythonpath $PWD $s; 
-    #   done; 
-    #   else python3 -m robot --pythonpath $PWD testsuite/*.robot; 
-    #   fi
+    - pip install -r requirements.txt
+    - files=(`git diff-tree --no-commit-id --name-only -r $CI_COMMIT_SHA`)
+      echo "files :::::" ${files}
+    - suites=()
+    - for f in ${files[@]}; 
+      do if [[ $f =~ testsuite\/ ]]; 
+      then echo suite file changed $f; 
+      suites+=$f; 
+      fi; done
+    - if [[ ${#suites[@]} -gt 0 ]]; 
+      then for s in ${suites[@]}; 
+      do python3 -m robot --pythonpath $PWD $s; 
+      done; 
+      else python3 -m robot --pythonpath $PWD testsuite/*.robot; 
+      fi
 
   artifacts:
     paths:
