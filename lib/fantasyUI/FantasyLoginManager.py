@@ -86,7 +86,7 @@ class FantasyLoginManager(object):
         # TODO: complete method documentation
 
         #Load environment file
-        load_dotenv()
+        #load_dotenv()
         
         #variable which defines local or Sauce run
         sauce_run = "True"
