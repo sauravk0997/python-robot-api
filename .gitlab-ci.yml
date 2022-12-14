@@ -71,7 +71,7 @@ nightlyjob:
     - pip install -r requirements.txt
     # run the command here
     # - python -m robot --listener robotframework_reportportal.listener -v RP_LOG_BATCH_SIZE:100 -v RP_UUID:$CI_UUID -v RP_ENDPOINT:https://reportportal.productivity.dtcisb.technology -v RP_LAUNCH:nightly -v RP_PROJECT:roxas-api-espn-core-v3 --pythonpath $PWD testsuite/*.robot
-    - if [ -z "$RF_SUITE" ]; then python -m robot --listener robotframework_reportportal.listener -v RP_LOG_BATCH_SIZE:100 -v RP_UUID:$RP_UUID -v RP_ENDPOINT:$RP_ENDPOINT -v RP_LAUNCH:fantasy_nightly -v RP_PROJECT:ESPN_Fantasy_App --pythonpath $PWD $CI_TAGS testsuite/*.robot; else python -m robot --listener robotframework_reportportal.listener -v RP_LOG_BATCH_SIZE:100 -v RP_UUID:$RP_UUID -v RP_ENDPOINT:$RP_ENDPOINT -v RP_LAUNCH:$RF_SUITE -v RP_PROJECT:ESPN_Fantasy_App --pythonpath $PWD $CI_TAGS testsuite/$RF_SUITE-tests.robot; fi
+    - if [ -z "$RF_SUITE" ]; then python -m robot --listener robotframework_reportportal.listener -v RP_LOG_BATCH_SIZE:100 -v RP_UUID:$RP_UUID -v RP_ENDPOINT:$RP_ENDPOINT -v RP_LAUNCH:fantasy_nightly -v RP_PROJECT:ESPN_Fantasy_App --pythonpath $PWD $CI_TAGS testsuite/fantasy-sport-e2e-tests.robot; else python -m robot --listener robotframework_reportportal.listener -v RP_LOG_BATCH_SIZE:100 -v RP_UUID:$RP_UUID -v RP_ENDPOINT:$RP_ENDPOINT -v RP_LAUNCH:$RF_SUITE -v RP_PROJECT:ESPN_Fantasy_App --pythonpath $PWD $CI_TAGS testsuite/$RF_SUITE-tests.robot; fi
 
   artifacts:
     paths:
