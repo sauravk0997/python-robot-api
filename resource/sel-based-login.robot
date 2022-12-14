@@ -7,7 +7,7 @@ Library  lib/fantasyUI/FantasyLoginManager.py
 *** Variables ***
 ${HOMEPAGE}     https://www.espn.com/fantasy/
 ${BROWSER}      Chrome
-${user}         test_user_dummy@test.com
+${user}         test_user_dummy1@test.com
 ${password}     APIuser@ESPN
 ${greeting}     API!
 

@@ -13,6 +13,7 @@ from selenium.common.exceptions import *
 from time import sleep
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 import os
+from dotenv import load_dotenv
 
 class FantasyLoginManager(object):
     """
@@ -193,7 +194,7 @@ class FantasyLoginManager(object):
         #     # No error located, move along
         #     pass
 
-        sleep(5)
+        sleep(10)
 
         # REOPEN PROFILE MENU AND CONFIRM LOGGED IN
         try:
