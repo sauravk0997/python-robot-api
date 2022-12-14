@@ -3,6 +3,7 @@ from marshmallow import ValidationError
 from robot.api.deco import keyword, library
 from robot.api.exceptions import Failure
 import requests
+import base64
 import string
 import datetime
 import math
@@ -19,6 +20,12 @@ class FantasyUtils(object):
     def get_SWID(self, result) -> str:
         swid = result.split(";")
         return swid[0].split("SWID=")[1]
+
+    @keyword('Get user credentials ${result}', types={'result': str})
+    def get_credentials(self, result) -> str:
+        encoding = 'utf-8'
+        new_result = base64.b64decode(result).decode(encoding)
+        return (new_result)
 
     @keyword('Get unixtimestamp time')
     def get_unix_timestamp_time(self) -> int:
