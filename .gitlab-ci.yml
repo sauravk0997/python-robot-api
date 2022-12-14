@@ -24,31 +24,61 @@ cache:
     - venv/
 
 before_script:
-  - python --version  # For debugging
+  - python --version
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
+  - export BROWSER_VERSION=${BROWSER_VERSION}
+  - export PLATFORM_NAME=${PLATFORM_NAME}
+  - export SAUCE_BUILD=${SAUCE_BUILD}
+  - export SAUCE_NAME=${SAUCE_NAME}
+  - export SAUCE_SCREEN_RESOLUTION=${SAUCE_SCREEN_RESOLUTION}
+  - export SAUCE_USER=${SAUCE_USER}
+  - export SAUCE_KEY=${SAUCE_KEY}
 
-test:
+mergejob:
   script:
-    - echo "test for credentials role access"
- #   - python setup.py test
-#    - pip install tox flake8  # you can also use tox
-#    - tox -e py36,flake8
+    - echo "Executing Merge Job"
+    - pip install -r requirements.txt
+    - files=(`git diff-tree --no-commit-id --name-only -r $CI_COMMIT_SHA`)
+      echo "files :::::" ${files}
+    - suites=()
+    - for f in ${files[@]}; 
+      do if [[ $f =~ testsuite\/ ]]; 
+      then echo suite file changed $f; 
+      suites+=$f; 
+      fi; done
+    - if [[ ${#suites[@]} -gt 0 ]]; 
+      then for s in ${suites[@]}; 
+      do python3 -m robot --pythonpath $PWD $s; 
+      done; 
+      else python3 -m robot --pythonpath $PWD testsuite/*.robot; 
+      fi
 
-run:
-  script:
-    - apt -y update && apt install -y gcc
-    - apt -y update && apt install -y gunicorn
-    - pip install -q -r requirements.txt
-    - echo "running tests"
-#    - python setup.py bdist_wheel
-    # an alternative approach is to install and run:
-#    - pip install dist/*
-    # run the command here
   artifacts:
-    when: always
     paths:
-      - logs/*
+      - output.xml
+      - report.html
+      - log.html
+
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: always
+
+nightlyjob:
+  script:
+    # an alternative approach is to install and run:
+    - pip install -r requirements.txt
+    # run the command here
+    # - python -m robot --listener robotframework_reportportal.listener -v RP_LOG_BATCH_SIZE:100 -v RP_UUID:$CI_UUID -v RP_ENDPOINT:https://reportportal.productivity.dtcisb.technology -v RP_LAUNCH:nightly -v RP_PROJECT:roxas-api-espn-core-v3 --pythonpath $PWD testsuite/*.robot
+    - if [ -z "$RF_SUITE" ]; then python -m robot --listener robotframework_reportportal.listener -v RP_LOG_BATCH_SIZE:100 -v RP_UUID:$RP_UUID -v RP_ENDPOINT:$RP_ENDPOINT -v RP_LAUNCH:fantasy_nightly -v RP_PROJECT:ESPN_Fantasy_App --pythonpath $PWD $CI_TAGS testsuite/fantasy-sport-e2e-tests.robot; else python -m robot --listener robotframework_reportportal.listener -v RP_LOG_BATCH_SIZE:100 -v RP_UUID:$RP_UUID -v RP_ENDPOINT:$RP_ENDPOINT -v RP_LAUNCH:$RF_SUITE -v RP_PROJECT:ESPN_Fantasy_App --pythonpath $PWD $CI_TAGS testsuite/$RF_SUITE-tests.robot; fi
+
+  artifacts:
+    paths:
+      - output.xml
+      - report.html
+      - log.html
+
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always
