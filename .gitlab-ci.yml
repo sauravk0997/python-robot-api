@@ -14,6 +14,7 @@ variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   SAUCE_NAME: echo "$SAUCE_USER"
   SAUCE_KEY: echo "$SAUCE_KEY"
+  RP_ENDPOINT: echo "$RP_ENDPOINT"
 
 # Pip's cache doesn't store the python packages
 # https://pip.pypa.io/en/stable/reference/pip_install/#caching
@@ -28,12 +29,12 @@ cache:
 before_script:
   - echo "Hello, $GITLAB_USER_LOGIN!"
   - echo "HOME, $HOME"
-  #- %gitlab-runner ALL = (ALL) NOPASSWD: ALL
   - whoami
   - python --version  # For debugging
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
+  - echo "$RP_ENDPOINT"
 
 mergejob:
   script:

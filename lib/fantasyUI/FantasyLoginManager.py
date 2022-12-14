@@ -36,19 +36,17 @@ class FantasyLoginManager(object):
     ROBOT_LIBRARY_SCOPE = "TEST"
 
     #Not required
-    # @not_keyword
-    # def __init__(self,
-    #              driver="Chrome",
-    #              xpaths=None,
-    #              cookie_espn_s2=None,
-    #              cookie_swid=None,
-    #              cookie_combined=None,
-    #              verbose=False):
+    @not_keyword
+    def __init__(self,
+                 cookie_espn_s2=None,
+                 cookie_swid=None,
+                 cookie_combined=None,
+                 verbose=False):
 
-    #     self.cookie_espn_s2     = cookie_espn_s2
-    #     self.cookie_swid        = cookie_swid
-    #     self.cookie_combined    = cookie_combined
-    #     self.verbose            = verbose
+        self.cookie_espn_s2     = cookie_espn_s2
+        self.cookie_swid        = cookie_swid
+        self.cookie_combined    = cookie_combined
+        self.verbose            = verbose
 
     @not_keyword
     def info(self, m: str) -> None:
