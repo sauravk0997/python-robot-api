@@ -35,7 +35,6 @@ class FantasyLoginManager(object):
     # scopes the class to the Test level so that it's instantiated once during each test case run
     ROBOT_LIBRARY_SCOPE = "TEST"
 
-    #Not required
     @not_keyword
     def __init__(self,
                  cookie_espn_s2=None,
@@ -83,11 +82,8 @@ class FantasyLoginManager(object):
     def login_fantasy_user(self, username="", password="", expected_profile_name_span_value="", url="https://www.espn.com/fantasy/"):
         # TODO: complete method documentation
 
-        #Load environment file
-        #load_dotenv()
-        
         #variable which defines local or Sauce run
-        sauce_run = "True"
+        sauce_run = "False"
         
         if sauce_run == "True": 
             options = ChromeOptions()
