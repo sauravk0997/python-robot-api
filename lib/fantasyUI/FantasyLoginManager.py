@@ -13,6 +13,7 @@ from selenium.common.exceptions import *
 from time import sleep
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 import os
+from dotenv import load_dotenv
 
 class FantasyLoginManager(object):
     """
