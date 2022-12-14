@@ -27,10 +27,10 @@ ${DRAFT_DETAILS_SLUG}     draftDetail
 ${TRANSACTIONS_SLUG}    transactions/
 @{user_emails}        test_api_user1@test.com    test_api_user2@test.com    test_api_user3@test.com
 #user cookies
-${user1_cookie}    SWID={DADA6BC1-6F16-4B4C-9E34-526B4870B891};espn_s2=AEAqx51yoqQ+9D/bdVjfB6Vqk60qbd9N4ksqclsl1YDg0YfakxNUOm7PZlZT+GkUAxvxf6VcUSwnhGNh51VAl7bE2+s7TZX+8uvmlhj3hSBVnLy8nXVyLPrDj1rDP6PF+OLvPQaiZtSbIU39EwPQDMatVBuoU1Fcu/yKOTmnZ0LiUhDRoMHti+jdDVhsDgDYVl8DOaJ4i6sfAtOOwIvcH49MiRFzqLR/t8mDI6oAyO8oLBuxXmnQVbaIDyrYSHj/1js/2Y7VlOf12JwcXn8cb1968h0eo2SNyOBI2VN5mwEdZw==;
-${user2_cookie}    SWID={F53C173D-F557-4E6E-B576-B12C9BE2C80F};espn_s2=AEAr93yzMIUA7cbl4sI/Jq56zp7bzYIoSrGcUYnMu8BC+gaiWIVSQzJmEjmzw3rmybzS7ZvcMBdmxMk/uJ9CeMd8QDLlPbhr0TPlorN4Q2vvUlNun/KeJ7UQt7cLTgFHumwH8TCD/8W2TbL4AFTuNBEDltlfWnVixzIdxkKnESKEzCwvBwmgo21fITKCOJsZEmMwWF4dc7koYWkxZX8SR30423njQ76iUTWv58HIFRYj8O2f0dPuKVpEIu2x89tMJmcfbIVZtjksWktkZDYEs4iw+GzZS1xmzNbaCf3lJxg3zQ==;
-${user3_cookie}    SWID={4E0A1098-59AA-492E-ABE1-32C3A44B0233};espn_s2=AEB8pEruBWboxDncWhpikJeM4XdvIuu+9qcz4LTldeKeHAZkl4ndAdaGwuW1w8ruMmv1KDa18fYV5xKHIhhuXFyIFOU3lAN9XD022VkjjRwj2WcyfzUQaP/uyNbRYRs77usFjcLpmncYpF2SqqfYgXB4p841z9LvAuw5oWt1JyuJ2FSNxbctilcj0ibVPWlqI4Mcy99Ge0QwHSdC4K4K12XDT5xRxSlrLRJyaiwkOABhnezYk2ca9Tk3Qs3I3kl0Zn9d/iwZtQB5iya5OeyDiUE8PMuNQWFQ29cYKZUaIi2VvQ==;
-@{user_cookies}       ${user1_cookie}    ${user2_cookie}    ${user3_cookie}
+# ${user1_cookie}    SWID={DADA6BC1-6F16-4B4C-9E34-526B4870B891};espn_s2=AEAqx51yoqQ+9D/bdVjfB6Vqk60qbd9N4ksqclsl1YDg0YfakxNUOm7PZlZT+GkUAxvxf6VcUSwnhGNh51VAl7bE2+s7TZX+8uvmlhj3hSBVnLy8nXVyLPrDj1rDP6PF+OLvPQaiZtSbIU39EwPQDMatVBuoU1Fcu/yKOTmnZ0LiUhDRoMHti+jdDVhsDgDYVl8DOaJ4i6sfAtOOwIvcH49MiRFzqLR/t8mDI6oAyO8oLBuxXmnQVbaIDyrYSHj/1js/2Y7VlOf12JwcXn8cb1968h0eo2SNyOBI2VN5mwEdZw==;
+# ${user2_cookie}    SWID={F53C173D-F557-4E6E-B576-B12C9BE2C80F};espn_s2=AEAr93yzMIUA7cbl4sI/Jq56zp7bzYIoSrGcUYnMu8BC+gaiWIVSQzJmEjmzw3rmybzS7ZvcMBdmxMk/uJ9CeMd8QDLlPbhr0TPlorN4Q2vvUlNun/KeJ7UQt7cLTgFHumwH8TCD/8W2TbL4AFTuNBEDltlfWnVixzIdxkKnESKEzCwvBwmgo21fITKCOJsZEmMwWF4dc7koYWkxZX8SR30423njQ76iUTWv58HIFRYj8O2f0dPuKVpEIu2x89tMJmcfbIVZtjksWktkZDYEs4iw+GzZS1xmzNbaCf3lJxg3zQ==;
+# ${user3_cookie}    SWID={4E0A1098-59AA-492E-ABE1-32C3A44B0233};espn_s2=AEB8pEruBWboxDncWhpikJeM4XdvIuu+9qcz4LTldeKeHAZkl4ndAdaGwuW1w8ruMmv1KDa18fYV5xKHIhhuXFyIFOU3lAN9XD022VkjjRwj2WcyfzUQaP/uyNbRYRs77usFjcLpmncYpF2SqqfYgXB4p841z9LvAuw5oWt1JyuJ2FSNxbctilcj0ibVPWlqI4Mcy99Ge0QwHSdC4K4K12XDT5xRxSlrLRJyaiwkOABhnezYk2ca9Tk3Qs3I3kl0Zn9d/iwZtQB5iya5OeyDiUE8PMuNQWFQ29cYKZUaIi2VvQ==;
+# @{user_cookies}       ${user1_cookie}    ${user2_cookie}    ${user3_cookie}
 @{member_ids}         DADA6BC1-6F16-4B4C-9E34-526B4870B891    F53C173D-F557-4E6E-B576-B12C9BE2C80F    4E0A1098-59AA-492E-ABE1-32C3A44B0233
 @{display_name}       ESPNFAN3016725091    ESPNFAN3292075826    ESPNFAN4644965931
 
@@ -226,7 +226,10 @@ Add players to team ${team_id} as team owner ${team_owner_id}
     [Documentation]    Generic method to add team players to respective teams as team owners
     &{offline_draft_team_json_template}=     Load JSON from file    resource/JSON/offlineDraftTeam${team_id}.json
     ${decremented_index}=    Evaluate    ${team_id}-2
-    &{header_value}=    create dictionary     cookie=${user_cookies}[${decremented_index}]
+    ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${decremented_index}]    test_api    API!
+    # &{header_user_cookie}     Create Dictionary    cookie=${header_user_cookie1}
+    &{header_value}=    create dictionary     cookie=${header_user_cookie1}
+    # &{header_value}=    create dictionary     cookie=${user_cookies}[${decremented_index}]
     ${offline_draft_team_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_team_json_template}     expected_status=200
 
 Add players to team 1 as League creator user
@@ -326,8 +329,11 @@ Validate Invitation Accept, Team Creation endpoints responds with successful sta
     FOR    ${index}    IN RANGE    0    3
         &{league_invite_accept_json_template}=    Load JSON from file    resource/JSON/leagueInviteAccept.json
         ${id_updated}=    Update value to JSON    ${league_invite_accept_json_template}    $.id   ${invite_id}
-        Save JSON to file    ${id_updated}    resource/JSON/leagueInviteAccept.json    2
-        &{header_user_cookie}    Create Dictionary    cookie=${user_cookies}[${index}]
+        Save JSON to file    ${id_updated}    resource/JSON/leagueInviteAccept.json    2   
+        # ${type string}=    Evaluate     type(${header})
+        # Log To Console     ${type string}
+        ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${index}]    test_api    API!
+        &{header_user_cookie}     Create Dictionary    cookie=${header_user_cookie1}
         #Make post request and send json payload to accept invitation - 
         ${memberInvitationAccepation}=    POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${invite_id}?memberId={${member_ids}[${index}]}&join=true    headers=${header_user_cookie}    json=${league_invite_accept_json_template}       expected_status=201
         #fetch team id
@@ -355,7 +361,9 @@ Validate Invitation Accept, Team Creation within the league with more than accep
         &{league_invite_accept_json_template}=    Load JSON from file    resource/JSON/leagueInviteAccept.json
         ${id_updated}=    Update value to JSON    ${league_invite_accept_json_template}    $.id   ${invite_id}
         Save JSON to file    ${id_updated}    resource/JSON/leagueInviteAccept.json    2
-        &{header_user_cookie}    Create Dictionary    cookie=${user_cookies}[${index}]
+        ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${index}]    test_api    API!
+        &{header_user_cookie}     Create Dictionary    cookie=${header_user_cookie1}
+        # &{header_user_cookie}    Create Dictionary    cookie=${user_cookies}[${index}]
         ${memberInvitationAccepation}=    POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${invite_id}?memberId={${member_ids}[${index}]}&join=true    headers=${header_user_cookie}    json=${league_invite_accept_json_template}       expected_status=201
         ${team_id}=    Get value from JSON    ${memberInvitationAccepation.json()}    $.teamId
         &{team_create_json_template}=    Load JSON from file    resource/JSON/teamCreateTemplate.json
@@ -368,6 +376,7 @@ Validate Invitation Accept, Team Creation within the league with more than accep
         ${team_response}=     POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/teams/${team_id}   headers=${header_user_cookie}     json=${team_create_json_template}   expected_status=400
         Invalid Schema from ${team_response} should be valid
     END
+
 
 Close the current Browser
     Browser Shutdown

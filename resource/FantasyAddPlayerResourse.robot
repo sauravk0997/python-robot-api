@@ -6,7 +6,7 @@ Library             String
 Library             DateTime   
 Library             RPA.JSON
 Library             lib/validators/FantasyAddPlayerValidator.py
-Library             lib/fantasyUI/FantasyLoginManager.py    driver=${BROWSER}    xpaths=${CURDIR}/JSON/xpaths.json    WITH NAME    FLM
+Library             lib/fantasyUI/FantasyLoginManager.py    driver=${BROWSER}    xpaths=${CURDIR}/../resource/xpaths.json    WITH NAME    FLM
 
 *** Variables ***
 ${LEAGUE_ID}             748489070 
@@ -32,7 +32,7 @@ Get user cookie
 Fetch scoring period id for team
     [Arguments]              ${team_id}
     ${team_response}=        GET  url=${TEAM_API}=${team_id}      headers=${header}      expected_status=200
-    ${scoring_period_id}=    Get value from JSON    ${team_response.json()}              $.scoringPeriodId
+    ${scoring_period_id}=    Get value from JSON    ${team_response.json()}                    $.scoringPeriodId
     Set Global Variable      ${scoring_period_id}
 
 Get the value of Drop Player Id and Free Agent Player Id of Team 
@@ -44,21 +44,25 @@ Get the value of Drop Player Id and Free Agent Player Id of Team
     ${free_agent_filter}           Get file                            resource/JSON/freeAgentFilter.json
     &{free_agent_header}=          Create Dictionary                   cookie=${USER_COOKIE}    x-fantasy-filter=${free_agent_filter}
     ${free_agent_response}=        GET  url= ${API_BASE}/${LEAGUE_SLUG}?scoringPeriodId=${scoring_period_id}&view=kona_player_info                  headers=${free_agent_header}      expected_status=200
-    ${team_response}=              GET  url=${TEAM_API}=${team_id1}    headers=${header}       expected_status=200 
+    ${team_response}=              GET  url=${TEAM_API}=${team_id1}                      headers=${header}             expected_status=200 
     @{player_details}              Get the droppable player and free-agent player id           ${team_id1}            ${team_response}              ${free_agent_response}
     Set Global Variable            @{player_details}
     [Return]                       @{player_details}
     
 Update payload ${payload} with ${scoring_period_id}, ${drop_player_id} and ${free_agents_id}
     [Documentation]     Custom keyword to update the payload with the values from API calls
-    ${scoring_period_id_updated}=        Update value to JSON                  ${payload}        $.scoringPeriodId             ${scoring_period_id}
-    Save JSON to file                    ${scoring_period_id_updated}          resource/JSON/addDropPlayerasTO.json    2
-    ${droppable_player_id_updated}=      Update value to JSON    ${payload}    $.items[1].playerId    ${player_details}[0]
-    Save JSON to file                    ${droppable_player_id_updated}        resource/JSON/addDropPlayerasTO.json    2
-    ${free_agents_player_id_updated}     Update value to JSON    ${payload}    $.items[0].playerId  ${player_details}[1]
-    Save JSON to file                    ${free_agents_player_id_updated}      resource/JSON/addDropPlayerasTO.json    2
+    IF    ${player_details}[0] != None   
+        ${scoring_period_id_updated}=        Update value to JSON                  ${payload}        $.scoringPeriodId             ${scoring_period_id}
+        Save JSON to file                    ${scoring_period_id_updated}          resource/JSON/addDropPlayerasTO.json    2
+        ${droppable_player_id_updated}=      Update value to JSON    ${payload}    $.items[1].playerId    ${player_details}[0]
+        Save JSON to file                    ${droppable_player_id_updated}        resource/JSON/addDropPlayerasTO.json    2
+        ${free_agents_player_id_updated}     Update value to JSON    ${payload}    $.items[0].playerId  ${player_details}[1]
+        Save JSON to file                    ${free_agents_player_id_updated}      resource/JSON/addDropPlayerasTO.json    2    
+    ELSE
+        Log    droppable player not available     
+    END
     [Return]                             ${payload}
-     
+    
 A POST request to ${endpoint} with ${payload} to add and drop a player should respond with ${status}
     [Documentation]     Post request for adding and dropping a player as a Team Owner in my team
     ${response}=        POST  url=${endpoint}      headers=${header}       json=${payload}     expected_status=${status}           

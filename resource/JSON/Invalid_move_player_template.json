@@ -3,14 +3,14 @@
   "teamId": 1,
   "type": "ROSTER",
   "memberId": "{FDA0D473-B9F0-47EE-B819-44851C76A9DE}",
-  "scoringPeriodId": 50,
+  "scoringPeriodId": 58,
   "executionType": "EXECUTE",
   "items": [
     {
-      "playerId": 4277905,
+      "playerId": "12345",
       "type": "LINEUP",
-      "fromLineupSlotId": 5,
-      "toLineupSlotId": 1
+      "fromLineupSlotId": 0,
+      "toLineupSlotId": 0
     }
   ]
 }

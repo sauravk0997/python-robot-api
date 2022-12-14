@@ -5,6 +5,7 @@ from robot.api.deco import keyword, library
 from robot.api.exceptions import Failure
 import requests
 import random
+import logging
 
 @library(scope='GLOBAL', version='5.0.2')
 class FantasyAddPlayerValidator(object):
@@ -54,6 +55,7 @@ class FantasyAddPlayerValidator(object):
     @keyword('Get the droppable player and free-agent player id')
     def get_droppable_and_freeAgents_players(self, teamId, droppable_player_response, free_agent_response) -> list:
         try:
+            droppable_player_id = 0
             player_id_details = []
             random_no = random.randint(0, 35)
             team_id = int(teamId)-1
@@ -83,11 +85,14 @@ class FantasyAddPlayerValidator(object):
                         continue
                 if flag == True:
                     break    
-            player_id_details.append(droppable_player_id)   
-            player_id_details.append(free_agents_id)
+            if droppable_player_id != 0:
+                player_id_details.append(droppable_player_id)   
+                player_id_details.append(free_agents_id)
+            else:
+                logging.info("Droppable player is not available")
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
-        return player_id_details   
+        return player_id_details
 
     @keyword('Get the free-agent player id')
     def get_freeAgents_player_id(self, free_agent_response) -> int:
