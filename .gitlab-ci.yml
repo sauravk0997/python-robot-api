@@ -40,9 +40,14 @@ before_script:
   - echo "$SAUCE_BUILD"
   - echo "$SAUCE_NAME"
   - echo "$SAUCE_SCREEN_RESOLUTION"
-  - echo "$SAUCE_USERNAME"
+  - echo "$SAUCE_USER"
   - export BROWSER_VERSION=${BROWSER_VERSION}
-  - export BROWSER_VERSION=${BROWSER_VERSION}
+  - export PLATFORM_NAME=${PLATFORM_NAME}
+  - export SAUCE_BUILD=${SAUCE_BUILD}
+  - export SAUCE_NAME=${SAUCE_NAME}
+  - export SAUCE_SCREEN_RESOLUTION=${SAUCE_SCREEN_RESOLUTION}
+  - export SAUCE_USER=${SAUCE_USER}
+  - export SAUCE_KEY=${SAUCE_KEY}
 
 mergejob:
   script:

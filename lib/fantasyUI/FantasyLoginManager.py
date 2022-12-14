@@ -98,7 +98,7 @@ class FantasyLoginManager(object):
             sauce_options['name'] = os.getenv('SAUCE_NAME')
             sauce_options['screenResolution'] = os.getenv('SAUCE_SCREEN_RESOLUTION')
             options.set_capability('sauce:options', sauce_options)
-            sauce_username = os.getenv('SAUCE_USERNAME')
+            sauce_username = os.getenv('SAUCE_USER')
             sauce_accesskey= os.getenv('SAUCE_KEY')
             sauce_url = f"https://{sauce_username}:{sauce_accesskey}@ondemand.apac-southeast-1.saucelabs.com:443/wd/hub"
             self.driver = webdriver.Remote(command_executor=sauce_url, options=options)
