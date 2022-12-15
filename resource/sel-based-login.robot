@@ -7,7 +7,7 @@ Library  lib/fantasyUI/FantasyLoginManager.py
 *** Variables ***
 ${HOMEPAGE}     https://www.espn.com/fantasy/
 ${BROWSER}      Chrome
-${user}         test_user_dummy1@test.com
+${user}         test_user_dummy2@test.com
 ${password}     APIuser@ESPN
 ${greeting}     API!
 
@@ -19,11 +19,9 @@ Auth with Cookie Capture
 
 Auth with user log in and capturing Cookie 
     [Arguments]    ${user}    ${password}    ${greeting}
-    FLM.Login Fantasy User    username=${user}    password=${password}  expected_profile_name_span_value=${greeting}   url=${HOMEPAGE}
-    ${espn_cookie}=     FLM.Fantasy API Cookie
+    Login Fantasy User    username=${user}    password=${password}  expected_profile_name_span_value=${greeting}   url=${HOMEPAGE}
+    ${espn_cookie}=     Fantasy API Cookie
     [Return]    ${espn_cookie}
 
- Browser Shutdown
-    FLM.Browser shutdown
  Close the current active browser
     Browser shutdown

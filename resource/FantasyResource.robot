@@ -226,7 +226,10 @@ Add players to team ${team_id} as team owner ${team_owner_id}
     [Documentation]    Generic method to add team players to respective teams as team owners
     &{offline_draft_team_json_template}=     Load JSON from file    resource/JSON/offlineDraftTeam${team_id}.json
     ${decremented_index}=    Evaluate    ${team_id}-2
-    ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${decremented_index}]    test_api    API!
+    FOR    ${index}    IN RANGE    0    3
+        ${incremented_value}    Evaluate    ${index}+1   
+    END
+    ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${decremented_index}]    APIuser@ESPN    User${incremented_value}!
     # &{header_user_cookie}     Create Dictionary    cookie=${header_user_cookie1}
     &{header_value}=    create dictionary     cookie=${header_user_cookie1}
     # &{header_value}=    create dictionary     cookie=${user_cookies}[${decremented_index}]
@@ -332,7 +335,9 @@ Validate Invitation Accept, Team Creation endpoints responds with successful sta
         Save JSON to file    ${id_updated}    resource/JSON/leagueInviteAccept.json    2   
         # ${type string}=    Evaluate     type(${header})
         # Log To Console     ${type string}
-        ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${index}]    test_api    API!
+        ${incremented_value}    Evaluate    ${index}+1
+        ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${index}]    APIuser@ESPN    User${incremented_value}!
+        Close the current Browser
         &{header_user_cookie}     Create Dictionary    cookie=${header_user_cookie1}
         #Make post request and send json payload to accept invitation - 
         ${memberInvitationAccepation}=    POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${invite_id}?memberId={${member_ids}[${index}]}&join=true    headers=${header_user_cookie}    json=${league_invite_accept_json_template}       expected_status=201
@@ -361,7 +366,8 @@ Validate Invitation Accept, Team Creation within the league with more than accep
         &{league_invite_accept_json_template}=    Load JSON from file    resource/JSON/leagueInviteAccept.json
         ${id_updated}=    Update value to JSON    ${league_invite_accept_json_template}    $.id   ${invite_id}
         Save JSON to file    ${id_updated}    resource/JSON/leagueInviteAccept.json    2
-        ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${index}]    test_api    API!
+        ${incremented_value}    Evaluate    ${index}+1
+        ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${index}]    APIuser@ESPN    User${incremented_value}!
         &{header_user_cookie}     Create Dictionary    cookie=${header_user_cookie1}
         # &{header_user_cookie}    Create Dictionary    cookie=${user_cookies}[${index}]
         ${memberInvitationAccepation}=    POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${invite_id}?memberId={${member_ids}[${index}]}&join=true    headers=${header_user_cookie}    json=${league_invite_accept_json_template}       expected_status=201
