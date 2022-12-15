@@ -6,7 +6,7 @@ Library             String
 Library             DateTime   
 Library             RPA.JSON
 Library             lib/validators/FantasyAddPlayerValidator.py
-Library             lib/fantasyUI/FantasyLoginManager.py    driver=${BROWSER}    xpaths=${CURDIR}/../resource/xpaths.json    WITH NAME    FLM
+Library             lib/fantasyUI/FantasyLoginManager.py
 
 *** Variables ***
 ${LEAGUE_ID}             748489070 
@@ -23,8 +23,8 @@ ${greeting}              Saurav!
 
 *** Keywords ***
 Get user cookie
-    FLM.Login Fantasy User    username=${user}         password=${password}       expected_profile_name_span_value=${greeting}     url=${HOMEPAGE}
-    ${USER_COOKIE}=           FLM.Fantasy API Cookie
+    Login Fantasy User    username=${user}         password=${password}       expected_profile_name_span_value=${greeting}     url=${HOMEPAGE}
+    ${USER_COOKIE}=           Fantasy API Cookie
     Set Global Variable       ${USER_COOKIE}
     &{header}=                Create Dictionary                    cookie=${USER_COOKIE}
     Set Global Variable       ${header}

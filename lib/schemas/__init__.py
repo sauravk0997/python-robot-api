@@ -6,3 +6,4 @@ from .FantasyMemberInviteSchema import *
 from .FantasyTeamSchema import *
 from .FantasyMovePlayerSchema import *
 from .InvalidSchema import *
+from .FantasyDropSchema import *

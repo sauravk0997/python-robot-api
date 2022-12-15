@@ -1,5 +1,4 @@
 from lib.schemas import *
-from lib.schemas.FantasyDropSchema import *
 from marshmallow import ValidationError
 from robot.api.deco import keyword, library
 from robot.api.exceptions import Failure
@@ -33,6 +32,24 @@ class FantasyDropValidator(object):
             raise Failure(f'Schema Data failed validation: {ve.messages}')
         return True
 
+    @keyword('invalid drop response ${response} schema should be valid', tags=['drop-player','schema checks', 'functional', 'CoreV3'],
+             types={'response': requests.Response})
+    def invalid_response_schema(self, response) -> bool:
+        """
+            Schema for the endpoint: apis/v3/games/FFL
+
+            Expects to receive an embedded python requests object as 'response'
+            and validates the json against the FantasyGames class.
+
+          Examples:
+          Fantasy Games Schema from ${response} should be valid
+        """
+        try:
+            schema = InvalidSchema().load(response.json())
+
+        except ValidationError as ve:
+            raise Failure(f'Schema Data failed validation: {ve.messages}')
+        return True
 
     #Selects the first player fromn all the teams for drop
     @keyword('Get a player to drop ${response} ${myteamid}', tags=['drop-player', 'functional', 'CoreV3'],
@@ -41,6 +58,7 @@ class FantasyDropValidator(object):
         try:
             teams = response.json()['teams']
             scoring_period_id = response.json()['scoringPeriodId']
+            team_id = 0
             if teamid == '0':
                 for team in teams:
                     no_of_players = len(team['roster']['entries'])
@@ -50,9 +68,10 @@ class FantasyDropValidator(object):
                             team_id = player_pool_entry["onTeamId"]
                             player_id = player_pool_entry["id"]
                             break
-                        else:
-                            continue
-                    break
+                    else:
+                        continue
+                    break                    
+
                 return scoring_period_id, team_id, player_id
 
             else:
@@ -67,8 +86,8 @@ class FantasyDropValidator(object):
     def create_player_list(self, response, teamid, drop_flag):
         teams = response.json()['teams']
         scoring_period_id = response.json()['scoringPeriodId']
+        team_id = teamid
         teamid = int(teamid) - 1
-        team_id = 0
         no_of_players = len(teams[teamid]['roster']['entries'])
         drop_player_list = []
         for player in range(0, no_of_players):

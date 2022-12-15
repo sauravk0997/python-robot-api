@@ -4,25 +4,29 @@ Documentation       All Common robot utils/functions and variables with respect 
 Library             RequestsLibrary
 Library             Collections
 Library             ../lib/validators/FantasyDropValidator.py
+Resource            resource/FantasyResource.robot
+Resource            resource/FantasyMovePlayer.Resource
 
 *** Variables ***
-${FANTASY_BASE_URL}=            https://fantasy.espn.com
-${GAME}=                        fba
-${SEASON}=                      2023
-${LEAGUEID}=                    748489070
-${QUERY_PARAM}=                 view=mDraftDetail&view=mTeam&view=mNav&view=mRoster
-${TEAM_SLUG}=                   apis/v3/games/${GAME}/seasons/${SEASON}/segments/0/leagues/${LEAGUEID}?${QUERY_PARAM}
-${TRANSACTIONS_BASE_URL}=       https://lm-api-writes.fantasy.espn.com
-${TRANSACTIONS_SLUG}=           apis/v3/games/${GAME}/seasons/${SEASON}/segments/0/leagues/${LEAGUEID}/transactions
-${USER_COOKIE}=                 SWID={2575812E-8058-4D83-9486-CDD9149938CA};espn_s2=AEAHRfKrt7NnGesv/TJuJsEUkEI46F6gVRGITxMzRm4eSpzQWnhOZjAliZGtXp9vPGVwM1lwNtDOKJSeDOmK01tmsHrt2lM7gw3HFunGo4swhRFvb1OgUNZ6oneUMdjlzS3Ilu7ZW12fzMMw3Fy/8kxfKMPDbWgwTTfP6/vuTDKySjqjtjHy4eNexWsmZhEf3au0RReaMLKuaUEZzI+hyf9ZmVultkCn6b4TtPGdm87dNMa0OUkqgB18t2/96ZdOl83EBPmrqWfowAthxlBrHJ4bXEqo/F/ophqUCwTDmD/+GA==
-${DROP_API}=                  ${TRANSACTIONS_BASE_URL}/${TRANSACTIONS_SLUG} 
+${FANTASY_BASE_URL}=                https://fantasy.espn.com
+${GAME}=                            fba
+${SEASON}=                          2023
+${QUERY_PARAMS}=                    view=mDraftDetail&view=mTeam&view=mNav&view=mRoster
+${TEAMS_SLUG}=                      apis/v3/games/${GAME}/seasons/${SEASON}/segments/0/leagues
+${TRANSACTIONS_BASE_URL}=           https://lm-api-writes.fantasy.espn.com
+${TRANSACTION_SLUG}=                apis/v3/games/${GAME}/seasons/${SEASON}/segments/0/leagues
+${DROP_API}=                        ${TRANSACTIONS_BASE_URL}/${TRANSACTION_SLUG}
+${ERROR_UNDROPPABLE}                TRAN_ROSTER_PLAYER_NOT_DROPPABLE
+${ERROR_INVALID_TYPE}               TRAN_INVALID_SCORINGPERIOD_NOT_FUTURE
+${ERROR_INVALID_PLAYER}             TRAN_PLAYER_NOT_ON_TEAM
+${ERROR_INVALID_TEAM}               TEAM_NOT_FOUND
+${ERROR_INVALID_SCORING_PERIOD}     TRAN_INVALID_SCORINGPERIOD_NOT_CURRENT
 
 
 *** Keywords ***
-A GET request to ${endpoint} should respond with ${status}
+A GET request to ${endpoint} respond with ${status}
     [Documentation]     Custom GET keyword with status validation.
-    &{headers}=         Create Dictionary    Cookie=${USER_COOKIE}
-    ${api_response}=    GET  url=${endpoint}  headers=${headers}   expected_status=200 
+    ${api_response}=    GET  url=${endpoint}  headers=&{header_value}   expected_status=200 
     [Return]            ${api_response}
 
 Validate the string is equal to the value for the given key
@@ -35,31 +39,30 @@ Validate the string is equal to the value for the given key
 A POST request to ${DROP_API} with ${payload} should respond with ${status}
     [Documentation]     Custom POST keyword with status validation.
     Log To Console      ${payload}
-    &{headers}=         Create Dictionary    Cookie=${USER_COOKIE}
-    ${api_response}=    POST  url=${DROP_API}  headers=${headers}    json=${payload}    expected_status=${status} 
+    ${api_response}=    POST  url=${DROP_API}/${league_id}/transactions  headers=&{header_value}    json=${payload}    expected_status=${status} 
     [Return]            ${api_response}
  
 Fetch payload details to drop a player ${myteamid}
     [Documentation]   Custom keyword to get a player for drop
-    ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAM_SLUG} should respond with 200
+    ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAMS_SLUG}/${league_id}?${QUERY_PARAMS} respond with 200
     ${spid}    ${teamid}    ${playerid}    Get a player to drop ${response} ${myteamid}
     [Return]          ${spid}    ${teamid}    ${playerid}
 
 Get droppable players ${myteamid}
     [Documentation]   Custom keyword to get the droppable players of a team
-    ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAM_SLUG} should respond with 200
+    ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAMS_SLUG}/${league_id}?${QUERY_PARAMS} respond with 200
     ${spid}    ${teamid}    ${playerid}    Find droppable players of a team ${response} ${myteamid}
     [Return]          ${spid}    ${teamid}    ${playerid}
 
-Get undroppable players ${myteamid}
+Get undroppable players ${myteamid} ${league_manager}
     [Documentation]   Custom keyword to get the undroppable players of a team
-    ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAM_SLUG} should respond with 200
+    ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAMS_SLUG}/${league_id}?${QUERY_PARAMS} respond with 200
     ${spid}    ${teamid}    ${playerid}    Find undroppable players of a team ${response} ${myteamid}
-    [Return]          ${spid}    ${teamid}    ${playerid}
+    [Return]          ${spid}    ${teamid}    ${playerid[0]}
 
 Get injured players ${myteamid}
     [Documentation]   Custom keyword to get the injured players of a team
-    ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAM_SLUG} should respond with 200
+    ${response}=      A GET request to ${FANTASY_BASE_URL}/${TEAMS_SLUG}/${league_id}?${QUERY_PARAMS} respond with 200
     ${spid}    ${teamid}    ${playerid}    Find injured players of a team ${response} ${myteamid}
     ${count}=    Get Length    ${playerid}
     IF    ${count} > 0
@@ -78,5 +81,29 @@ Update payload ${payload} with ${teamid} ${playerid} ${scoring_period_id} and ${
     Set To Dictionary       ${payload["items"][0]}    fromTeamId=${teamid}
     Set To Dictionary       ${payload}    scoringPeriodId    ${scoring_period_id}
     Set To Dictionary       ${payload}    isLeagueManager    ${league_manager}
-    set global variable     ${payload}    
-    [Return]                ${payload}
+    set global variable     ${payload}
+
+Undroppable error response ${drop_api_response} along with schema should be valid
+    [Documentation]         Custom keyword to validate error response and schema
+    invalid drop response ${drop_api_response} schema should be valid
+    validate the ${drop_api_response} to contain ${ERROR_UNDROPPABLE}
+
+Invalid type error response ${drop_api_response} along with schema should be valid
+    [Documentation]         Custom keyword to validate error response and schema
+    invalid drop response ${drop_api_response} schema should be valid
+    validate the ${drop_api_response} to contain ${ERROR_INVALID_TYPE}
+
+Invalid player error response ${drop_api_response} along with schema should be valid
+    [Documentation]         Custom keyword to validate error response and schema
+    invalid drop response ${drop_api_response} schema should be valid
+    validate the ${drop_api_response} to contain ${ERROR_INVALID_PLAYER}
+
+Invalid team error response ${drop_api_response} along with schema should be valid
+    [Documentation]         Custom keyword to validate error response and schema
+    invalid drop response ${drop_api_response} schema should be valid
+    validate the ${drop_api_response} to contain ${ERROR_INVALID_TEAM}
+
+Invalid scoring period error response ${drop_api_response} along with schema should be valid
+    [Documentation]         Custom keyword to validate error response and schema
+    invalid drop response ${drop_api_response} schema should be valid
+    validate the ${drop_api_response} to contain ${ERROR_INVALID_SCORING_PERIOD}
