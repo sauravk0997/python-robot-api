@@ -85,11 +85,9 @@ class FantasyAddPlayerValidator(object):
                         continue
                 if flag == True:
                     break    
-            if droppable_player_id != 0:
-                player_id_details.append(droppable_player_id)   
-                player_id_details.append(free_agents_id)
-            else:
-                logging.info("Droppable player is not available")
+            
+            player_id_details.append(droppable_player_id)   
+            player_id_details.append(free_agents_id)
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
         return player_id_details

@@ -51,18 +51,14 @@ Get the value of Drop Player Id and Free Agent Player Id of Team
     
 Update payload ${payload} with ${scoring_period_id}, ${drop_player_id} and ${free_agents_id}
     [Documentation]     Custom keyword to update the payload with the values from API calls
-    IF    ${player_details}[0] != None   
-        ${scoring_period_id_updated}=        Update value to JSON                  ${payload}        $.scoringPeriodId             ${scoring_period_id}
-        Save JSON to file                    ${scoring_period_id_updated}          resource/JSON/addDropPlayerasTO.json    2
-        ${droppable_player_id_updated}=      Update value to JSON    ${payload}    $.items[1].playerId    ${player_details}[0]
-        Save JSON to file                    ${droppable_player_id_updated}        resource/JSON/addDropPlayerasTO.json    2
-        ${free_agents_player_id_updated}     Update value to JSON    ${payload}    $.items[0].playerId  ${player_details}[1]
-        Save JSON to file                    ${free_agents_player_id_updated}      resource/JSON/addDropPlayerasTO.json    2    
-    ELSE
-        Log    droppable player not available     
-    END
+    ${scoring_period_id_updated}=        Update value to JSON                  ${payload}        $.scoringPeriodId             ${scoring_period_id}
+    Save JSON to file                    ${scoring_period_id_updated}          resource/JSON/addDropPlayerasTO.json    2
+    ${droppable_player_id_updated}=      Update value to JSON    ${payload}    $.items[1].playerId    ${player_details}[0]
+    Save JSON to file                    ${droppable_player_id_updated}        resource/JSON/addDropPlayerasTO.json    2
+    ${free_agents_player_id_updated}     Update value to JSON    ${payload}    $.items[0].playerId  ${player_details}[1]
+    Save JSON to file                    ${free_agents_player_id_updated}      resource/JSON/addDropPlayerasTO.json    2    
     [Return]                             ${payload}
-    
+
 A POST request to ${endpoint} with ${payload} to add and drop a player should respond with ${status}
     [Documentation]     Post request for adding and dropping a player as a Team Owner in my team
     ${response}=        POST  url=${endpoint}      headers=${header}       json=${payload}     expected_status=${status}           
@@ -101,29 +97,44 @@ Drop a player from my team as TO
     ${save_scoringPeriodId}    Update value to JSON                ${drop_payload}       $.scoringPeriodId            ${scoring_period_id}
     Save JSON to file          ${save_scoringPeriodId}             resource/JSON/dropPlayerasTO.json     2 
     Get the value of Drop Player Id and Free Agent Player Id of Team    1 
-    ${droppable_players_id_updated}=    Update value to JSON       ${drop_payload}    $.items[0].playerId             ${player_details}[0]
-    Save JSON to file          ${droppable_players_id_updated}     resource/JSON/dropPlayerasTO.json    2
-    Set Global Variable        ${drop_payload}
+    IF    ${player_details}[0] != 0
+          ${droppable_players_id_updated}=    Update value to JSON       ${drop_payload}    $.items[0].playerId             ${player_details}[0]
+          Save JSON to file          ${droppable_players_id_updated}     resource/JSON/dropPlayerasTO.json    2
+          Set Global Variable        ${drop_payload}
+          ${drop_player_response}=    A POST request to ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} drop a player from my team should respond with 200
+          Add Player Schema from ${drop_player_response} should be valid
+          Validate player is dropped from my team from ${drop_player_response}
+    ELSE
+          Log    Droppable players are not available
+    END
 
 Add a player to my team as TO
     Fetch scoring period id for team    1
-    &{add_payload}=                    Load JSON from file                          resource/JSON/addPlayerasTO.json
-    ${save_scoringPeriodId}            Update value to JSON                         ${add_payload}         $.scoringPeriodId    ${scoring_period_id}
-    Save JSON to file                  ${save_scoringPeriodId}                      resource/JSON/addPlayerasTO.json    2 
-    Get the value of Drop Player Id and Free Agent Player Id of Team    1 
-    ${addable_players_id_updated}=     Update value to JSON        ${add_payload}    $.items[0].playerId                        ${player_details}[1]
-    Save JSON to file                  ${addable_players_id_updated}                 resource/JSON/addPlayerasTO.json    2
-    Set Global Variable                ${add_payload}
+    ${team_response}=              GET  url=${TEAM_API}=1                      headers=${header}             expected_status=200 
+    ${Team_length}=    Get value from JSON    ${team_response.json()}    $.teams[0].roster.entries
+    ${length}      Get Length    ${Team_length}
+    IF    ${length} != 13
+        &{add_payload}=                    Load JSON from file                          resource/JSON/addPlayerasTO.json
+        ${save_scoringPeriodId}            Update value to JSON                         ${add_payload}         $.scoringPeriodId    ${scoring_period_id}
+        Save JSON to file                  ${save_scoringPeriodId}                      resource/JSON/addPlayerasTO.json    2 
+        Get the value of Drop Player Id and Free Agent Player Id of Team    1 
+        ${addable_players_id_updated}=     Update value to JSON        ${add_payload}    $.items[0].playerId                        ${player_details}[1]
+        Save JSON to file                  ${addable_players_id_updated}                 resource/JSON/addPlayerasTO.json    2
+        Set Global Variable                ${add_payload}
+        ${add_player_response}=     A POST request to ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} add a player to my team should respond with 200
+        Add Player Schema from ${add_player_response} should be valid
+        Validate player is added to my team from ${add_player_response}
+    ELSE
+        Log    Roster is full
+    END
 
 A POST request to ${endpoint} drop a player from my team should respond with ${status}
     [Documentation]     Post request for dropping a player from my team
-    Drop a player from my team as TO
     ${response}=      POST  url=${endpoint}     headers=${header}    json=${drop_payload}     expected_status=${status}           
     [Return]          ${response}
 
 A POST request to ${endpoint} add a player to my team should respond with ${status}
     [Documentation]     Post request for adding a player to my team
-    Add a player to my team as TO
     ${response}=       POST  url=${endpoint}     headers=${header}    json=${add_payload}     expected_status=${status}           
     [Return]           ${response}
 
@@ -145,37 +156,54 @@ As League Manager, Drop a player from other team ${team_ID}
     ${save_scoringPeriodId}             Update value to JSON                           ${drop_payload1}    $.scoringPeriodId                            ${scoring_period_id}
     Save JSON to file                   ${save_scoringPeriodId}                        resource/JSON/dropPlayerasLM.json     2 
     Get the value of Drop Player Id and Free Agent Player Id of Team    5 
-    ${droppable_players_id_updated}=    Update value to JSON       ${drop_payload1}    $.items[0].playerId                           ${player_details}[0]
-    Save JSON to file                   ${droppable_players_id_updated}                resource/JSON/dropPlayerasLM.json    2
-    ${team_id_updated_1}                Update value to JSON                           ${drop_payload1}    $.teamId                  ${TEAM_ID}
-    Save JSON to file                   ${team_id_updated_1}                           resource/JSON/dropPlayerasLM.json    2
-    ${team_id_updated_2}                Update value to JSON                           ${drop_payload1}    $.items[0].fromTeamId     ${TEAM_ID}
-    Save JSON to file                   ${team_id_updated_2}                           resource/JSON/dropPlayerasLM.json    2
-    Set Global Variable                 ${drop_payload1}
+    IF    ${player_details}[0] != 0
+        ${droppable_players_id_updated}=    Update value to JSON       ${drop_payload1}    $.items[0].playerId                           ${player_details}[0]
+        Save JSON to file                   ${droppable_players_id_updated}                resource/JSON/dropPlayerasLM.json    2
+        ${team_id_updated_1}                Update value to JSON                           ${drop_payload1}    $.teamId                  ${TEAM_ID}
+        Save JSON to file                   ${team_id_updated_1}                           resource/JSON/dropPlayerasLM.json    2
+        ${team_id_updated_2}                Update value to JSON                           ${drop_payload1}    $.items[0].fromTeamId     ${TEAM_ID}
+        Save JSON to file                   ${team_id_updated_2}                           resource/JSON/dropPlayerasLM.json    2
+        Set Global Variable                 ${drop_payload1}
+        ${drop_player_as_LM_response}=    A POST request to ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} drop a player from other team as LM should respond with 200
+        Add Player Schema from ${drop_player_as_LM_response} should be valid
+        Validate player is dropped from my team from ${drop_player_as_LM_response}
+    ELSE
+        Log    Droppable players are not available
+    END
 
 As League Manager, Add a player to other team ${team_ID}
     Fetch scoring period id for team    5
-    &{add_payload1}=                    Load JSON from file              resource/JSON/addPlayerasLM.json
-    ${save_scoringPeriodId}             Update value to JSON             ${add_payload1}    $.scoringPeriodId         ${scoring_period_id}
-    Save JSON to file                   ${save_scoringPeriodId}          resource/JSON/addPlayerasLM.json    2 
-    Get the value of Drop Player Id and Free Agent Player Id of Team      5 
-    ${addable_players_id_updated}=      Update value to JSON             ${add_payload1}    $.items[0].playerId       ${player_details}[1]
-    Save JSON to file                   ${addable_players_id_updated}    resource/JSON/addPlayerasLM.json    2
-    ${team_id_updated_1}                Update value to JSON             ${add_payload1}    $.teamId                  ${TEAM_ID}
-    Save JSON to file                   ${team_id_updated_1}             resource/JSON/addPlayerasLM.json    2
-    ${team_id_updated_2}                Update value to JSON             ${add_payload1}    $.items[0].toTeamId       ${TEAM_ID}
-    Save JSON to file                   ${team_id_updated_2}             resource/JSON/addPlayerasLM.json    2
-    Set Global Variable                 ${add_payload1}
+    ${team_response}=              GET  url=${TEAM_API}=${team_ID}                      headers=${header}             expected_status=200 
+    ${Team_length}=    Get value from JSON    ${team_response.json()}    $.teams[4].roster.entries
+    ${length}      Get Length    ${Team_length}
+    IF    ${length} != 13
+        &{add_payload1}=                    Load JSON from file              resource/JSON/addPlayerasLM.json
+        ${save_scoringPeriodId}             Update value to JSON             ${add_payload1}    $.scoringPeriodId         ${scoring_period_id}
+        Save JSON to file                   ${save_scoringPeriodId}          resource/JSON/addPlayerasLM.json    2 
+        Get the value of Drop Player Id and Free Agent Player Id of Team      5 
+        ${addable_players_id_updated}=      Update value to JSON             ${add_payload1}    $.items[0].playerId       ${player_details}[1]
+        Save JSON to file                   ${addable_players_id_updated}    resource/JSON/addPlayerasLM.json    2
+        ${team_id_updated_1}                Update value to JSON             ${add_payload1}    $.teamId                  ${TEAM_ID}
+        Save JSON to file                   ${team_id_updated_1}             resource/JSON/addPlayerasLM.json    2
+        ${team_id_updated_2}                Update value to JSON             ${add_payload1}    $.items[0].toTeamId       ${TEAM_ID}
+        Save JSON to file                   ${team_id_updated_2}             resource/JSON/addPlayerasLM.json    2
+        Set Global Variable                 ${add_payload1}
+        ${add_player_as_LM_response}=     A POST request to ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} add a player to other team as LM should respond with 200
+        Add Player Schema from ${add_player_as_LM_response} should be valid
+        Validate player is added to my team from ${add_player_as_LM_response}
+    ELSE
+        Log    Roster is full
+    END
 
 A POST request to ${endpoint} drop a player from other team as LM should respond with ${status}
     [Documentation]     Post request for dropping a player from my team
-    As League Manager, Drop a player from other team 5
+    # As League Manager, Drop a player from other team 5
     ${response}=      POST  url=${endpoint}     headers=${header}         json=${drop_payload1}        expected_status=${status}           
     [Return]          ${response}
 
 A POST request to ${endpoint} add a player to other team as LM should respond with ${status}
     [Documentation]     Post request for adding a player to my team
-    As League Manager, Add a player to other team 5
+    # As League Manager, Add a player to other team 5
     ${response}=     POST  url=${endpoint}     headers=${header}    json=${add_payload1}     expected_status=${status}           
     [Return]         ${response}
 
