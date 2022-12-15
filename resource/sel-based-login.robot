@@ -8,9 +8,9 @@ Library   lib/fantasyUI/FantasyUtils.py
 *** Variables ***
 ${HOMEPAGE}                https://www.espn.com/fantasy/
 ${BROWSER}                 Chrome
-${user}                    test_user_dummy2@test.com
+${user}                    test_user_account@test.com
 ${encrypted_password}      U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
-${greeting}                API!
+${greeting}                test!
 
 *** Keywords ***
 Auth with Cookie Capture
