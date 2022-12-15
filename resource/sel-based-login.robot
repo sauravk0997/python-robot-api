@@ -17,11 +17,11 @@ Auth with Cookie Capture
     ${espn_cookie}=     Fantasy API Cookie
     [Return]    ${espn_cookie}
 
-Auth with Cookie Capture test
+Login to the application and get the user cookie
     [Arguments]     ${email}     ${Password}      ${greet}
     Login Fantasy User    username=${email}    password=${password}  expected_profile_name_span_value=${greet}   url=${HOMEPAGE}
     ${espn_cookie}=     Fantasy API Cookie
     [Return]    ${espn_cookie}
 
- Close the current active browser
+Close the current active browser
     Browser shutdown
