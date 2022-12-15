@@ -197,13 +197,11 @@ As League Manager, Add a player to other team ${team_ID}
 
 A POST request to ${endpoint} drop a player from other team as LM should respond with ${status}
     [Documentation]     Post request for dropping a player from my team
-    # As League Manager, Drop a player from other team 5
     ${response}=      POST  url=${endpoint}     headers=${header}         json=${drop_payload1}        expected_status=${status}           
     [Return]          ${response}
 
 A POST request to ${endpoint} add a player to other team as LM should respond with ${status}
     [Documentation]     Post request for adding a player to my team
-    # As League Manager, Add a player to other team 5
     ${response}=     POST  url=${endpoint}     headers=${header}    json=${add_payload1}     expected_status=${status}           
     [Return]         ${response}
 

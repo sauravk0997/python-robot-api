@@ -5,7 +5,6 @@ from robot.api.deco import keyword, library
 from robot.api.exceptions import Failure
 import requests
 import random
-import logging
 
 @library(scope='GLOBAL', version='5.0.2')
 class FantasyAddPlayerValidator(object):
