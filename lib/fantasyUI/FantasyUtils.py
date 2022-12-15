@@ -21,11 +21,9 @@ class FantasyUtils(object):
         swid = result.split(";")
         return swid[0].split("SWID=")[1]
 
-    @keyword('Get user credentials ${result}', types={'result': str})
+    @keyword('Get decrypted password ${encrypted_password}', types={'result': str})
     def get_credentials(self, result) -> str:
-        encoding = 'utf-8'
-        new_result = base64.b64decode(result).decode(encoding)
-        return (new_result)
+        return base64.b64decode(result).decode('utf-8')
 
     @keyword('Get unixtimestamp time')
     def get_unix_timestamp_time(self) -> int:
