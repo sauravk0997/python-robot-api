@@ -10,8 +10,8 @@ Library              RPA.JSON
 Resource             resource/FantasyMovePlayer.Resource
 Resource             resource/suite_setup_teardown_moveplayer.resource
 Library              lib/validators/FantasyMovePlayerValidator.py
-Suite Setup          Get a Fantasy League details
-Suite Teardown       Delete League
+Suite Setup          Create a account and a league
+Suite Teardown       Delete League and Account
 
 *** Variables ***
 ${own_team_id}            1
