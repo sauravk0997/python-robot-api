@@ -82,7 +82,7 @@ class FantasyLoginManager(object):
         # TODO: complete method documentation
 
         #variable which defines local or Sauce run
-        sauce_run = "FALSE"
+        sauce_run = "True"
         
         if sauce_run == "True": 
             options = ChromeOptions()
