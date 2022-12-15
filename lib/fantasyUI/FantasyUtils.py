@@ -7,7 +7,7 @@ import base64
 import string
 import datetime
 import math
-
+import random
 
 @library(scope='GLOBAL', version='5.0.2')
 class FantasyUtils(object):
@@ -37,3 +37,12 @@ class FantasyUtils(object):
             for invite in invited_dict:
                 if invite.get("inviteType") == "COPY_TO_CLIPBOARD":
                     return invite.get("id")
+
+    @keyword('Generate a random email')
+    def generate_random_email(self):
+        length = 4
+        random_string = ''.join(random.choice(string.ascii_lowercase) for x in range(length))
+        random_number = str(random.randint(0, 10))
+        random_email = 'test' + '_' + random_string + '_' + random_number + '@test.com'
+        return random_email
+

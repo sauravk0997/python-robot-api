@@ -1,0 +1,32 @@
+{
+  "profile": {
+    "phones": [],
+    "email": "awxps_5@test.com",
+    "region": "HK",
+    "gender": "0",
+    "addresses": [],
+    "firstName": "Test Api Account",
+    "lastName": "Account"
+  },
+  "legalAssertions": [
+    "gtou_ppv2_pp-supplement-hk"
+  ],
+  "marketing": [
+    {
+      "code": "ESPN+_L",
+      "subscribed": false,
+      "textID": "BU_*_LOCATION_*__1fda23ecf41a7014271f42df168efb88"
+    },
+    {
+      "code": "ESPN_Level1_GeneralPermission",
+      "subscribed": false,
+      "textID": "BU_*_LOCATION_*__1fda23ecf41a7014271f42df168efb88"
+    },
+    {
+      "code": "WDIGFamilySites",
+      "subscribed": false,
+      "textID": "BU_*_LOCATION_*__1fda23ecf41a7014271f42df168efb88"
+    }
+  ],
+  "password": "demo_test1"
+}
