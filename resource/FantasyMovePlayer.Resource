@@ -243,8 +243,9 @@ create a payload to move players of different team ${team_id} as a team owner us
 Move the players of any team ${team_id} as a team owner and validate the response
     ${league_info_response}              Get the league details
     @{Players_details_list}              Get any lineup player details of team ${team id} from ${league_info_response.json()}
-    ${random_number}                     generate random string    1    012
-    &{any_other_team_owner_cookie}       create dictionary    cookie=${user_cookies}[${random_number}]
+    ${random_number}                     generate random string    1    123
+    ${decremented_index}        Evaluate    ${random_number}-1
+    ${any_other_team_owner_cookie}    Auth with user log in and capturing Cookie    ${user_emails}[${decremented_index}]    APIuser@ESPN    User${decremented_index}!
     create a payload to move players of different team ${team_id} as a team owner using ${Players_details_list} and ${any_other_team_owner_cookie},send post request and validate the response along with error type
 
 Move any invalid player to team ${team_id} and validate the response
