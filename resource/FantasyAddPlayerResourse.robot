@@ -113,7 +113,7 @@ Add a player to my team as TO
     ${team_response}=              GET  url=${TEAM_API}=1                      headers=${header}             expected_status=200 
     ${Team_length}=    Get value from JSON    ${team_response.json()}    $.teams[0].roster.entries
     ${length}      Get Length    ${Team_length}
-    IF    ${length} != 13
+    IF    ${length} != 13 OR ${length} != 10
         &{add_payload}=                    Load JSON from file                          resource/JSON/addPlayerasTO.json
         ${save_scoringPeriodId}            Update value to JSON                         ${add_payload}         $.scoringPeriodId    ${scoring_period_id}
         Save JSON to file                  ${save_scoringPeriodId}                      resource/JSON/addPlayerasTO.json    2 
@@ -150,6 +150,48 @@ Validate player is added to my team from ${response}
     ${player_TeamId}               Get value from JSON       ${response.json()}       $.teamId   
     Should Be Equal As Integers    ${player_toTeamId}        ${player_TeamId}
 
+Sending POST request and validating for adding and dropping a player from my team as Team Owner
+    [Documentation]     Post request for adding and dropping a player from my team as team owmer and validating E2E
+    Fetch scoring period id for team    1
+    @{player_details}      Get the value of Drop Player Id and Free Agent Player Id of Team    1
+    IF    ${player_details}[0] != 0
+          &{initial_payload}=    Load JSON from file    resource/JSON/addDropPlayerasTO.json
+          ${final_payload}       Update payload ${initial_payload} with ${scoring_period_id}, ${player_details}[0] and ${player_details}[1]
+          ${response}=           A POST request to ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} with ${final_payload} to add and drop a player should respond with 200
+          Validate players are added and dropped from ${response}
+          Add Player Schema from ${response} should be valid
+    ELSE
+        Log    Droppable player is not available
+    END
+
+Sending POST request and validating for adding and dropping a player from my team as League Manager
+    [Documentation]     Post request for adding and dropping a player from my team as league manager and validating E2E
+    Fetch scoring period id for team    1
+    @{player_details}      Get the value of Drop Player Id and Free Agent Player Id of Team     1
+    IF    ${player_details}[0] != 0
+          &{initial_payload}=    Load JSON from file    resource/JSON/addDropPlayerasLM.json
+          ${final_payload}    As League Manager, Update payload ${initial_payload} with ${scoring_period_id}, ${player_details}[0] and ${player_details}[1] for team id 1
+          ${response}=    A POST request to ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} with ${final_payload} to add and drop a player as LM should respond with 200
+          Validate players are added and dropped from ${response}
+          Add Player Schema from ${response} should be valid
+    ELSE
+        Log    Droppable player is not available
+    END
+
+Sending POST request and validating for adding and dropping a player from other team as League Manager
+    [Documentation]     Post request for adding and dropping a player from other team as league manager and validating E2E
+    Fetch scoring period id for team    5 
+    @{player_details}      Get the value of Drop Player Id and Free Agent Player Id of Team     5
+    IF    ${player_details}[0] != 0 
+          &{initial_payload}=    Load JSON from file    resource/JSON/addDropPlayerasLM.json
+          ${final_payload}    As League Manager, Update payload ${initial_payload} with ${scoring_period_id}, ${player_details}[0] and ${player_details}[1] for team id 5
+          ${response}=    A POST request to ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} with ${final_payload} to add and drop a player as LM should respond with 200
+          Validate players are added and dropped from ${response}
+          Add Player Schema from ${response} should be valid
+    ELSE
+        Log    Droppable player is not available
+    END
+
 As League Manager, Drop a player from other team ${team_ID}
     Fetch scoring period id for team    5
     &{drop_payload1}=                   Load JSON from file                            resource/JSON/dropPlayerasLM.json
@@ -176,7 +218,8 @@ As League Manager, Add a player to other team ${team_ID}
     ${team_response}=              GET  url=${TEAM_API}=${team_ID}                      headers=${header}             expected_status=200 
     ${Team_length}=    Get value from JSON    ${team_response.json()}    $.teams[4].roster.entries
     ${length}      Get Length    ${Team_length}
-    IF    ${length} != 13
+    Set Global Variable    ${length}
+    IF    ${length} != 13 OR ${length} != 10
         &{add_payload1}=                    Load JSON from file              resource/JSON/addPlayerasLM.json
         ${save_scoringPeriodId}             Update value to JSON             ${add_payload1}    $.scoringPeriodId         ${scoring_period_id}
         Save JSON to file                   ${save_scoringPeriodId}          resource/JSON/addPlayerasLM.json    2 
@@ -227,10 +270,14 @@ Updating header and filter for response with json file ${json_file}
 
 A POST request ${endpoint} not to add a player to my team if my roaster is full should respond with ${status}
     [Documentation]     Post request for not adding a player to my team if my roaster is full
-    Updating header and filter for response with json file resource/JSON/freeAgentFilter.json
-    ${free_agent_player_id}                  Get the free-agent player id                    ${player_response}
-    Updating payload for the Post request    ${free_agent_player_id}
-    ${response}=                             POST  url=${endpoint}                           headers=${header}        json=${payload}          expected_status=${status}           
+    IF    ${length} == 13
+        Updating header and filter for response with json file resource/JSON/freeAgentFilter.json
+        ${free_agent_player_id}                  Get the free-agent player id                    ${player_response}
+        Updating payload for the Post request    ${free_agent_player_id}
+        ${response}=                             POST  url=${endpoint}                           headers=${header}        json=${payload}          expected_status=${status}             
+    ELSE
+        Log    Add player to the team
+    END
     [Return]                                 ${response}
 
 A POST request ${endpoint} to add a player at position C to my team should respond with ${status}
