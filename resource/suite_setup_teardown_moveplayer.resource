@@ -6,7 +6,7 @@ Library             Collections
 Library             String
 Library             OperatingSystem
 Library             lib/validators/FantasyMovePlayerValidator.py
-Library             lib/fantasyUI/FantasyUtils.py
+Library             lib/fantasyAPI/FantasyUtils.py
 Resource            resource/FantasyResource.robot
 
 *** Variables ***

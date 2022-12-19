@@ -7,7 +7,7 @@ Library             RPA.JSON
 Library             Collections
 Library             String
 Library             lib/validators/FantasyCreateLeagueValidator.py
-Library             lib/fantasyUI/FantasyUtils.py
+Library             lib/fantasyAPI/FantasyUtils.py
 Resource            resource/sel-based-login.robot
 
 
