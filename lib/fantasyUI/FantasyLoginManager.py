@@ -103,7 +103,7 @@ class FantasyLoginManager(object):
         self.action_chain = ActionChains(self.driver)
 
         try:
-            xpaths= 'resource/JSON/xpaths.json'
+            xpaths= 'resource/UI/xpaths.json'
             # This check allows the user to overload the init to pass a variety of content into the xpaths variable
             if type(xpaths) in (dict, ):
                 # assume the dict is in the correct format and move on
