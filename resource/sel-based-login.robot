@@ -3,7 +3,7 @@ Library   Collections
 Library   OperatingSystem
 Library   RequestsLibrary
 Library  lib/fantasyUI/FantasyLoginManager.py
-Library   lib/fantasyUI/FantasyUtils.py
+Library   lib/fantasyAPI/FantasyUtils.py
 
 *** Variables ***
 ${HOMEPAGE}                https://www.espn.com/fantasy/
