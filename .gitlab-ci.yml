@@ -22,15 +22,10 @@ cache:
   paths:
 #    - .cache/pip
     - venv/
-  
-cleanup_job:
-  stage: cleanup
-  script:
-    - echo "Cleaning up"
-    - rm -rf "%CACHE_PATH%/%CI_PIPELINE_ID%"
-  when: always
 
 before_script:
+  - echo "Cleaning up"
+  - rm -rf "%CACHE_PATH%/%CI_PIPELINE_ID%"
   - python --version
   - pip install virtualenv
   - virtualenv venv
