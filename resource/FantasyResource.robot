@@ -80,18 +80,15 @@ Assign League Manager Roles to Team2, Team3 and Team4 owners
 
 Assign League Manager Roles to invalid users
     [Documentation]    Assigns League Manager Roles to invalid user display names
-    #${random_string}=    Generate Random String    25    0123456789
     FOR    ${index}    IN RANGE    1    4
         &{lm_json_template}=     Load JSON from file    resource/JSON/leagueManagerPowerAccess.json
         ${decremented_index}=    Evaluate    ${index}-1
         ${display_name_updated}=    Update value to JSON    ${lm_json_template}    $.displayName   ${display_name}[${decremented_index}]
-        #${display_name_updated}=    Update value to JSON    ${lm_json_template}    $.displayName   None
         Save JSON to file    ${display_name_updated}    resource/JSON/leagueManagerPowerAccess.json    2
         ${first_name_updated}=    Update value to JSON    ${lm_json_template}    $.firstName    User${index}
         Save JSON to file    ${first_name_updated}    resource/JSON/leagueManagerPowerAccess.json    2
         ${id_updated}=    Update value to JSON    ${lm_json_template}    $.id    {${member_ids}[${decremented_index}]}
         Save JSON to file    ${id_updated}    resource/JSON/leagueManagerPowerAccess.json    2
-        #&{header_value}=    create dictionary     cookie=${espn_cookie}
         ${lm_response}=     PUT    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/members/%7B${member_ids}[${decremented_index}]%7D    json=${lm_json_template}     expected_status=401
         Invalid Schema from ${lm_response} should be valid     
     END
@@ -132,8 +129,6 @@ Schedule Offline Draft
 
 Schedule Offline Draft with invalid payload
     [Documentation]    Draft settings Changes to start Online drafting
-    #Get unix time stamp time
-    #${unixtimestamp}=    Get unixtimestamp time
     #Load Draft settings payload
     &{draft_json_template}=     Load JSON from file    resource/JSON/draftSettings.json
     ${positive_value}=    Convert To Integer    1234567
@@ -220,13 +215,9 @@ Add players to all teams as league creator user and save the roster with invalid
 Add players to team ${team_id} as team owner ${team_owner_id}
     [Documentation]    Generic method to add team players to respective teams as team owners
     &{offline_draft_team_json_template}=     Load JSON from file    resource/JSON/offlineDraftTeam${team_id}.json
-    ${decremented_index}=    Evaluate    ${team_id}-2
-    FOR    ${index}    IN RANGE    0    3
-        ${incremented_value}    Evaluate    ${index}+1   
-        # ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${index}]    APIuser@ESPN    User${incremented_value}!
-        &{header_value}=    create dictionary     cookie=${Cookies}[${incremented_value}]
-        ${offline_draft_team_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_team_json_template}     expected_status=200
-    END
+    ${decremented_index}=    Evaluate    ${team_id}-1
+    &{header_value}=    create dictionary     cookie=${cookies}[${decremented_index}]
+    ${offline_draft_team_response}=     POST    url= ${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/${TRANSACTIONS_SLUG}  headers=${header_value}    json=${offline_draft_team_json_template}     expected_status=200
 
 Add players to team 1 as League creator user
     [Documentation]    Add players to team 1 as league creator user
@@ -320,17 +311,15 @@ Validate Fantasy create league endpoint as non-league creator user responds with
     Save JSON to file    ${isLeagueCreator_reupdated}    resource/JSON/leagueCreateTemplate.json    2
 
 Get all the user cookies
-    @{Cookies}=    Create List
-    Log    ${Cookies}
-    Append To List    ${Cookies}    ${espn_cookie}
+    @{cookies}=    Create List
+    Append To List    ${cookies}    ${espn_cookie}
     FOR    ${index}    IN RANGE    0    3
         ${incremented_value}    Evaluate    ${index}+1
-        ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${index}]    APIuser@ESPN    User${incremented_value}!
-        Log To Console    ${header_user_cookie1}
-        Append To List    ${Cookies}    ${header_user_cookie1}
-        Log    ${Cookies}
+        ${header_user_cookie}    Auth with user log in and capturing Cookie    ${user_emails}[${index}]    APIuser@ESPN    User${incremented_value}!
+        Append To List    ${cookies}    ${header_user_cookie}
+        Log    ${cookies}
     END
-    Set Global Variable    ${Cookies}
+    Set Global Variable    ${cookies}
 
 Validate Invitation Accept, Team Creation endpoints responds with successful status code
     [Documentation]    Accept League Invite sent by inviter, fetch team id, update team information, invoke team creation API endpoint and validate the response schema
@@ -340,8 +329,7 @@ Validate Invitation Accept, Team Creation endpoints responds with successful sta
         ${id_updated}=    Update value to JSON    ${league_invite_accept_json_template}    $.id   ${invite_id}
         Save JSON to file    ${id_updated}    resource/JSON/leagueInviteAccept.json    2   
         ${incremented_value}    Evaluate    ${index}+1
-        #${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${index}]    APIuser@ESPN    User${incremented_value}!
-        &{header_user_cookie}     Create Dictionary    cookie=${Cookies}[${incremented_value}]
+        &{header_user_cookie}     Create Dictionary    cookie=${cookies}[${incremented_value}]
         #Make post request and send json payload to accept invitation - 
         ${memberInvitationAccepation}=    POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${invite_id}?memberId={${member_ids}[${index}]}&join=true    headers=${header_user_cookie}    json=${league_invite_accept_json_template}       expected_status=201
         #fetch team id
@@ -370,8 +358,7 @@ Validate Invitation Accept, Team Creation within the league with more than accep
         ${id_updated}=    Update value to JSON    ${league_invite_accept_json_template}    $.id   ${invite_id}
         Save JSON to file    ${id_updated}    resource/JSON/leagueInviteAccept.json    2
         ${incremented_value}    Evaluate    ${index}+1
-        # ${header_user_cookie1}    Auth with user log in and capturing Cookie    ${user_emails}[${index}]    APIuser@ESPN    User${incremented_value}!
-        &{header_user_cookie}     Create Dictionary    cookie=${Cookies}[${incremented_value}]
+        &{header_user_cookie}     Create Dictionary    cookie=${cookies}[${incremented_value}]
         ${memberInvitationAccepation}=    POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/invites/${invite_id}?memberId={${member_ids}[${index}]}&join=true    headers=${header_user_cookie}    json=${league_invite_accept_json_template}       expected_status=201
         ${team_id}=    Get value from JSON    ${memberInvitationAccepation.json()}    $.teamId
         &{team_create_json_template}=    Load JSON from file    resource/JSON/teamCreateTemplate.json
@@ -384,8 +371,6 @@ Validate Invitation Accept, Team Creation within the league with more than accep
         ${team_response}=     POST    url=${FANTASY_BASE_URL}/${LEAGUES_SLUG}/${league_id}/teams/${team_id}   headers=${header_user_cookie}     json=${team_create_json_template}   expected_status=400
         Invalid Schema from ${team_response} should be valid
     END
-
-
 
 Close the current Browser
     Browser Shutdown
