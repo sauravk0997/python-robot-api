@@ -184,7 +184,7 @@ class FantasyLoginManager(object):
             console("***** Click on Login Button *****")
 
         except Exception as e:
-            console(e)
+            console(e.with_traceback)
             return False
 
         #This code not required to run on sauce labs
