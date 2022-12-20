@@ -113,7 +113,7 @@ Add a player to my team as TO
     ${team_response}=              GET  url=${TEAM_API}=1                      headers=${header}             expected_status=200 
     ${Team_length}=    Get value from JSON    ${team_response.json()}    $.teams[0].roster.entries
     ${length}      Get Length    ${Team_length}
-    IF    ${length} != 13 OR ${length} != 10
+    IF    ${length} != 13 or ${length} != 10
         &{add_payload}=                    Load JSON from file                          resource/JSON/addPlayerasTO.json
         ${save_scoringPeriodId}            Update value to JSON                         ${add_payload}         $.scoringPeriodId    ${scoring_period_id}
         Save JSON to file                  ${save_scoringPeriodId}                      resource/JSON/addPlayerasTO.json    2 
@@ -219,7 +219,7 @@ As League Manager, Add a player to other team ${team_ID}
     ${Team_length}=    Get value from JSON    ${team_response.json()}    $.teams[4].roster.entries
     ${length}      Get Length    ${Team_length}
     Set Global Variable    ${length}
-    IF    ${length} != 13 OR ${length} != 10
+    IF    ${length} != 13 or ${length} != 10
         &{add_payload1}=                    Load JSON from file              resource/JSON/addPlayerasLM.json
         ${save_scoringPeriodId}             Update value to JSON             ${add_payload1}    $.scoringPeriodId         ${scoring_period_id}
         Save JSON to file                   ${save_scoringPeriodId}          resource/JSON/addPlayerasLM.json    2 
