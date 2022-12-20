@@ -81,14 +81,15 @@ class FantasyLoginManager(object):
     def login_fantasy_user(self, username="", password="", expected_profile_name_span_value="", url="https://www.espn.com/fantasy/"):
         # TODO: complete method documentation
 
+        #load_dotenv()
         #variable which defines local or Sauce run
         sauce_run = "True"
         
         if sauce_run == "True": 
             options = ChromeOptions()
-            options.add_argument("--no-sandbox")
-            options.add_argument("--headless")
-            options.add_argument("--disable-gpu")
+            # options.add_argument("--no-sandbox")
+            # options.add_argument("--headless")
+            # options.add_argument("--disable-gpu")
             options.browser_version = os.getenv('BROWSER_VERSION')
             options.platform_name = os.getenv('PLATFORM_NAME')
             sauce_options = {}
@@ -98,7 +99,8 @@ class FantasyLoginManager(object):
             options.set_capability('sauce:options', sauce_options)
             sauce_username = os.getenv('SAUCE_USER')
             sauce_accesskey= os.getenv('SAUCE_KEY')
-            sauce_url = f"https://{sauce_username}:{sauce_accesskey}@ondemand.apac-southeast-1.saucelabs.com:443/wd/hub"
+            #sauce_url = f"https://{sauce_username}:{sauce_accesskey}@ondemand.apac-southeast-1.saucelabs.com:443/wd/hub"
+            sauce_url = "https://SasikumarSibbala:67475fd8-65ce-45ff-89e5-6ad0b2811f24@ondemand.us-west-1.saucelabs.com:443/wd/hub"
             self.driver = webdriver.Remote(command_executor=sauce_url, options=options)
         else:
             self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
@@ -152,7 +154,7 @@ class FantasyLoginManager(object):
             profile_link = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_PROFILE_ICON"])))
             self.action_chain.move_to_element(profile_link).perform()
             console("***** Mouse hovered on Profile icon *****")
-            sleep(5)
+            #sleep(5)
             # once dropdown appears, move to login_link and click
             login_link = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_LINK"])))
             self.action_chain.move_to_element(login_link).click().perform()
@@ -163,7 +165,7 @@ class FantasyLoginManager(object):
 
         # MOVE TO LOGIN MODAL, FILL AND SUBMIT
         try:
-            sleep(5)
+            #sleep(5)
             # wait for login modal to appear and switch to its iframe
             modal_wrapper = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_WRAPPER"])))
             self.driver.switch_to.frame(self.driver.find_element(By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME"]))
