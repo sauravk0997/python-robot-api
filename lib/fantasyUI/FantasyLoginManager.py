@@ -82,10 +82,13 @@ class FantasyLoginManager(object):
         # TODO: complete method documentation
 
         #variable which defines local or Sauce run
-        sauce_run = "False"
+        sauce_run = "True"
         
         if sauce_run == "True": 
             options = ChromeOptions()
+            options.add_argument("--no-sandbox")
+            options.add_argument("--headless")
+            options.add_argument("--disable-gpu")
             options.browser_version = os.getenv('BROWSER_VERSION')
             options.platform_name = os.getenv('PLATFORM_NAME')
             sauce_options = {}
