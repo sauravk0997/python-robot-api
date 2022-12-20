@@ -17,8 +17,8 @@ ${TRANSACTION_SLUG}      transactions/
 ${TEAM_API}              ${API_BASE}/${LEAGUE_SLUG}?view=mDraftDetail&view=mLiveScoring&view=mMatchupScore&view=mPendingTransactions&view=mPositionalRatings&view=mRoster&view=mSettings&view=mTeam&view=modular&view=mNav&rosterForTeamId
 ${HOMEPAGE}              https://www.espn.com/fantasy/
 ${BROWSER}               Chrome
-${user}                  saurav.kumar@zucitech.com
-${password}              Saurav@1103
+${user}                  test_api_user4@test.com
+${password}              APIuser@ESPN
 ${greeting}              Saurav!                  
 
 *** Keywords ***
