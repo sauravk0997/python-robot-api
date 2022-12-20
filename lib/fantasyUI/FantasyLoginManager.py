@@ -162,6 +162,7 @@ class FantasyLoginManager(object):
 
         # MOVE TO LOGIN MODAL, FILL AND SUBMIT
         try:
+            sleep(5)
             # wait for login modal to appear and switch to its iframe
             modal_wrapper = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_WRAPPER"])))
             self.driver.switch_to.frame(self.driver.find_element(By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME"]))
