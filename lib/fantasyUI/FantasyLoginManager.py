@@ -99,8 +99,8 @@ class FantasyLoginManager(object):
             options.set_capability('sauce:options', sauce_options)
             sauce_username = os.getenv('SAUCE_USER')
             sauce_accesskey= os.getenv('SAUCE_KEY')
-            #sauce_url = f"https://{sauce_username}:{sauce_accesskey}@ondemand.apac-southeast-1.saucelabs.com:443/wd/hub"
-            sauce_url = "https://SasikumarSibbala:67475fd8-65ce-45ff-89e5-6ad0b2811f24@ondemand.us-west-1.saucelabs.com:443/wd/hub"
+            sauce_url = f"https://{sauce_username}:{sauce_accesskey}@ondemand.apac-southeast-1.saucelabs.com:443/wd/hub"
+            #sauce_url = "https://SasikumarSibbala:67475fd8-65ce-45ff-89e5-6ad0b2811f24@ondemand.us-west-1.saucelabs.com:443/wd/hub"
             self.driver = webdriver.Remote(command_executor=sauce_url, options=options)
         else:
             self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
