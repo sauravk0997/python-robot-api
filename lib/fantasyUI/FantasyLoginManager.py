@@ -210,9 +210,14 @@ class FantasyLoginManager(object):
             profile_name_value = profile_name.text
 
             if profile_name_value == expected_profile_name_span_value:
-                self.cookie_espn_s2     = self.driver.get_cookie('espn_s2')
-                self.cookie_swid        = self.driver.get_cookie('SWID')
-                self.fantasy_api_cookie()
+                console("***** Checking page ready state *****")
+                page_state = self.driver.execute_script("return document.readyState")
+                if(page_state == "complete"):
+                    console("***** Page Loaded successfully *****")
+                    self.cookie_espn_s2     = self.driver.get_cookie('espn_s2')
+                    self.cookie_swid        = self.driver.get_cookie('SWID')
+                    console("***** Invoking User cookie function ***** ")
+                    self.fantasy_api_cookie()
             else:
                 raise ValueError(f"Expected profile name span value did not match observed value.\n    expected: {expected_profile_name_span_value}\n    observed: {profile_name_value}")
 
