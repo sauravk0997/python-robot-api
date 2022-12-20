@@ -37,7 +37,7 @@ before_script:
   - export SAUCE_KEY=${SAUCE_KEY}
 
 mergejob:
-  cache: {}
+  cache: []
   script:
     - echo "Executing Merge Job"
     - apt-get update
