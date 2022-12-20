@@ -38,6 +38,7 @@ before_script:
 
 mergejob:
   script:
+    - echo "Executing Merge Job"
     - pip install -r requirements.txt
     - files=(`git diff-tree --no-commit-id --name-only -r $CI_COMMIT_SHA`)
       echo "files :::::" ${files}
