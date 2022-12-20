@@ -182,7 +182,8 @@ class FantasyLoginManager(object):
             login_button = self.driver.find_element(By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_LOGIN_BUTTON"])
             #self.action_chain.click(login_button).perform()
             self.action_chain.move_to_element(login_button).perform()
-            console("***** Click on Login Button *****")
+            self.action_chain.double_click(login_button).perform()
+            console("***** Double clicked on Login Button *****")
 
         except Exception as e:
             console(e.with_traceback)
