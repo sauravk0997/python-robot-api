@@ -37,8 +37,11 @@ before_script:
   - export SAUCE_KEY=${SAUCE_KEY}
 
 mergejob:
-  cache: []
+  #cache: []
   script:
+    - echo "Cleaning up"
+    - echo "Remove cache files"
+    - rm -rf "%CACHE_PATH%/%CI_PIPELINE_ID%"
     - echo "Executing Merge Job"
     - apt-get update
     # Install the chrome and chrome webdriver
