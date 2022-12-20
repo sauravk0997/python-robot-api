@@ -95,9 +95,7 @@ class FantasyLoginManager(object):
             options.set_capability('sauce:options', sauce_options)
             sauce_username = os.getenv('SAUCE_USER')
             sauce_accesskey= os.getenv('SAUCE_KEY')
-            # sauce_url = f"https://{sauce_username}:{sauce_accesskey}@ondemand.apac-southeast-1.saucelabs.com:443/wd/hub"
-            # sauce_url = f"https://{sauce_username}:{sauce_accesskey}@ondemand.us-west-1.saucelabs.com:443/wd/hub"
-            sauce_url = f"https://SasikumarSibbala:67475fd8-65ce-45ff-89e5-6ad0b2811f24@ondemand.us-west-1.saucelabs.com:443/wd/hub"
+            sauce_url = f"https://{sauce_username}:{sauce_accesskey}@ondemand.apac-southeast-1.saucelabs.com:443/wd/hub"
             self.driver = webdriver.Remote(command_executor=sauce_url, options=options)
         else:
             self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
@@ -151,7 +149,6 @@ class FantasyLoginManager(object):
             profile_link = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_PROFILE_ICON"])))
             self.action_chain.move_to_element(profile_link).perform()
             console("***** Mouse hovered on Profile icon *****")
-            #sleep(5)
             # once dropdown appears, move to login_link and click
             login_link = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_LINK"])))
             self.action_chain.move_to_element(login_link).click().perform()
@@ -162,19 +159,16 @@ class FantasyLoginManager(object):
 
         # MOVE TO LOGIN MODAL, FILL AND SUBMIT
         try:
-            sleep(1)
             # wait for login modal to appear and switch to its iframe
             modal_wrapper = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_WRAPPER"])))
             self.driver.switch_to.frame(self.driver.find_element(By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME"]))
 
             # wait a moment then look for username field and fill
-            sleep(1)
             username_field = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_USERNAME_FIELD"])))
             self.action_chain.send_keys_to_element(username_field, username).perform()
             console("***** Entered username *****")
 
             # look for password field and fill
-            sleep(1)
             password_field = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_PASSWORD_FIELD"])))
             self.action_chain.send_keys_to_element(password_field, password).perform()
             console("***** Entered password *****")
@@ -182,11 +176,8 @@ class FantasyLoginManager(object):
             # locate and press the login button
             sleep(1)
             login_button = self.driver.find_element(By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_LOGIN_BUTTON"])
-            #self.action_chain.click(login_button).perform()
-            console("***** Moved to Login Button *****")
-            self.action_chain.move_to_element(login_button).perform()
-            self.action_chain.double_click(login_button).perform()
-            console("***** Double clicked on Login Button *****")
+            self.action_chain.click(login_button).perform()
+            console("***** Click on Login Button *****")
 
         except Exception as e:
             console(e.with_traceback)
@@ -216,14 +207,9 @@ class FantasyLoginManager(object):
             profile_name_value = profile_name.text
 
             if profile_name_value == expected_profile_name_span_value:
-                console("***** Checking page ready state *****")
-                page_state = self.driver.execute_script("return document.readyState")
-                if(page_state == "complete"):
-                    console("***** Page Loaded successfully *****")
-                    self.cookie_espn_s2     = self.driver.get_cookie('espn_s2')
-                    self.cookie_swid        = self.driver.get_cookie('SWID')
-                    console("***** Invoking User cookie function ***** ")
-                    self.fantasy_api_cookie()
+                self.cookie_espn_s2     = self.driver.get_cookie('espn_s2')
+                self.cookie_swid        = self.driver.get_cookie('SWID')
+                self.fantasy_api_cookie()
             else:
                 raise ValueError(f"Expected profile name span value did not match observed value.\n    expected: {expected_profile_name_span_value}\n    observed: {profile_name_value}")
 
