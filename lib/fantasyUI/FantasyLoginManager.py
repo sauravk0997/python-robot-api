@@ -152,6 +152,7 @@ class FantasyLoginManager(object):
             profile_link = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_PROFILE_ICON"])))
             self.action_chain.move_to_element(profile_link).perform()
             console("***** Mouse hovered on Profile icon *****")
+            sleep(5)
             # once dropdown appears, move to login_link and click
             login_link = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_LINK"])))
             self.action_chain.move_to_element(login_link).click().perform()
