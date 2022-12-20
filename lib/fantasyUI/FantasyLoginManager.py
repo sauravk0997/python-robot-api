@@ -81,15 +81,11 @@ class FantasyLoginManager(object):
     def login_fantasy_user(self, username="", password="", expected_profile_name_span_value="", url="https://www.espn.com/fantasy/"):
         # TODO: complete method documentation
 
-        #load_dotenv()
         #variable which defines local or Sauce run
         sauce_run = "True"
         
         if sauce_run == "True": 
             options = ChromeOptions()
-            # options.add_argument("--no-sandbox")
-            # options.add_argument("--headless")
-            # options.add_argument("--disable-gpu")
             options.browser_version = os.getenv('BROWSER_VERSION')
             options.platform_name = os.getenv('PLATFORM_NAME')
             sauce_options = {}
@@ -100,7 +96,6 @@ class FantasyLoginManager(object):
             sauce_username = os.getenv('SAUCE_USER')
             sauce_accesskey= os.getenv('SAUCE_KEY')
             sauce_url = f"https://{sauce_username}:{sauce_accesskey}@ondemand.apac-southeast-1.saucelabs.com:443/wd/hub"
-            #sauce_url = "https://SasikumarSibbala:67475fd8-65ce-45ff-89e5-6ad0b2811f24@ondemand.us-west-1.saucelabs.com:443/wd/hub"
             self.driver = webdriver.Remote(command_executor=sauce_url, options=options)
         else:
             self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
@@ -165,7 +160,7 @@ class FantasyLoginManager(object):
 
         # MOVE TO LOGIN MODAL, FILL AND SUBMIT
         try:
-            #sleep(5)
+            sleep(1)
             # wait for login modal to appear and switch to its iframe
             modal_wrapper = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_WRAPPER"])))
             self.driver.switch_to.frame(self.driver.find_element(By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME"]))
@@ -177,11 +172,13 @@ class FantasyLoginManager(object):
             console("***** Entered username *****")
 
             # look for password field and fill
+            sleep(1)
             password_field = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_PASSWORD_FIELD"])))
             self.action_chain.send_keys_to_element(password_field, password).perform()
             console("***** Entered password *****")
 
             # locate and press the login button
+            sleep(1)
             login_button = self.driver.find_element(By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_LOGIN_BUTTON"])
             self.action_chain.click(login_button).perform()
             console("***** Click on Login Button *****")
