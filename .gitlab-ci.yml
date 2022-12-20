@@ -37,7 +37,6 @@ before_script:
   - export SAUCE_KEY=${SAUCE_KEY}
 
 mergejob:
-  #cache: []
   script:
     - pip install -r requirements.txt
     - files=(`git diff-tree --no-commit-id --name-only -r $CI_COMMIT_SHA`)
