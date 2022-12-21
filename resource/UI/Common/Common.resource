@@ -35,4 +35,3 @@ Select any fantasy team from the existing league ${league_name} to move players
      wait until element is visible   ${profile_Locator}
      mouse over        ${profile_Locator}
      click element      xpath://span[text()='${league_name}']
-     sleep    5s
