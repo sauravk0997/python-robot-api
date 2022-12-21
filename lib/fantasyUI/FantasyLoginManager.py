@@ -160,15 +160,18 @@ class FantasyLoginManager(object):
         # MOVE TO LOGIN MODAL, FILL AND SUBMIT
         try:
             # wait for login modal to appear and switch to its iframe
+            sleep(1)
             modal_wrapper = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_WRAPPER"])))
             self.driver.switch_to.frame(self.driver.find_element(By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME"]))
 
             # wait a moment then look for username field and fill
+            sleep(1)
             username_field = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_USERNAME_FIELD"])))
             self.action_chain.send_keys_to_element(username_field, username).perform()
             console("***** Entered username *****")
 
             # look for password field and fill
+            sleep(1)
             password_field = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_PASSWORD_FIELD"])))
             self.action_chain.send_keys_to_element(password_field, password).perform()
             console("***** Entered password *****")
@@ -207,9 +210,14 @@ class FantasyLoginManager(object):
             profile_name_value = profile_name.text
 
             if profile_name_value == expected_profile_name_span_value:
-                self.cookie_espn_s2     = self.driver.get_cookie('espn_s2')
-                self.cookie_swid        = self.driver.get_cookie('SWID')
-                self.fantasy_api_cookie()
+                console("***** Checking page ready state *****")
+                page_state = self.driver.execute_script("return document.readyState")
+                if(page_state == "complete"):
+                    console("***** Page Loaded successfully *****")
+                    self.cookie_espn_s2     = self.driver.get_cookie('espn_s2')
+                    self.cookie_swid        = self.driver.get_cookie('SWID')
+                    console("***** Invoking User cookie function ***** ")
+                    self.fantasy_api_cookie()
             else:
                 raise ValueError(f"Expected profile name span value did not match observed value.\n    expected: {expected_profile_name_span_value}\n    observed: {profile_name_value}")
 
