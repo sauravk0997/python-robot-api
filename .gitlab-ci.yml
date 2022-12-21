@@ -59,6 +59,7 @@ mergejob:
     - cp chromedriver /usr/local/bin
     - rm chromedriver_linux64.zip
     - rm chromedriver
+    - echo "Installing dependencies"
     - pip install -r requirements.txt
     - files=(`git diff-tree --no-commit-id --name-only -r $CI_COMMIT_SHA`)
       echo "files :::::" ${files}
