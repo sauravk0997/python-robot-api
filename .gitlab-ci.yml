@@ -38,6 +38,7 @@ before_script:
 
 mergejob:
   script:
+    - echo "**** Merge Job Start ****"
     - echo "Cleaning up"
     - echo "Remove cache files"
     - rm -rf "%CACHE_PATH%/%CI_PIPELINE_ID%"
