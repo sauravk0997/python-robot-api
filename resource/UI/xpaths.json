@@ -8,6 +8,11 @@
     "XPATH_USER_LOGIN_MODAL_IFRAME_USERNAME_FIELD":  "//input[@type=\"email\"]",
     "XPATH_USER_LOGIN_MODAL_IFRAME_PASSWORD_FIELD":  "//input[@type=\"password\"]",
     "XPATH_USER_LOGIN_MODAL_IFRAME_LOGIN_BUTTON":    "//button[@type=\"submit\"]",
-    "XPATH_USER_PROFILE_NAME":                       "//*[@id=\"global-header\"]/div[2]/ul/li[2]/div/div/ul[1]/li[1]/span"
+    "XPATH_USER_PROFILE_NAME":                       "//*[@id=\"global-header\"]/div[2]/ul/li[2]/div/div/ul[1]/li[1]/span",
+    "XPATH_USER_LOGIN_MODAL_IFRAME_TEAMS_BUTTON":    "/html/body/div[5]/div[2]/header/div[2]/ul/li[2]/div/div/ul[2]/li/div/ul/li/a/div[2]",
+    "XPATH_USER_LOGIN_MODAL_IFRAME_DROP_BUTTON":     "/html/body/div[1]/div[1]/div/div/div[5]/div[2]/div[4]/div/div/div/div[1]/div[2]/div[2]/button[2]/span",
+    "XPATH_USER_LOGIN_MODAL_IFRAME_DROP_PLAYER_BUTTON": "//button[@aria-label='Drop Player Rudy Gobert']//span[@class='jsx-1169440911'][normalize-space()='DROP']",
+    "XPATH_USER_LOGIN_MODAL_IFRAME_CONTINUE_BUTTON":  "/html/body/div[1]/div[1]/div/div/div[7]/div[2]/div/button[2]/span",
+    "XPATH_USER_LOGIN_MODAL_IFRAME_CONFIRM_BUTTON": "//span[normalize-space()='Confirm']"
   }
 }
