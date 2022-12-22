@@ -6,7 +6,7 @@ Library             Collections
 Library             String
 Library             OperatingSystem
 Library             lib/validators/FantasyMovePlayerValidator.py
-Library             lib/fantasyUI/FantasyUtils.py
+Library             lib/fantasyAPI/FantasyUtils.py
 Resource            resource/FantasyResource.robot
 
 *** Variables ***
@@ -21,6 +21,7 @@ ${CREATE_ACCOUNT_URL}                         https://registerdisney.go.com/jgc/
 Create a account and a league
     [Documentation]    Create - ESPN Fantasy User,League and teams creation and adding players to team
     Create a test account and signup and sign in to the application
+    Get all the user cookies
     Create a League and validate the response schema
     Send Invitations, Accept Invitation send by inviter and Create teams
     Schedule Offline Draft
@@ -62,6 +63,7 @@ Delete the created test account
 Get a Fantasy League details
     [Documentation]    Create - ESPN Fantasy League and teams creation and adding players to team
     Initialize the user cookie
+    Get all the user cookies
     &{header_value}=    create dictionary     cookie=${espn_cookie}
     set global variable    &{header_value}
     Create a League and validate the response schema

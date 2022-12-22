@@ -3,7 +3,6 @@ Resource    resource/FantasyResource.robot
 Suite Setup     Run Keywords    Initialize the user cookie
 ...        AND     Get all the user cookies
 ...        AND      Close the current Browser
-#Suite Teardown     Close the current Browser
 
 *** Test Cases ***
 E2E - Validate User Steps to Create Empty Teams within Leagues

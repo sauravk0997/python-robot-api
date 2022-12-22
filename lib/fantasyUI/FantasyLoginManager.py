@@ -103,7 +103,7 @@ class FantasyLoginManager(object):
         self.action_chain = ActionChains(self.driver)
 
         try:
-            xpaths= 'resource/JSON/xpaths.json'
+            xpaths= 'resource/UI/xpaths.json'
             # This check allows the user to overload the init to pass a variety of content into the xpaths variable
             if type(xpaths) in (dict, ):
                 # assume the dict is in the correct format and move on
@@ -164,7 +164,6 @@ class FantasyLoginManager(object):
             self.driver.switch_to.frame(self.driver.find_element(By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME"]))
 
             # wait a moment then look for username field and fill
-            sleep(1)
             username_field = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_USERNAME_FIELD"])))
             self.action_chain.send_keys_to_element(username_field, username).perform()
             console("***** Entered username *****")
@@ -175,12 +174,13 @@ class FantasyLoginManager(object):
             console("***** Entered password *****")
 
             # locate and press the login button
+            sleep(1)
             login_button = self.driver.find_element(By.XPATH, xlogin["XPATH_USER_LOGIN_MODAL_IFRAME_LOGIN_BUTTON"])
             self.action_chain.click(login_button).perform()
             console("***** Click on Login Button *****")
 
         except Exception as e:
-            console(e)
+            console(e.with_traceback)
             return False
 
         #This code not required to run on sauce labs

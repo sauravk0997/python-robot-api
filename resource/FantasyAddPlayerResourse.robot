@@ -302,7 +302,6 @@ A POST request ${endpoint} to add a player at position C to my team should respo
  
 A POST request ${endpoint} to add an On Waiver player in my team should respond with ${status}
     [Documentation]     Post request for adding a Waiver player to my team 
-   
     Updating header and filter for response with json file resource/JSON/onWaiverFilter.json
     ${waiver_length}=    Get value from JSON    ${player_response.json()}    $.players
     ${on_waiver_length}      Get Length    ${waiver_length}
