@@ -17,8 +17,8 @@ ${TRANSACTION_SLUG}      transactions/
 ${TEAM_API}              ${API_BASE}/${LEAGUE_SLUG}?view=mDraftDetail&view=mLiveScoring&view=mMatchupScore&view=mPendingTransactions&view=mPositionalRatings&view=mRoster&view=mSettings&view=mTeam&view=modular&view=mNav&rosterForTeamId
 ${HOMEPAGE}              https://www.espn.com/fantasy/
 ${BROWSER}               Chrome
-${user}                  saurav.kumar@zucitech.com
-${password}              Saurav@1103
+${user}                  test_api_user4@test.com
+${password}              APIuser@ESPN
 ${greeting}              Saurav!                  
 
 *** Keywords ***
@@ -113,7 +113,7 @@ Add a player to my team as TO
     ${team_response}=              GET  url=${TEAM_API}=1                      headers=${header}             expected_status=200 
     ${Team_length}=    Get value from JSON    ${team_response.json()}    $.teams[0].roster.entries
     ${length}      Get Length    ${Team_length}
-    IF    ${length} != 13 OR ${length} != 10
+    IF    ${length} != 13
         &{add_payload}=                    Load JSON from file                          resource/JSON/addPlayerasTO.json
         ${save_scoringPeriodId}            Update value to JSON                         ${add_payload}         $.scoringPeriodId    ${scoring_period_id}
         Save JSON to file                  ${save_scoringPeriodId}                      resource/JSON/addPlayerasTO.json    2 
@@ -219,7 +219,7 @@ As League Manager, Add a player to other team ${team_ID}
     ${Team_length}=    Get value from JSON    ${team_response.json()}    $.teams[4].roster.entries
     ${length}      Get Length    ${Team_length}
     Set Global Variable    ${length}
-    IF    ${length} != 13 OR ${length} != 10
+    IF    ${length} != 13
         &{add_payload1}=                    Load JSON from file              resource/JSON/addPlayerasLM.json
         ${save_scoringPeriodId}             Update value to JSON             ${add_payload1}    $.scoringPeriodId         ${scoring_period_id}
         Save JSON to file                   ${save_scoringPeriodId}          resource/JSON/addPlayerasLM.json    2 
@@ -270,6 +270,9 @@ Updating header and filter for response with json file ${json_file}
 
 A POST request ${endpoint} not to add a player to my team if my roaster is full should respond with ${status}
     [Documentation]     Post request for not adding a player to my team if my roaster is full
+    ${team_response}=              GET  url=${TEAM_API}=1                      headers=${header}             expected_status=200 
+    ${Team_length}=    Get value from JSON    ${team_response.json()}    $.teams[0].roster.entries
+    ${length}      Get Length    ${Team_length}
     IF    ${length} == 13
         Updating header and filter for response with json file resource/JSON/freeAgentFilter.json
         ${free_agent_player_id}                  Get the free-agent player id                    ${player_response}
@@ -282,19 +285,36 @@ A POST request ${endpoint} not to add a player to my team if my roaster is full 
 
 A POST request ${endpoint} to add a player at position C to my team should respond with ${status}
     [Documentation]     Post request for adding a Position C player to my team when I already have 4 Positiom C player in my team
-    Updating header and filter for response with json file resource/JSON/freeAgentFilter.json
-    ${free_agent_player_id}                  Get the Position C player id        ${player_response}
-    Updating payload for the Post request    ${free_agent_player_id}
-    ${response}=                             POST  url=${endpoint}               headers=${header}                        json=${payload}                  expected_status=${status}           
-    [Return]                                 ${response}
+    ${team_response}=              GET  url=${TEAM_API}=1                      headers=${header}             expected_status=200 
+    ${Count_of_Player_C}      Get the length of position C players      ${team_response}
+    IF    ${Count_of_Player_C} == 4
+        Updating header and filter for response with json file resource/JSON/freeAgentFilter.json
+        ${free_agent_player_id}                  Get the Position C player id        ${player_response}
+        Updating payload for the Post request    ${free_agent_player_id}
+        ${response}=                             POST  url=${endpoint}               headers=${header}                        json=${payload}                  expected_status=${status}           
+        Validate the response ${response} and response should contain error message TRAN_ROSTER_POSITION_LIMIT_EXCEEDED
+        Invalid Add Player Schema from ${response} should be valid
+
+    ELSE
+        Log     Your team only have 3 position C player. Please add one more position C player to your team
+    END
+    
  
 A POST request ${endpoint} to add an On Waiver player in my team should respond with ${status}
     [Documentation]     Post request for adding a Waiver player to my team 
+   
     Updating header and filter for response with json file resource/JSON/onWaiverFilter.json
-    ${on_Waiver_player_id}                   Get the On Waivers player id        ${player_response}
-    Updating payload for the Post request    ${on_Waiver_player_id}
-    ${response}=                             POST  url=${endpoint}               headers=${header}                      json=${payload}                  expected_status=${status}           
-    [Return]                                 ${response}
+    ${waiver_length}=    Get value from JSON    ${player_response.json()}    $.players
+    ${on_waiver_length}      Get Length    ${waiver_length}
+    IF    ${on_waiver_length} != 0   
+        ${on_Waiver_player_id}                   Get the On Waivers player id        ${player_response}
+        Updating payload for the Post request    ${on_Waiver_player_id}
+        ${response}=                             POST  url=${endpoint}               headers=${header}                      json=${payload}                  expected_status=${status}           
+        Validate the response ${response} and response should contain error message TRAN_PLAYER_NOT_FREEAGENT
+        Invalid Add Player Schema from ${response} should be valid
+    ELSE
+        Log    Waivers players are not present
+    END   
 
 A POST request ${endpoint} to add an On Roaster player in my team should respond with ${status}
     [Documentation]     Post request for adding a roaster player to my team 
