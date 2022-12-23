@@ -302,7 +302,7 @@ A POST request ${endpoint} to add a player at position C to my team should respo
  
 A POST request ${endpoint} to add an On Waiver player in my team should respond with ${status}
     [Documentation]     Post request for adding a Waiver player to my team 
-    Updating header and filter for response with json file resource/JSON/onWaiverFilter.json
+    Updating header and filter for response with json file resource/JSON/OnWaiverFilter.json
     ${waiver_length}=    Get value from JSON    ${player_response.json()}    $.players
     ${on_waiver_length}      Get Length    ${waiver_length}
     IF    ${on_waiver_length} != 0   
@@ -317,7 +317,7 @@ A POST request ${endpoint} to add an On Waiver player in my team should respond 
 
 A POST request ${endpoint} to add an On Roaster player in my team should respond with ${status}
     [Documentation]     Post request for adding a roaster player to my team 
-    Updating header and filter for response with json file resource/JSON/onRoastersFilter.json
+    Updating header and filter for response with json file resource/JSON/OnRoastersFilter.json
     ${on_team_player_id}                     Get the On Roasters player id        ${player_response}
     Updating payload for the Post request    ${on_team_player_id}
     ${response}=                             POST  url=${endpoint}                headers=${header}                      json=${payload}                      expected_status=${status}           

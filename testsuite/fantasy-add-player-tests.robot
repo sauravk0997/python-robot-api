@@ -73,20 +73,20 @@ As a Team Owner, I should not be able to add a player with wrong scoring period 
 As a League Manager, add a valid player to invalid team
     [Documentation]    Simple validation of the base level schema and adding a valid player to invlaid team
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
-    ${invalid_team_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/invalidTeam.json should respond with 409
+    ${invalid_team_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/InvalidTeam.json should respond with 409
     Validate the response ${invalid_team_response} and response should contain error message TEAM_NOT_FOUND
     Invalid Add Player Schema from ${invalid_team_response} should be valid
 
 As a Team Owner, add an invalid player to my team
     [Documentation]    Simple validation of the base level schema url and adding a invalid player to my team
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
-    ${invalid_player_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/invalidPlayer.json should respond with 400
+    ${invalid_player_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/InvalidPlayer.json should respond with 400
     Validate the response ${invalid_player_response} and response should contain error message PLAYER_NOT_EXISTS
     Invalid Add Player Schema from ${invalid_player_response} should be valid    
 
 As a League Manager, add an invalid player to my team
     [Documentation]    Simple validation of the base level schema url and adding an invalid player as LM to my team
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
-    ${invalid_player_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/invlaidPlayerasLM.json should respond with 400
+    ${invalid_player_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} to add a player with proper resource/JSON/InvlaidPlayerasLM.json should respond with 400
     Validate the response ${invalid_player_response} and response should contain error message PLAYER_NOT_EXISTS
     Invalid Add Player Schema from ${invalid_player_response} should be valid
