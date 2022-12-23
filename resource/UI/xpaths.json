@@ -1,4 +1,3 @@
-
 {
   "login": {
     "XPATH_USER_PROFILE_ICON":                       "//*[@id=\"global-user-trigger\"]",
