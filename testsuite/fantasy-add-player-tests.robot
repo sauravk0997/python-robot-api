@@ -35,9 +35,7 @@ As a Fantasy League Manager, add and drop a player to other team
 As a Team Owner, I should not be able to add a new player in my team, if my roaster is full.
     [Documentation]     Simple validation of the base level schema url and adding a player in my team as a Team Owner when my roaster is full for Fantasy Games API.
     [Tags]    invalid   fantasy_games    CSEAUTO-29016    CSEAUTO-28388
-    ${free_agent_response}=    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} not to add a player to my team if my roaster is full should respond with 409
-    Validate the response ${free_agent_response} and response should contain error message TRAN_ROSTER_LIMIT_EXCEEDED_ONE
-    Invalid Add Player Schema from ${free_agent_response} should be valid
+    A POST request ${API_BASE}/${LEAGUE_SLUG}/${TRANSACTION_SLUG} not to add a player to my team if my roaster is full should respond with 409
 
 Drop and add a player in my team as a Team Owner
     [Documentation]     Simple validation of the base level schema url and 'dropping and then adding' a player in my team as a Team Owner for Fantasy Games API.
@@ -48,8 +46,8 @@ Drop and add a player in my team as a Team Owner
 Drop and add a player in other team as a League Manager
     [Documentation]     Simple validation of the base level schema url and 'dropping and then adding' a player in my team as a Team Owner for Fantasy Games API.
     [Tags]    valid   fantasy_games    CSEAUTO-28331    CSEAUTO-28388
-    As League Manager, Drop a player from other team 5
-    As League Manager, Add a player to other team 5
+    As League Manager, Drop a player from other team 4
+    As League Manager, Add a player to other team 4
 
 As a Team Owner, I should not be able to add an On Waivers player in my team.
     [Documentation]     Simple validation of the base level schema url and adding a waiver player in my team as a Team Owner for Fantasy Games API.
