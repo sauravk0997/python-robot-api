@@ -5,9 +5,8 @@ Metadata             Author      Yusuf Mubarak M
 Metadata             Date        20-12-2022
 Resource             resource/UI/Common/Common.resource
 Resource             resource/UI/Pages/TeamsPage.robot
-Test Setup           Launch the Browser and Navigate to Espn site
-Test Teardown        Close Browser Session
-
+Suite Setup          Launch the site and create a test account and a fantasy league
+Suite Teardown       Delete the account and close browser
 
 *** Variables ***
 
@@ -15,8 +14,20 @@ Test Teardown        Close Browser Session
 *** Test Cases ***
 As a team owner move the Players by swaping the position of the players in current scoring period
     [Tags]    moveplayers    valid
-    Login into the espn site
-    Select any fantasy team from the existing league My-Fantasy-League-5487 to move players
+    Select any fantasy team from the existing league TestLeague to move players
     User is navigated to teams page
-    Check for the players in the team who are available to move
-    check for the players who can swap their positions based on the availability of players who are eligible for move
+    Check for the players in the team who are available to move from there existing positions
+    Swap the Position of the players in the current scoring period
+    Verify whether the player swapped their Position
+
+As a Team Owner of a fantasy league I am able to move any player to the Bench from my team for the current scoring period
+    Select any fantasy team from the existing league TestLeague to move players
+    User is navigated to teams page
+    Check and Move any eligible existing lineup player to Bench
+    Verify whether the Player is Moved to Bench
+
+As a Fantasy Team Owner move any player from the Bench to the lineup for the current scoring period
+    Select any fantasy team from the existing league TestLeague to move players
+    User is navigated to teams page
+    Move any eligible Bench Player to lineup
+    Verify whether the Player is Moved to Lineup
