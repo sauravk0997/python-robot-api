@@ -140,19 +140,17 @@ class FantasyAddPlayerValidator(object):
         return on_Team_player_id 
     
     @keyword('Get the length of position C players')
-    def get_the_length_of_position_C_players(self, Team_response) -> int:
+    def get_the_length_of_position_C_players(self, team_response) -> int:
         try:
             Count = 0
-            no_of_players = len(Team_response.json()['teams'][0]['roster']['entries'])
+            no_of_players = len(team_response.json()['teams'][0]['roster']['entries'])
             for player in range(0, no_of_players):
-                entries = Team_response.json()['teams'][0]['roster']['entries']
+                entries = team_response.json()['teams'][0]['roster']['entries']
                 no_of_Position_C_player = entries[player]["playerPoolEntry"]["player"]["defaultPositionId"]
                 if no_of_Position_C_player == 5:
                     Count += 1
                 else:
                     continue
-            print(Count)
-           
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
         return Count 
