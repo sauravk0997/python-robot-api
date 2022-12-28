@@ -3,7 +3,6 @@ Documentation    All the Common objects and keywords
 Library          SeleniumLibrary
 Library          lib/fantasyUI/FantasyUICustomKeywords.py
 Library          lib/fantasyAPI/FantasyUtils.py
-Resource            resource/UI/Pages/CreateLeaguePage.resource
 Resource             resource/UI/Common/Common.resource
 Resource             resource/suite_setup_teardown_moveplayer.resource
 
@@ -19,10 +18,10 @@ ${dropdown1}               (//select[@class="dropdown__select"])[1]
 ${dropdown2}               (//select[@class="dropdown__select"])[2]
 ${HOMEPAGE}                https://www.espn.com/fantasy
 ${BROWSER}                 Chrome
-${user}                    uitest_user_account@test.com
-${encrypted_password}      P0hIJnQ1V3BSIVNKQDhAa2pzZGhmaXd1ZWZnaG93Zjg3
-${greeting}                UI test!
-${league_id}               1724624906
+${user}                    abdul.waajib@zucitech.com
+${encrypted_password}      OXRmQi4zWTQjOGt1ayFqc2RramNid2l1Y2gyaXUzdTNocmtqNGZramV3Zg==
+${greeting}                uitest!
+${league_id}               496618003
 
 *** Keywords ***
 
@@ -32,23 +31,11 @@ Load players
     Begin Offline Draft
     Add players to all teams as league creator user and save the roster
 
-Reset draft
-    Click on LM tools
-    wait until element is visible    (//a[contains(text(),'Reset Draft')])[1]
-    click element    (//a[contains(text(),'Reset Draft')])[1]
-    wait until element is visible    //button[normalize-space()='Reset Draft']
-    click element    //button[normalize-space()='Reset Draft']
-    wait until element is visible    (//button[@aria-label='Reset Draft'])[1]
-    Sleep    5s
-    click element    (//button[@aria-label='Reset Draft'])[1]
-    Sleep    5s
-    Close Browser Session
-
 Select any fantasy team
     wait until element is visible   ${profile_Locator}
     mouse over        ${profile_Locator}
-    wait until element is visible   xpath:(//span[contains(text(),'My-Fantasy-League-8437')])[1]
-    click element      xpath:(//span[contains(text(),'My-Fantasy-League-8437')])[1]
+    wait until element is visible   xpath:(//span[contains(text(),'My-Fantasy-League-5027')])[1]
+    click element      xpath:(//span[contains(text(),'My-Fantasy-League-5027')])[1]
 
 Login into the espn site for drop
     ${decrypted_password}=    Get decrypted password ${encrypted_password}
@@ -56,7 +43,7 @@ Login into the espn site for drop
     click button      ${login_button}
     Select Frame      ${oneid_frame}
     wait until element is visible    ${Email_field}
-    input text        ${Email_field}       uitest_user_account@test.com
+    input text        ${Email_field}       ${user}
     wait until element is visible    ${Password_field}
     input password    ${Password_field}    ${decrypted_password}
     click button      ${login_button}
@@ -113,22 +100,8 @@ Click on confirm drop
     Click Element    //span[normalize-space()='Confirm']
     Sleep    10s
 
-Click on LM tools
-    Wait Until Element Is Visible    //span[contains(text(),'LM Tools')]
-    click element       //span[contains(text(),'LM Tools')]
-    Sleep    5s
-
 Click on roster moves
     wait until element is visible    //a[normalize-space()='Roster Moves']
     Execute JavaScript    window.document.evaluate("//a[normalize-space()='Roster Moves']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
     Click element    //a[normalize-space()='Roster Moves']
     Sleep    5s
-
-Select options from dropdown
-    wait until element is visible    ${dropdown1}
-    Select From List By Value       ${dropdown1}        dropPlayers
-    wait until element is visible    ${dropdown2}
-    Select From List By Value       ${dropdown2}        2
-    Wait Until Element Is Visible    //button[normalize-space()='Continue']
-    click element       //button[normalize-space()='Continue']
-    Sleep    3s

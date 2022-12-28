@@ -8,14 +8,13 @@ Library   lib/fantasyAPI/FantasyUtils.py
 *** Variables ***
 ${HOMEPAGE}                https://www.espn.com/fantasy/
 ${BROWSER}                 Chrome
-${user}                    abdultest@test.com
-# ${encrypted_password}      U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
-${greeting}                abdultest!
-${decrypted_password}      YWkCXza!aUn8YMn
+${user}                    test_user_account@test.com
+${encrypted_password}      U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
+${greeting}                test!
 
 *** Keywords ***
 Auth with Cookie Capture
-#    ${decrypted_password}=     Get decrypted password ${encrypted_password}
+   ${decrypted_password}=     Get decrypted password ${encrypted_password}
    Login Fantasy User    username=${user}    password=${decrypted_password}  expected_profile_name_span_value=${greeting}   url=${HOMEPAGE}
    ${espn_cookie}=     Fantasy API Cookie
    [Return]    ${espn_cookie}
