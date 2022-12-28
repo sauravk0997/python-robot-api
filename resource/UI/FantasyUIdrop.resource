@@ -81,6 +81,15 @@ Click on drop player and continue in LM tools
     Click Element    //span[normalize-space()='Continue']
     Sleep    5s
 
+Click on drop undroppable player and continue in LM tools
+    wait until element is visible   //button[@aria-label="Can't drop Ja Morant"]
+    Scroll Element Into View    //button[@aria-label="Can't drop Ja Morant"]
+    Sleep    5s
+    Click Element    //button[@aria-label="Can't drop Ja Morant"]
+    wait until element is visible    //span[normalize-space()='Continue']
+    Click Element    //span[normalize-space()='Continue']
+    Sleep    5s
+
 Click on drop player and continue
     wait until element is visible   //button[contains(@title,'Drop Player')]
     Execute JavaScript    window.document.evaluate("//button[contains(@title,'Drop Player')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
