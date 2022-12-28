@@ -7,7 +7,7 @@ Resource             resource/suite_setup_teardown_moveplayer.resource
 Resource             ../resource/FantasyDropResource.robot
 Library              RPA.JSON
 Suite Setup          Get a Fantasy League details
-# Suite Teardown       Delete League
+Suite Teardown       Delete League
 
 *** Variables ***
 ${droppedteamid}=    0                           #A dropped player will always have a teamid 0
