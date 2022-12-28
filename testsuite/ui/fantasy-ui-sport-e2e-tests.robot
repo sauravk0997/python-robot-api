@@ -2,7 +2,6 @@
 Resource    resource/UI/FantasyUIcommon.resource
 
 *** Variables ***
-${FANTASY_URL}     https://fantasy.espn.com/
 ${BASKETBALL_CREATE_LEAGUE_SLUG}    basketball/welcome?addata=fantasy_dropdown_fba2-22
 
 *** Test Cases ***
