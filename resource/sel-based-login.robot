@@ -25,5 +25,11 @@ Login to the application and get the user cookie
     ${espn_cookie}=     Fantasy API Cookie
     [Return]    ${espn_cookie}
 
+Auth with user log in and capturing Cookie 
+    [Arguments]    ${user}    ${password}    ${greeting}
+    Login Fantasy User    username=${user}    password=${password}  expected_profile_name_span_value=${greeting}   url=${HOMEPAGE}
+    ${espn_cookie}=     Fantasy API Cookie
+    [Return]    ${espn_cookie}
+
 Close the current active browser
     Browser shutdown

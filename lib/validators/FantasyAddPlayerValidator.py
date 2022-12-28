@@ -54,6 +54,7 @@ class FantasyAddPlayerValidator(object):
     @keyword('Get the droppable player and free-agent player id')
     def get_droppable_and_freeAgents_players(self, teamId, droppable_player_response, free_agent_response) -> list:
         try:
+            droppable_player_id = 0
             player_id_details = []
             random_no = random.randint(0, 35)
             team_id = int(teamId)-1
@@ -83,11 +84,12 @@ class FantasyAddPlayerValidator(object):
                         continue
                 if flag == True:
                     break    
+            
             player_id_details.append(droppable_player_id)   
             player_id_details.append(free_agents_id)
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
-        return player_id_details   
+        return player_id_details
 
     @keyword('Get the free-agent player id')
     def get_freeAgents_player_id(self, free_agent_response) -> int:
@@ -136,3 +138,19 @@ class FantasyAddPlayerValidator(object):
         except ValidationError as ve:
              raise Failure(f'Parsing failed :{ve.messages}')
         return on_Team_player_id 
+    
+    @keyword('Get the length of position C players')
+    def get_the_length_of_position_C_players(self, team_response) -> int:
+        try:
+            Count = 0
+            no_of_players = len(team_response.json()['teams'][0]['roster']['entries'])
+            for player in range(0, no_of_players):
+                entries = team_response.json()['teams'][0]['roster']['entries']
+                no_of_Position_C_player = entries[player]["playerPoolEntry"]["player"]["defaultPositionId"]
+                if no_of_Position_C_player == 5:
+                    Count += 1
+                else:
+                    continue
+        except ValidationError as ve:
+             raise Failure(f'Parsing failed :{ve.messages}')
+        return Count 
