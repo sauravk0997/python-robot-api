@@ -3,13 +3,12 @@ Documentation    All the Common objects and keywords
 Library          SeleniumLibrary
 Library          lib/fantasyUI/FantasyUICustomKeywords.py
 Library          lib/fantasyAPI/FantasyUtils.py
-Resource             resource/UI/Common/Common.resource
 Resource             resource/suite_setup_teardown_moveplayer.resource
 
 *** Variables ***
 ${HOMEPAGE_URL}            https://www.espn.com/
 ${profile_Locator}         global-user-trigger
-${login_button}            xpath://button[text()='Log In']
+${login_button_drop}       xpath://button[text()='Log In']
 ${oneid_frame}             id:oneid-iframe
 ${Email_field}             id:InputLoginValue
 ${Password_field}          id:InputPassword
@@ -18,7 +17,7 @@ ${dropdown1}               (//select[@class="dropdown__select"])[1]
 ${dropdown2}               (//select[@class="dropdown__select"])[2]
 ${HOMEPAGE}                https://www.espn.com/fantasy
 ${BROWSER}                 Chrome
-${user}                    abdul.waajib@zucitech.com
+${user}                    uitest3_user_account@test.com
 ${encrypted_password}      OXRmQi4zWTQjOGt1ayFqc2RramNid2l1Y2gyaXUzdTNocmtqNGZramV3Zg==
 ${greeting}                uitest!
 ${league_id}               496618003
@@ -40,13 +39,13 @@ Select any fantasy team
 Login into the espn site for drop
     ${decrypted_password}=    Get decrypted password ${encrypted_password}
     mouse over        ${profile_Locator}
-    click button      ${login_button}
+    click button      ${login_button_drop}
     Select Frame      ${oneid_frame}
     wait until element is visible    ${Email_field}
     input text        ${Email_field}       ${user}
     wait until element is visible    ${Password_field}
     input password    ${Password_field}    ${decrypted_password}
-    click button      ${login_button}
+    click button      ${login_button_drop}
 
 Click on drop button
     wait until element is visible   //div[@class='action-container absolute']//button[2]

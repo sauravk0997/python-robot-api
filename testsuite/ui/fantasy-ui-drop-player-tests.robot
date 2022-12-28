@@ -3,16 +3,19 @@ Library              Collections
 Library              OperatingSystem
 Library              SeleniumLibrary
 Library              RequestsLibrary
-Resource             resource/UI/FantasyUIdrop.resource
-Resource             resource/UI/Common/Common.resource
+Resource             resource/UI/Pages/FantasyDropPage.resource
+Resource             resource/UI/FantasyUIcommon.resource
 Test Setup           Load players
 Test Teardown        Reset draft
+
+*** Variables ***
+${url}        https://www.espn.com/
 
 *** Test Cases ***
 Drop a player from my team as a team manager
     [Documentation]    E2E - Add and drop players as a team manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Launch the Browser and Navigate to Espn site
+    Launch the Browser and Navigate to the ${url} site
     Login into the espn site for drop
     Select any fantasy team
     Click on drop button
@@ -25,7 +28,7 @@ Drop a player from my team as a team manager
 Drop a player from my team as a league manager
     [Documentation]    E2E - Add and drop players as a league manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Launch the Browser and Navigate to Espn site
+    Launch the Browser and Navigate to the ${url} site
     Login into the espn site for drop
     Select any fantasy team
     Click on LM tools
@@ -40,7 +43,7 @@ Drop a player from my team as a league manager
 Drop a player from droppable list as a team manager
     [Documentation]    E2E - Add and drop players as a team manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Launch the Browser and Navigate to Espn site
+    Launch the Browser and Navigate to the ${url} site
     Login into the espn site for drop
     Select any fantasy team
     Click on drop button
@@ -53,7 +56,7 @@ Drop a player from droppable list as a team manager
 Drop a player from undroppable list as a league manager
     [Documentation]    E2E - Add and drop players as a league manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Launch the Browser and Navigate to Espn site
+    Launch the Browser and Navigate to the ${url} site
     Login into the espn site for drop
     Select any fantasy team
     Click on LM tools
