@@ -12,8 +12,8 @@ ${user}                    test_user_account2@test.com
 ${encrypted_password}      U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
 @{user_emails}        test_api_user1@test.com    test_api_user2@test.com    test_api_user3@test.com
 ${PROFILE_LOGIN_BUTTON}    xpath://button[text()='Log In']
-${dropdown1}            (//select[@class="dropdown__select"])[1]
-${dropdown2}            (//select[@class="dropdown__select"])[2]
+${roster_moves_dropdown1}            (//select[@class="dropdown__select"])[1]
+${roster_moves_dropdown2}            (//select[@class="dropdown__select"])[2]
 
 *** Keywords ***
 Initialize Variables

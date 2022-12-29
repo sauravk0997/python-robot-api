@@ -6,43 +6,36 @@ Library          lib/fantasyAPI/FantasyUtils.py
 Resource             resource/suite_setup_teardown_moveplayer.resource
 
 *** Variables ***
-${HOMEPAGE_URL}            https://www.espn.com/
-${profile_Locator}         global-user-trigger
 ${login_button_drop}       xpath://button[text()='Log In']
-${oneid_frame}             id:oneid-iframe
-${Email_field}             id:InputLoginValue
-${Password_field}          id:InputPassword
 @{player_list_xpath}       //button[contains(@title,'Drop Player')]
-${dropdown1}               (//select[@class="dropdown__select"])[1]
-${dropdown2}               (//select[@class="dropdown__select"])[2]
-${HOMEPAGE}                https://www.espn.com/fantasy
 ${BROWSER}                 Chrome
 ${user}                    uitest3_user_account@test.com
 ${encrypted_password}      OXRmQi4zWTQjOGt1ayFqc2RramNid2l1Y2gyaXUzdTNocmtqNGZramV3Zg==
 ${greeting}                uitest!
-${league_id}               496618003
+${league_id}               792931688
 
 *** Keywords ***
 
 Load players
     Initialize the user cookie
+    Close the current active browser
     Schedule Offline Draft
     Begin Offline Draft
     Add players to all teams as league creator user and save the roster
 
 Select any fantasy team
-    wait until element is visible   ${profile_Locator}
-    mouse over        ${profile_Locator}
-    wait until element is visible   xpath:(//span[contains(text(),'My-Fantasy-League-5027')])[1]
-    click element      xpath:(//span[contains(text(),'My-Fantasy-League-5027')])[1]
+    wait until element is visible   ${profile_icon}
+    mouse over        ${profile_icon}
+    wait until element is visible   xpath:(//span[contains(text(),'My-Fantasy-League-5324')])[1]
+    click element      xpath:(//span[contains(text(),'My-Fantasy-League-5324')])[1]
 
 Login into the espn site for drop
     ${decrypted_password}=    Get decrypted password ${encrypted_password}
-    mouse over        ${profile_Locator}
+    mouse over        ${profile_icon}
     click button      ${login_button_drop}
     Select Frame      ${oneid_frame}
-    wait until element is visible    ${Email_field}
-    input text        ${Email_field}       ${user}
+    wait until element is visible    ${username_field}
+    input text        ${username_field}       ${user}
     wait until element is visible    ${Password_field}
     input password    ${Password_field}    ${decrypted_password}
     click button      ${login_button_drop}
