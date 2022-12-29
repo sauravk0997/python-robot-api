@@ -7,14 +7,20 @@ Library             String
 Resource            resource/UI/Pages/CreateLeaguePage.resource
 
 *** Variables ***
-${FANTASY_URL}     https://fantasy.espn.com/
-${user}                    test_user_account2@test.com
-${encrypted_password}      U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
-@{user_emails}        test_api_user1@test.com    test_api_user2@test.com    test_api_user3@test.com
-${PROFILE_LOGIN_BUTTON}    xpath://button[text()='Log In']
-${ROSTER_MOVES_DROPDOWN1}            (//select[@class="dropdown__select"])[1]
-${ROSTER_MOVES_DROPDOWN2}            (//select[@class="dropdown__select"])[2]
-${ROSTER_MOVES_OPTION}        //a[normalize-space()='Roster Moves']
+${FANTASY_URL}                        https://fantasy.espn.com/
+${user}                               test_user_account2@test.com
+${encrypted_password}                 U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
+@{user_emails}                        test_api_user1@test.com    test_api_user2@test.com    test_api_user3@test.com
+${ROSTER_MOVES_DROPDOWN1}             (//select[@class="dropdown__select"])[1]
+${LM_TOOLS_CONTINUE_BUTTON}           //button[normalize-space()='Continue']
+${ROSTER_MOVES_DROPDOWN2}             (//select[@class="dropdown__select"])[2]
+${ROSTER_MOVES_OPTION}                //a[normalize-space()='Roster Moves']
+${LM_TOOLS_OPTION}                    //span[contains(text(),'LM Tools')]
+${RESET_DRAFT_OPTION}                 (//a[contains(text(),'Reset Draft')])
+${RESET_DRAFT_BUTTON1}                //button[normalize-space()='Reset Draft']
+${RESET_DRAFT_BUTTON2}                (//button[@aria-label='Reset Draft'])
+${CONTINUE_LEAGUE_OFFICE_BUTTON}      //a[normalize-space()='Continue to League Office']
+${PROFILE_LOGIN_BUTTON}               xpath://button[text()='Log In']
 
 *** Keywords ***
 Initialize Variables
@@ -43,11 +49,11 @@ Launch the Browser and Navigate to the ${url} site
     Go To                    ${url}
     Maximize Browser Window
 
-Select ${team} fantasy team
+Select my fantasy ${MY_LEAGUE}
     wait until element is visible   ${profile_icon}
     mouse over        ${profile_icon}
-    wait until element is visible   xpath:(//span[contains(text(),'${team}')])[1]
-    click element      xpath:(//span[contains(text(),'${team}')])[1]
+    wait until element is visible   xpath:(//span[contains(text(),'${MY_LEAGUE}')])[1]
+    click element      xpath:(//span[contains(text(),'${MY_LEAGUE}')])[1]
 
 Click on roster moves
     wait until element is visible    ${ROSTER_MOVES_OPTION}
@@ -110,3 +116,32 @@ Login into the espn site with user credentials ${username} and ${password}
     wait until element is visible    ${password_field}
     input password    ${password_field}    ${password}
     click button      ${login_button}
+Click on LM tools
+    Wait Until Element Is Visible    ${LM_TOOLS_OPTION}
+    click element       ${LM_TOOLS_OPTION}
+    Sleep    5s
+
+Select options from dropdown
+    wait until element is visible    ${ROSTER_MOVES_DROPDOWN1}
+    Select From List By Value       ${ROSTER_MOVES_DROPDOWN1}        dropPlayers
+    wait until element is visible    ${ROSTER_MOVES_DROPDOWN2}
+    Select From List By Value       ${ROSTER_MOVES_DROPDOWN2}        2
+    Wait Until Element Is Visible    ${LM_TOOLS_CONTINUE_BUTTON}
+    click element       ${LM_TOOLS_CONTINUE_BUTTON}
+    Sleep    3s
+
+Reset draft
+    Click on LM tools
+    wait until element is visible    ${RESET_DRAFT_OPTION}
+    click element    ${RESET_DRAFT_OPTION}
+    wait until element is visible    ${RESET_DRAFT_BUTTON1}
+    click element    ${RESET_DRAFT_BUTTON1}
+    wait until element is visible    ${RESET_DRAFT_BUTTON2}
+    Sleep    5s
+    click element    ${RESET_DRAFT_BUTTON2}
+    Sleep    5s
+    click element    ${CONTINUE_LEAGUE_OFFICE_BUTTON}
+    Logout from Fantasy Application
+    Log To Console    ***** User logged out *****
+    FantasyUIcommon.Close the current Browser
+    Log To Console    ***** All browsers closed *****
