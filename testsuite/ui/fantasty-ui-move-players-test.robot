@@ -4,7 +4,7 @@ Documentation        Moving players of any fantasy team in fantasy league Positi
 Metadata             Author      Yusuf Mubarak M
 Metadata             Date        20-12-2022
 Resource             resource/UI/FantasyUICommonMove.resource
-Resource             resource/UI/Pages/TeamsPage.robot
+Resource             resource/UI/Pages/FantasyUIMovePlayer.resource
 Suite Setup          Launch the site and create a test account and a fantasy league
 Suite Teardown       Delete the account and close browser
 

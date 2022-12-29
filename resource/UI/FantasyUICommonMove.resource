@@ -63,7 +63,7 @@ Launch the site and create a test account and a fantasy league
     sleep     4s
     wait until element is visible    ${SIGNUP_BUTTON}          timeout=10s
     click button                     ${SIGNUP_BUTTON}
-    sleep     2s
+    sleep     4s
     set global variable              ${random_email}
     Create a League
 
