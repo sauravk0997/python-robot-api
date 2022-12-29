@@ -9,7 +9,6 @@ ${My_TEAM_ACTIVE}                         xpath://li[@class='myTeam active NavSe
 ${MOVEABLE_LINEUP_PLAYER}                 xpath://div[not(@title='Bench') and @class='jsx-2810852873 table--cell']//ancestor::tr//child::td[3]//descendant::button
 ${LINEUP_PLAYERS_ELIGIBLE_SLOTS}          xpath://button[@title='MOVE']//preceding::td[2]/div[not(text()='Bench')]//following::span[5]
 ${LINEUP_MOVEABLE_PLAYER_NAME}            xpath://button[@title='MOVE']//preceding::td[2]/div[not(text()='Bench')]//following::div[1]
-#${here_player_name}                      xpath://button[@title='HERE']//preceding::td[1]/div
 ${LINEUP_PLAYERS_ON_SLOT_PREFIX}          xpath://button[@title='MOVE']//preceding::td[2]/div[not(text()='Bench')]
 ${EMPTY_BENCH_LOCATOR}                    xpath://div[@title='Bench']//following::div[1][contains(@title,"Player")]//following::button
 ${MOVEABLE_BENCH_PLAYER}                  xpath://div[@title='Bench']//following::div[1]//following::button
