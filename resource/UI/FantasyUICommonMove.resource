@@ -60,9 +60,10 @@ Launch the site and create a test account and a fantasy league
     ${random_email}                  generate a random email
     input text                       ${NEW_EMAIL_FIELD}        ${random_email}
     input password                   ${NEW_PASSWORD_FIELD}     test_api
+    sleep     4s
     wait until element is visible    ${SIGNUP_BUTTON}          timeout=10s
     click button                     ${SIGNUP_BUTTON}
-    sleep     8s
+    sleep     2s
     set global variable              ${random_email}
     Create a League
 

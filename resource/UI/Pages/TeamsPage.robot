@@ -61,10 +61,12 @@ Check and Move any eligible existing lineup player to Bench
            ${random_player}     Get random player no in range of ${move_button_lineup_players}
            ${player_names}      Get WebElements         ${LINEUP_MOVEABLE_PLAYER_NAME}
            ${Player_name_for_moving_to_Bench}       get element attribute    ${player_names}[${random_player}]     title
+           sleep    2s
            scroll element into view    ${move_button_lineup_players}[${random_player}]
            click button     ${move_button_lineup_players}[${random_player}]
            ${bench_status}    RUN KEYWORD AND RETURN STATUS    wait until element is visible    ${EMPTY_BENCH_LOCATOR}     timeout=10s
            IF    ${bench_status} == True
+              sleep    2s
               scroll element into view    ${EMPTY_BENCH_LOCATOR}
               click button    ${EMPTY_BENCH_LOCATOR}
               set global variable    ${Player_name_for_moving_to_Bench}
@@ -91,12 +93,14 @@ Move any eligible Bench Player to lineup
     IF    ${length_of_moveable_bench_player} != 0
         ${random_no}     Get random player no in range of ${bench_players}
         @{player}      get webelements       ${BENCH_MOVEABLE_PLAYER_NAME}
+        sleep    2s
         scroll element into view    ${bench_players}[${random_no}]
         click button    ${bench_players}[${random_no}]
         ${bench_player_moved_lineup}    get element attribute   ${player}[${random_no}]     title
         set global variable     ${bench_player_moved_lineup}
         ${empty_lineup}    run keyword and return status   wait until element is visible    ${EMPTY_LINEUP_SLOT}     timeout=10s
         IF    ${empty_lineup} == True
+           sleep    2s
            scroll element into view    ${EMPTY_LINEUP_SLOT}
            click button    ${EMPTY_LINEUP_SLOT}
            ${bench_player_moved_lineup_status}    convert to boolean    true
@@ -107,9 +111,9 @@ Move any eligible Bench Player to lineup
           ${length_of_moveable_lineup_player}     get length    ${lineup_players}
           IF    ${length_of_moveable_lineup_player} != 0
              ${random_player}    Get random player no in range of ${lineup_players}
+             sleep    2s
              scroll element into view    ${lineup_players}[${random_player}]
              click button    ${lineup_players}[${random_player}]
-             sleep    5s
              ${bench_player_moved_lineup_status}    convert to boolean    true
              set global variable    ${bench_player_moved_lineup_status}
           ELSE
