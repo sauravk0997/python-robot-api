@@ -11,6 +11,7 @@ ${FANTASY_URL}     https://fantasy.espn.com/
 ${user}                    test_user_account2@test.com
 ${encrypted_password}      U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
 @{user_emails}        test_api_user1@test.com    test_api_user2@test.com    test_api_user3@test.com
+${PROFILE_LOGIN_BUTTON}    xpath://button[text()='Log In']
 
 *** Keywords ***
 Initialize Variables
@@ -84,3 +85,13 @@ log in to the site
     input password    ${password_field}    APIuser@ESPN
     click button      ${login_button}
     Unselect Frame
+
+Login into the espn site with user credentials ${username} and ${password}
+    mouse over        ${profile_icon}
+    click button      ${PROFILE_LOGIN_BUTTON}
+    Select Frame      ${oneid_frame}
+    wait until element is visible    ${username_field}
+    input text        ${username_field}       ${username}
+    wait until element is visible    ${password_field}
+    input password    ${password_field}    ${password}
+    click button      ${login_button}
