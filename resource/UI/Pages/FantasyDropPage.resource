@@ -1,7 +1,6 @@
 *** Settings ***
 Documentation    All the Common objects and keywords
 Library          SeleniumLibrary
-Library          lib/fantasyUI/FantasyUICustomKeywords.py
 Library          lib/fantasyAPI/FantasyUtils.py
 Resource             resource/suite_setup_teardown_moveplayer.resource
 
