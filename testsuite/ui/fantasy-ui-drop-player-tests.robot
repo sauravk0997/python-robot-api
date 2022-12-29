@@ -9,15 +9,16 @@ Test Setup           Load players
 Test Teardown        Reset draft
 
 *** Variables ***
-${url}        https://www.espn.com/
+${URL}        https://www.espn.com/
+${TEAM}       My-Fantasy-League-5324
 
 *** Test Cases ***
 Drop a player from my team as a team manager
     [Documentation]    E2E - Add and drop players as a team manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Launch the Browser and Navigate to the ${url} site
+    Launch the Browser and Navigate to the ${URL} site
     Login into the espn site for drop
-    Select any fantasy team
+    Select ${TEAM} fantasy team
     Click on drop button
     ${before_drop}    check no of players available to drop
     Click on drop player and continue
@@ -28,9 +29,9 @@ Drop a player from my team as a team manager
 Drop a player from my team as a league manager
     [Documentation]    E2E - Add and drop players as a league manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Launch the Browser and Navigate to the ${url} site
+    Launch the Browser and Navigate to the ${URL} site
     Login into the espn site for drop
-    Select any fantasy team
+    Select ${TEAM} fantasy team
     Click on LM tools
     Click on roster moves
     Select options from dropdown
@@ -43,9 +44,9 @@ Drop a player from my team as a league manager
 Drop a player from droppable list as a team manager
     [Documentation]    E2E - Add and drop players as a team manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Launch the Browser and Navigate to the ${url} site
+    Launch the Browser and Navigate to the ${URL} site
     Login into the espn site for drop
-    Select any fantasy team
+    Select ${TEAM} fantasy team
     Click on drop button
     ${before_drop}    check no of players available to drop
     Click on drop player and continue
@@ -56,9 +57,9 @@ Drop a player from droppable list as a team manager
 Drop a player from undroppable list as a league manager
     [Documentation]    E2E - Add and drop players as a league manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Launch the Browser and Navigate to the ${url} site
+    Launch the Browser and Navigate to the ${URL} site
     Login into the espn site for drop
-    Select any fantasy team
+    Select ${TEAM} fantasy team
     Click on LM tools
     Click on roster moves
     Select options from dropdown

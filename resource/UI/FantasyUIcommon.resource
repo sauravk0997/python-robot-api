@@ -12,8 +12,9 @@ ${user}                    test_user_account2@test.com
 ${encrypted_password}      U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
 @{user_emails}        test_api_user1@test.com    test_api_user2@test.com    test_api_user3@test.com
 ${PROFILE_LOGIN_BUTTON}    xpath://button[text()='Log In']
-${roster_moves_dropdown1}            (//select[@class="dropdown__select"])[1]
-${roster_moves_dropdown2}            (//select[@class="dropdown__select"])[2]
+${ROSTER_MOVES_DROPDOWN1}            (//select[@class="dropdown__select"])[1]
+${ROSTER_MOVES_DROPDOWN2}            (//select[@class="dropdown__select"])[2]
+${ROSTER_MOVES_OPTION}        //a[normalize-space()='Roster Moves']
 
 *** Keywords ***
 Initialize Variables
@@ -41,6 +42,18 @@ Launch the Browser and Navigate to the ${url} site
     create webdriver         Chrome    executable_path=${chrome_driver_path}
     Go To                    ${url}
     Maximize Browser Window
+
+Select ${team} fantasy team
+    wait until element is visible   ${profile_icon}
+    mouse over        ${profile_icon}
+    wait until element is visible   xpath:(//span[contains(text(),'${team}')])[1]
+    click element      xpath:(//span[contains(text(),'${team}')])[1]
+
+Click on roster moves
+    wait until element is visible    ${ROSTER_MOVES_OPTION}
+    Execute JavaScript    window.document.evaluate("//a[normalize-space()='Roster Moves']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
+    Click element    ${ROSTER_MOVES_OPTION}
+    Sleep    5s
 
 Close the current Browser
     close browser
