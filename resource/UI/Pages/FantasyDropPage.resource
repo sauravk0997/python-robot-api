@@ -16,6 +16,8 @@ ${user}                       uitest3_user_account@test.com
 ${encrypted_password}         OXRmQi4zWTQjOGt1ayFqc2RramNid2l1Y2gyaXUzdTNocmtqNGZramV3Zg==
 ${greeting}                   uitest!
 ${league_id}                  792931688
+${OUT_STATUS}                 //span[@title='Out']
+${DTD_STATUS}                 //span[@title='Day-To-Day'']
 
 *** Keywords ***
 
