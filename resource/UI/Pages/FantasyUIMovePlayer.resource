@@ -35,6 +35,7 @@ User is navigated to teams page
     page should contain            My Team
     wait until element is visible  ${My_TEAM_ACTIVE}
     page should contain element    ${My_TEAM_ACTIVE}
+    sleep    3s
 
 Check for the players in the team who are available to move from there existing positions
     @{move_button_players}    Get WebElements    ${MOVEABLE_LINEUP_PLAYER}
@@ -107,7 +108,6 @@ Move any eligible Bench Player to lineup
     IF    ${length_of_moveable_bench_player} != 0
         ${random_no}     Get random player no in range of ${bench_players}
         @{player}      get webelements       ${BENCH_MOVEABLE_PLAYER_NAME}
-        sleep    2s
         scroll element into view    ${bench_players}[${random_no}]
         click button    ${bench_players}[${random_no}]
         ${bench_player_moved_lineup}    get element attribute   ${player}[${random_no}]     title

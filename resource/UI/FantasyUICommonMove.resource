@@ -51,7 +51,7 @@ ${ROSTER_MOVES}                            xpath://a[text()='Roster Moves']
 ${DELETE_LEAGUE_LINK}                      xpath://a[text()='Delete League']
 ${DELETE_LEAGUE_BUTTON}                    xpath://button[text()='Delete League']
 ${CONFIRM_DELETE_LEAGUE_BUTTON}            xpath://span[text()='Confirm']//parent::button
-@{USER_EMAILS}                             test_ui6@test.com        test_ui7@test.com      test_ui@test.com
+@{USER_EMAILS}                             test_ui_user1@test.com        test_ui_user2@test.com      test_ui_user3@test.com
 
 *** Keywords ***
 Launch the Browser and Navigate to Espn site
@@ -136,6 +136,7 @@ Send invitations, Accept Invitation send by the inviter and create teams
 
 Login to the site using the created test account
     Login into the espn site from Homepage        ${random_email}
+    sleep    3s
     wait until element is visible   ${PROFILE_LOCATOR}     timeout=10s
     mouse over                      ${PROFILE_LOCATOR}
     click element                   xpath://span[text()='TestLeague']
@@ -145,6 +146,7 @@ Begin Draft
     click element    ${SCHEDULE_DRAFT_BUTTON}
     wait until element is visible    ${OFFLINE_DRAFT_TYPE}       timeout=10s
     click element    ${OFFLINE_DRAFT_TYPE}
+    sleep       2s
     click button     ${SAVE_DRAFT_TYPE}
     sleep       3s
 
@@ -240,8 +242,6 @@ Login into the espn site from Homepage
 
 Login into the espn site
     [Arguments]            ${email}
-#    mouse over                       ${PROFILE_ICON_AFTER_LOGIN}
-#    click button                     ${LOGIN_BUTTON}
     Select Frame                     id:disneyid-iframe
     wait until element is visible    ${USER_EMAIL_FIELD}
     input text                       ${USER_EMAIL_FIELD}        ${email}
@@ -249,12 +249,6 @@ Login into the espn site
     input password                   ${USER_PASSWORD_FIELD}     test_ui
     click button                     ${LOGIN_BUTTON}
     Unselect Frame
-
-Select any fantasy team from the existing league ${league_name} to move players
-     go to                           ${HOMEPAGE_URL}
-     wait until element is visible   ${PROFILE_LOCATOR}     timeout=10s
-     mouse over                      ${PROFILE_LOCATOR}
-     click element                   xpath://span[text()='${league_name}']
 
 Select any fantasy league ${league_name} to move players
      go to                           ${HOMEPAGE_URL}
