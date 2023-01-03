@@ -3,11 +3,12 @@ Documentation    All the page objects and keywords of landing page
 Library          SeleniumLibrary
 Library          Collections
 Library          lib/fantasyUI/FantasyUIutils.py
+Library          String
 
 *** Variables ***
 ${My_TEAM_ACTIVE}                         xpath://li[@class='myTeam active NavSecondary__Item']
 ${MOVEABLE_LINEUP_PLAYER}                 xpath://div[not(@title='Bench') and @class='jsx-2810852873 table--cell']//ancestor::tr//child::td[3]//descendant::button
-${LINEUP_PLAYERS_ELIGIBLE_SLOTS}          xpath://button[@title='MOVE']//preceding::td[2]/div[not(text()='Bench')]//following::span[5]
+${LINEUP_PLAYERS_ELIGIBLE_SLOTS}          xpath://div[not(@title='Bench') and @class='jsx-2810852873 table--cell']//ancestor::tr//child::button//preceding::td[1]//descendant::span[@class='playerinfo__playerpos ttu']
 ${LINEUP_MOVEABLE_PLAYER_NAME}            xpath://button[@title='MOVE']//preceding::td[2]/div[not(text()='Bench')]//following::div[1]
 ${LINEUP_PLAYERS_ON_SLOT_PREFIX}          xpath://button[@title='MOVE']//preceding::td[2]/div[not(text()='Bench')]
 ${EMPTY_BENCH_LOCATOR}                    xpath://div[@title='Bench']//following::div[1][contains(@title,"Player")]//following::button
@@ -15,8 +16,20 @@ ${MOVEABLE_BENCH_PLAYER}                  xpath://div[@title='Bench']//following
 ${EMPTY_LINEUP_SLOT}                      xpath://div[@title='Player']//parent::td//preceding::td[1]/div[not(text()='IR')]//following::div[6]/button[@title="HERE"]
 ${LINEUP_PLAYER_HERE_BUTTON}              xpath://button[@title='HERE']
 ${BENCH_MOVEABLE_PLAYER_NAME}             xpath://button[@title='MOVE']//preceding::td[2]/div[text()='Bench']//following::div[1]
+${DROPDOWNS}                              xpath://select[@class='dropdown__select']
+${CONTINUE_BUTTON}                        xpath://button[text()='Continue']
 
 *** Keywords ***
+Select any team in the league from edit roster page
+    @{options}     get webelements    ${DROPDOWNS}
+    wait until element is visible     ${options}[0]
+    select from list by value         ${options}[0]        editRoster
+    ${random_value}    generate random string            1        234
+    wait until element is visible     ${options}[1]
+    select from list by value         ${options}[1]        ${random_value}
+    click button                      ${CONTINUE_BUTTON}
+
+
 User is navigated to teams page
     execute javascript             window.scrollTo(0, document.body.scrollHeight)
     page should contain            My Team
@@ -77,6 +90,8 @@ Check and Move any eligible existing lineup player to Bench
            END
        ELSE
           log        Lineup transaction could not be completed, as lineup is locked
+          ${bench_status}    convert to boolean    false
+          set global variable    ${bench_status}
        END
 
 Verify whether the Player is Moved to Bench
