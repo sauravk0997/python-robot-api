@@ -25,9 +25,9 @@ ${MEMBER_INVITE_SLUG}     invites?copyLMOnInvite=false&notifyUnjoined=false
 ${DRAFT_SETTINGS_SLUG}    settings?scoringPeriodId=0
 ${DRAFT_DETAILS_SLUG}     draftDetail
 ${TRANSACTIONS_SLUG}    transactions/
-@{user_emails}        test_api_user1@test.com    test_api_user2@test.com    test_api_user3@test.com
-@{member_ids}         DADA6BC1-6F16-4B4C-9E34-526B4870B891    F53C173D-F557-4E6E-B576-B12C9BE2C80F    4E0A1098-59AA-492E-ABE1-32C3A44B0233
-@{display_name}       ESPNFAN3016725091    ESPNFAN3292075826    ESPNFAN4644965931
+@{user_emails}        test_api_user7@test.com    test_api_user2@test.com    test_api_user3@test.com
+@{member_ids}         3ECB5A72-B1C2-4BD5-841A-BB5EE5811263    F53C173D-F557-4E6E-B576-B12C9BE2C80F    4E0A1098-59AA-492E-ABE1-32C3A44B0233
+@{display_name}       ESPNFAN7363626398    ESPNFAN3292075826    ESPNFAN4644965931
 
 *** Keywords ***
 A GET request to ${endpoint} should respond with ${status}

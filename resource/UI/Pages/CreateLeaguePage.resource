@@ -25,6 +25,15 @@ ${DELETE_LEAGUE_TEXT}         xpath://a[text()='Delete League']
 ${DELETE_LEAGUE_BUTTON}       xpath://button[text()='Delete League']
 ${CONFIRM_TEXT}               xpath://span[text()='Confirm']
 ${SUCCESS_HEADING}            css:.success-heading
+${OFFLINE_DRAFT_TYPE}         xpath://label[text()="Offline"]
+${SAVE_DRAFT_TYPE}            xpath://button[text()='Save Changes']
+${EDIT_DRAFT_SETTINGS}        xpath://a[text()='Edit Draft Settings']
+${INPUT_OFFLINE_DRAFT}        xpath://a[text()='Input Offline Draft Results']
+${BEGIN_OFFLINE_DRAFT}        xpath://button[text()='Begin Offline Draft']
+${PLAYER_NAMES}               xpath://input[@placeholder='Player Name']
+${SAVE_ROSTER}                xpath:(//button[text()='Save Roster'])[4]
+${FINISH_BUTTON}              xpath://button[text()='I Am Finished Entering Results']
+${RELEASE_ROSTER}             xpath://span[text()='Release Rosters']
 
 *** Keywords ***
 Create a league
@@ -88,3 +97,59 @@ Delete the league
     Wait Until Element Is Visible    ${SUCCESS_HEADING}
     ${success_text}=    Get Text    ${SUCCESS_HEADING}
     Should Be Equal As Strings    ${success_text}    Success!    msg=The expected and actual strings are not Equal
+
+Schedule Offline Draft
+    ${present}=    Run Keyword And Return Status    Element Should Be Visible    ${DISNEY_ID_IFRAME}
+    Run Keyword If    ${present}    
+    ...    Re-login to the fantasy application as a root user
+    ...  ELSE    Run Keywords
+    ...    Logout from Fantasy Application
+    ...    Re-login to the fantasy application as a root user
+    Sleep    3
+    Wait Until Element Is Visible    ${MY_TEAMS_ICON}
+    Mouse Over       ${MY_TEAMS_ICON}
+    click element    xpath://span[text()='${league_name}']
+    Wait Until Element Is Visible     ${LM_TOOLS}
+    Click Element   ${LM_TOOLS}
+    Wait Until Element Is Visible    ${EDIT_DRAFT_SETTINGS}
+    click element     ${EDIT_DRAFT_SETTINGS}
+    wait until element is visible    ${OFFLINE_DRAFT_TYPE}       timeout=10s
+    click element    ${OFFLINE_DRAFT_TYPE}
+    click button     ${SAVE_DRAFT_TYPE}
+Begin Offline Draft
+    Wait Until Element Is Visible     ${LM_TOOLS}
+    Click Element   ${LM_TOOLS}
+    # Wait Until Element Is Visible    ${EDIT_DRAFT_SETTINGS}
+    # click element     ${EDIT_DRAFT_SETTINGS}
+    Wait Until Element Is Visible    ${INPUT_OFFLINE_DRAFT}
+    click element     ${INPUT_OFFLINE_DRAFT}
+    Wait Until Element Is Visible    ${BEGIN_OFFLINE_DRAFT}
+    Click Button     ${BEGIN_OFFLINE_DRAFT}
+
+Add players to all teams as league creator user and save the roster
+    Add players to team 1
+    Add players to team 2
+    Add players to team 3
+    Add players to team 4
+    Click Button    ${FINISH_BUTTON}
+    Click Button    ${RELEASE_ROSTER}
+
+Add players to team ${team_no}
+    wait until element is visible             ${PLAYER_NAMES}           timeout=10s
+    @{players_elements}    get webelements    ${PLAYER_NAMES}
+    ${players_list}     load json from file           resource/UI/offlineDraftTeam${team_no}.json
+    FOR    ${index}    IN RANGE    13
+    #   IF    (${team_no} == 3) and (${index} == 12)
+    #       Scroll Element Into View    xpath://div[@class='InnerLayout__child'][4]//div[@class='Table__Title']   
+    #   END
+      ${name}     get value from json     ${players_list}      $.Player${index}
+      input text    ${players_elements}[${index}]      ${name}
+      wait until element is visible      //button[@data-player-search-playername="${name}"]
+      click button    //button[@data-player-search-playername="${name}"]
+      Scroll Element Into View    ${SAVE_ROSTER}
+      Sleep    1
+    #   ${incremented_index}=    Evaluate    ${index}+1
+    #   Scroll Element Into View    xpath:(//button[text()='Save Roster'])[${incremented_index}]
+    END
+    Scroll Element Into View    xpath:(//button[text()='Save Roster'])[${team_no}]
+    Click Button    xpath:(//button[text()='Save Roster'])[${team_no}]

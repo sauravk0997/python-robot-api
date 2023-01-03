@@ -10,7 +10,7 @@ Resource            resource/UI/Pages/CreateLeaguePage.resource
 ${FANTASY_URL}                        https://fantasy.espn.com/
 ${user}                               test_user_account2@test.com
 ${encrypted_password}                 U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
-@{user_emails}                        test_api_user1@test.com    test_api_user2@test.com    test_api_user3@test.com
+@{user_emails}                        test_api_user7@test.com    test_api_user2@test.com    test_api_user3@test.com
 ${ROSTER_MOVES_DROPDOWN1}             (//select[@class="dropdown__select"])[1]
 ${LM_TOOLS_CONTINUE_BUTTON}           //button[normalize-space()='Continue']
 ${ROSTER_MOVES_DROPDOWN2}             (//select[@class="dropdown__select"])[2]
