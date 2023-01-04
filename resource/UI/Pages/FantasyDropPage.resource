@@ -90,6 +90,19 @@ Click on drop player and continue
     Click Element    ${CONTINUE_BUTTON}
     Sleep    5s
 
+Click on drop player who is DTD and continue in LM tools
+    Set Selenium Implicit Wait    5s
+    Scroll Element Into View    //span[@title='Day-To-Day']
+    ${c} =   Get Element Count   //span[@title='Day-To-Day']
+    Run Keyword If   ${c}>0    Get player name and drop
+
+Get player name and drop
+    ${DTD_player}=    Get Element Attribute    //span[@title='Day-To-Day']//parent::div    title
+    Sleep    2s
+    Scroll Element Into View    //button[@aria-label='Drop Player ${DTD_player}']
+    Execute Javascript    window.scrollTo(0, window.scrollY+height)
+    Click Element    //button[@aria-label='Drop Player ${DTD_player}']
+
 check no of players available to drop
     @{player_list}=       Get WebElements    ${DROP_PLAYERS_LIST}
     ${length}    Get Length    ${player_list}

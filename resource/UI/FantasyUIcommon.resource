@@ -5,6 +5,7 @@ Library             lib/fantasyUI/FantasyUIutils.py
 Library             lib/fantasyAPI/FantasyUtils.py
 Library             String
 Resource            resource/UI/Pages/CreateLeaguePage.resource
+# Resource            resource/UI/FantasyUICommonMove.resource
 
 *** Variables ***
 ${FANTASY_URL}                        https://fantasy.espn.com/
@@ -14,6 +15,7 @@ ${ENCRYPTED_PASSWORD1}                VUl1c2VyQEVTUE4=
 @{user_emails}                        ui_test_user1@test.com    ui_test_user2@test.com    ui_test_user3@test.com
 ${ROSTER_MOVES_DROPDOWN1}             (//select[@class="dropdown__select"])[1]
 ${LM_TOOLS_CONTINUE_BUTTON}           //button[normalize-space()='Continue']
+${SIGNUP_BUTTON}                           xpath://button[text()='Sign Up']
 ${ROSTER_MOVES_DROPDOWN2}             (//select[@class="dropdown__select"])[2]
 ${ROSTER_MOVES_OPTION}                //a[normalize-space()='Roster Moves']
 ${LM_TOOLS_OPTION}                    //span[contains(text(),'LM Tools')]
@@ -22,6 +24,25 @@ ${RESET_DRAFT_BUTTON1}                //button[normalize-space()='Reset Draft']
 ${RESET_DRAFT_BUTTON2}                (//button[@aria-label='Reset Draft'])
 ${CONTINUE_LEAGUE_OFFICE_BUTTON}      //a[normalize-space()='Continue to League Office']
 ${PROFILE_LOGIN_BUTTON}               xpath://button[text()='Log In']
+${FIRST_NAME_FIELD}                        id:InputFirstName
+${LAST_NAME_FIELD}                         id:InputLastName
+${NEW_EMAIL_FIELD}                         id:InputEmail
+${NEW_PASSWORD_FIELD}                      id:password-new
+${LEAGUE_CREATE_URL}                       https://fantasy.espn.com/basketball/league/create?ex_cid=FBA2018_RightRailCreate
+${LEAGUE_NAME_FIELD}                       xpath://input[@class='form__control LeagueNameInput']
+${NO_OF_TEAMS}                             xpath://div[text()=4]//parent::div
+${LEAGUE_CREATE_BUTTON}                    xpath://button[text()='Create League']
+${DISMISS_INVITE}                          xpath://div[@class='lightbox__closebtn__wrap flex items-center justify-center']
+${SCHEDULE_DRAFT_BUTTON}                   xpath://a[text()="Schedule Your Draft"]
+${OFFLINE_DRAFT_TYPE}                      xpath://label[text()="Offline"]
+${SAVE_DRAFT_TYPE}                         xpath://button[text()='Save Changes']
+${SAVE_ROSTER_TEAM1}                       xpath://button[text()='Save Roster'and @data-team-id='1']
+${SAVE_ROSTER_TEAM2}                       xpath://button[text()='Save Roster'and @data-team-id='2']
+${RELEASE_ROSTER}                          xpath://span[text()='Release Rosters']
+${INPUT_OFFLINE_RESULTS_LINK}              xpath://a[text()='Input Offline Draft Results']
+${BEGIN_OFFLINE_DRAFT}                     xpath://button[text()='Begin Offline Draft']
+${PLAYER_NAMES}                            xpath://input[@placeholder='Player Name']
+${FINISH_ENTERING_BUTTON}                  //button[text()='I Am Finished Entering Results']
 
 *** Keywords ***
 Initialize Variables
@@ -64,6 +85,24 @@ Click on roster moves
 
 Close the current Browser
     close browser
+
+Create a League to drop players
+    go to                            ${LEAGUE_CREATE_URL}
+    set selenium implicit wait       10s
+    wait until element is visible    ${LEAGUE_NAME_FIELD}     timeout=10s
+    input text                       ${LEAGUE_NAME_FIELD}    TestLeague
+    click element                    ${NO_OF_TEAMS}
+    click button                     ${LEAGUE_CREATE_BUTTON}
+    wait until element is visible    ${DISMISS_INVITE}       timeout=10s
+    click element                    ${DISMISS_INVITE}
+    Begin Draft and start inputing players for the team
+    # Reload Page
+    Execute JavaScript    window.scrollTo(0, 0) 
+    wait until element is visible    ${FINISH_ENTERING_BUTTON}
+    click element                    ${FINISH_ENTERING_BUTTON}
+    wait until element is visible    ${RELEASE_ROSTER}      timeout=10s
+    click element                    ${RELEASE_ROSTER}
+    sleep       2s
 
 Log in to the Fantasy Application
     Mouse Over    ${FANTASY_PROFILE_ICON}
