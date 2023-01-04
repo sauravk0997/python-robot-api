@@ -35,6 +35,9 @@ ${SAVE_ROSTER}                xpath:(//button[text()='Save Roster'])[4]
 ${FINISHED_RESULT_BUTTON}     xpath://button[text()='I Am Finished Entering Results']
 ${RELEASE_ROSTER}             xpath://span[text()='Release Rosters']
 ${TAKE_ME_TO_LEAGUE_ROSTERS}    xpath://div[@class='lightbox__content lightbox__content--desktop lightbox__content--isContent']//a[text()='Take me to League Rosters']
+${ASSIGN_LM_POWERS}            xpath://a[text()='Assign League Manager Powers']
+${SUBMIT_CHANGES_BUTTON}      xpath://button[text()='Submit Changes']
+${CONTINUE_LEAGUE_OFFICE}     xpath://a[text()='Continue to League Office']
 
 *** Keywords ***
 Create a league
@@ -51,6 +54,7 @@ Create a league
     Click Element    ${CREATE_LEAGUE_BUTTON}
     Wait Until Element Is Visible     ${CLOSE_ICON}
     Click Element    ${CLOSE_ICON}
+    Sleep    1
     Wait Until Element Is Visible    ${INVITE_MANAGERS}
     Click Element    ${INVITE_MANAGERS}
     sleep  3
@@ -77,24 +81,26 @@ Send invitations, Accept Invitation send by the inviter and create teams
     END
 
 Delete the league
-    validate iframe and re-login into the application
+    check iframe and re-login into the application
     Wait Until Element Is Visible    ${MY_TEAMS_ICON}
     Mouse Over       ${MY_TEAMS_ICON}
     click element    xpath://span[text()='${league_name}']
     Wait Until Element Is Visible     ${LM_TOOLS}
     Click Element   ${LM_TOOLS}
-    Wait Until Element Is Visible    ${DELETE_LEAGUE_TEXT}
     Sleep    2
+    Wait Until Element Is Visible    ${DELETE_LEAGUE_TEXT}
     click element    ${DELETE_LEAGUE_TEXT}
     Wait Until Element Is Visible    ${DELETE_LEAGUE_BUTTON}
     Click Button    ${DELETE_LEAGUE_BUTTON}
+    Sleep    1
     Wait Until Element Is Visible    ${CONFIRM_TEXT}
     Click Element   ${CONFIRM_TEXT}
     Wait Until Element Is Visible    ${SUCCESS_HEADING}
     ${success_text}=    Get Text    ${SUCCESS_HEADING}
     Should Be Equal As Strings    ${success_text}    Success!    msg=The expected and actual strings are not Equal
+    Close the current Browser
 
-validate iframe and re-login into the application
+check iframe and re-login into the application
     ${present}=    Run Keyword And Return Status    Element Should Be Visible    ${DISNEY_ID_IFRAME}
     Run Keyword If    ${present}    
     ...    Re-login to the fantasy application as a root user
@@ -104,7 +110,7 @@ validate iframe and re-login into the application
     Sleep    3
 
 Schedule Offline Draft
-    validate iframe and re-login into the application
+    check iframe and re-login into the application
     Wait Until Element Is Visible    ${MY_TEAMS_ICON}
     Mouse Over       ${MY_TEAMS_ICON}
     click element    xpath://span[text()='${league_name}']
@@ -151,6 +157,7 @@ Add players to team ${team_no}
       Scroll Element Into View    ${SAVE_ROSTER}
       Sleep    1
     END
+    Click Button    ${SAVE_ROSTER}
     IF    ${team_no} == 3
         Scroll Element Into View    ${SAVE_ROSTER}
         Click Button    xpath:(//button[text()='Save Roster'])[${team_no}]
@@ -158,3 +165,17 @@ Add players to team ${team_no}
         Scroll Element Into View    xpath:(//button[text()='Save Roster'])[${team_no}]
         Click Button    xpath:(//button[text()='Save Roster'])[${team_no}]
     END
+
+Assign League Manager Roles to Team2, Team3 and Team4 owners
+    Wait Until Element Is Visible     ${LM_TOOLS}
+    Click Element   ${LM_TOOLS}
+    Sleep    2
+    Wait Until Element Is Visible     ${ASSIGN_LM_POWERS}
+    Click Element    ${ASSIGN_LM_POWERS}
+    FOR    ${index}    IN RANGE    1    4
+        Wait Until Element Is Visible     css:[data-idx='${index}'] .control__indicator
+        Click Element    css:[data-idx='${index}'] .control__indicator
+    END
+    Click Button    ${SUBMIT_CHANGES_BUTTON}
+    Wait Until Element Is Visible     ${CONTINUE_LEAGUE_OFFICE}
+    click element    ${CONTINUE_LEAGUE_OFFICE}
