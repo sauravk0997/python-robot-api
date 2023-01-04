@@ -12,7 +12,7 @@ Suite Teardown        Close the current Browser
 
 *** Variables ***
 ${username}        sauravk0997@gmail.com
-${password}        Saurav@1103
+${password}        U2F1cmF2QDExMDM=
 ${LEAGUE_NAME}     UI-Automation-Testing-League-1
 
 *** Test Cases ***
@@ -44,7 +44,12 @@ As a League Manager, drop and then add player to my team
     Add players to the team as an LM
     Validate the player is added to a team
 
-# As a Team Owner, add and drop a player to my team
-#     [Tags]    fantasy-ui    drop-add-player    valid    CSEAUTO-29716    CSEAUTO-29763
-#     validate the user is navigated to the teams page
+As a Team Owner, add and drop a player from my team
+    [Tags]    fantasy-ui    drop-add-player    valid    CSEAUTO-29716    CSEAUTO-29764
+    Add and drop a player when team roster is full
+    Validate the player is added to a team
+  
+    
+    
+
 

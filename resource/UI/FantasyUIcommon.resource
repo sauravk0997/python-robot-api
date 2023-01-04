@@ -107,14 +107,15 @@ log in to the site
     click button      ${login_button}
     Unselect Frame
 
-Login into the espn site with user credentials ${username} and ${password}
+Login into the espn site with user credentials ${username} and ${encrypted_password}
+    ${decrypted_password}=     Get decrypted password ${encrypted_password}
     mouse over        ${profile_icon}
     click button      ${PROFILE_LOGIN_BUTTON}
     Select Frame      ${oneid_frame}
     wait until element is visible    ${username_field}
     input text        ${username_field}       ${username}
     wait until element is visible    ${password_field}
-    input password    ${password_field}    ${password}
+    input password    ${password_field}    ${decrypted_password}
     click button      ${login_button}
 Click on LM tools
     Wait Until Element Is Visible    ${LM_TOOLS_OPTION}

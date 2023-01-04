@@ -28,12 +28,26 @@ validate the user is navigated to the teams page
   wait until element is visible    ${MY_TEAM_LINK}
   page should contain element      ${MY_TEAM_LINK}
 
+Click on the my team link
+  wait until element is visible    ${MY_TEAM_LINK}        timeout=15
+  Click Element    ${MY_TEAM_LINK}
+
+Click on continue button
+  wait until element is visible     ${CONTINUE_BUTTON}
+  Click Element                     ${CONTINUE_BUTTON} 
+
+Click on confirm button
+  wait until element is visible     ${CONFIRM_BUTTON}
+  Click Element                     ${CONFIRM_BUTTON} 
+
+Click on drop player button
+  Wait Until Element Is Visible    ${DROP_PLAYER_BUTTON}    timeout=10
+  Click Element                     ${DROP_PLAYER_BUTTON}
+
 Clicking over drop button and taking players length
   Sleep    5s
   execute javascript             window.scrollTo(document.body.scrollHeight, 100)
-  Wait Until Element Is Visible    ${DROP_PLAYER_BUTTON}    timeout=10
-  # Clicking over the drop button at top right
-  Click Element                     ${DROP_PLAYER_BUTTON}
+  Click on drop player button
   wait until element is visible    ${ALL_PLAYER_LIST}
   # Storing all the droppable player to the list
   @{player_after_dropping}=       Get WebElements    ${ALL_PLAYER_LIST}
@@ -42,8 +56,7 @@ Clicking over drop button and taking players length
   Set Global Variable                                ${length_after_dropping}
 
 Drop a player from my fantasy team
-  wait until element is visible            ${DROP_PLAYER_BUTTON}    timeout=7
-  Click Element    ${DROP_PLAYER_BUTTON}
+  Click on drop player button
   ${Drop_players_status}    Run Keyword And Return Status    wait until element is visible            ${ACTIVE_DROP_BUTTON}    timeout=7 
   # Storing all the droppable player to the list
   IF    ${Drop_players_status} == True
@@ -59,11 +72,9 @@ Drop a player from my fantasy team
       # Selecting a player to be dropped from the team
       Click Button                      ${drop_button}[0]   
       # Clicking on continue button
-      wait until element is visible     ${CONTINUE_BUTTON}
-      Click Element                     ${CONTINUE_BUTTON}    
+      Click on continue button  
       # Clicking on confirm button
-      wait until element is visible     ${CONFIRM_BUTTON}    timeout=8
-      Click Element                     ${CONFIRM_BUTTON}    
+      Click on confirm button  
     ELSE
       Log    Droppable players are not available 
   END
@@ -73,10 +84,9 @@ Drop a player from my fantasy team
   set global variable   ${length_before_dropping}
 
 Validate whether player is dropped from team
+  Click on the my team link
   Clicking over drop button and taking players length
   ${length_of_team}    Evaluate    ${length_before_dropping}-1
-  log     "Length after dropping :::: "${length_after_dropping}
-  log     "Lenght of team :::: "${length_of_team}
   IF    ${length_after_dropping} == ${length_of_team}
     Log    Player is dropped
   ELSE
@@ -84,7 +94,7 @@ Validate whether player is dropped from team
   END  
   Click Element    ${CANCEL_BUTTON}
 
-Add players to the team as an TO
+Add a player as TO
   # Clicking on add player button on top right
   wait until element is visible    ${ADD_PLAYER_LINK} 
   Click Element                    ${ADD_PLAYER_LINK} 
@@ -102,8 +112,9 @@ Add players to the team as an TO
      Log    Free Agent players are not available 
   END
   
-  wait until element is visible    ${MY_TEAM_LINK}     timeout=10
-  Click Element    ${MY_TEAM_LINK}
+Add players to the team as an TO
+  Add a player as TO
+  Click on the my team link
 
 Navigate to LM tools, Click on Roster moves and do the ${action} on the Team ${team_id} 
   # Clicking on LM Tool button
@@ -132,8 +143,7 @@ Add players to the team as an LM
   ELSE
      Log    Free Agent players are not available 
   END 
-  wait until element is visible    ${MY_TEAM_LINK}
-  Click Element    ${MY_TEAM_LINK}
+  Click on the my team link
 
 Drop players fom the team as an LM
   ${Drop_players_status}    Run Keyword And Return Status    wait until element is visible            ${ACTIVE_DROP_BUTTON} 
@@ -146,25 +156,23 @@ Drop players fom the team as an LM
     ${length_before_dropping}        Get Length         ${player_before_dropping}   
     IF    ${lm_drop} != 0
     # Dropping a player from the team as league manager
+      execute javascript             window.scrollTo(document.body.scrollHeight, 100)
       Click Button    ${lm_drop_players}[0]  
       # Clicking on continue button
-      wait until element is visible     ${CONTINUE_BUTTON}
-      Click Element                     ${CONTINUE_BUTTON}    
+      Click on continue button  
       # Clicking on confirm button
-      wait until element is visible     ${CONFIRM_BUTTON}
-      Click Element                     ${CONFIRM_BUTTON}  
+      Click on confirm button
     ELSE
       Log    Droppable players are not available 
     END 
   ELSE
       Log    Please add players to your team
   END
-  wait until element is visible    ${MY_TEAM_LINK}    timeout=8
-  Click Element    ${MY_TEAM_LINK}
   set global variable   ${length_before_dropping}
 
 Validate the player is added to a team
   Clicking over drop button and taking players length
+  Click on the my team link
   wait until element is visible                    ${ALL_PLAYER_LIST}
   @{player_after_adding}=       Get WebElements    ${ALL_PLAYER_LIST}
   ${length_after_adding}    Get Length             ${player_after_adding}
@@ -172,4 +180,26 @@ Validate the player is added to a team
     Log    Player is added to the team
   ELSE
     Log    Player is not added to the team
-  END  
+  END
+  
+Add and drop a player when team roster is full
+  Clicking over drop button and taking players length
+  IF    ${length_after_dropping} == 13
+    Click on the my team link
+    Add players to the team as an TO
+    Click on drop player button
+    ${Drop_players_status}    Run Keyword And Return Status    wait until element is visible            ${ACTIVE_DROP_BUTTON}    timeout=7 
+    IF    ${Drop_players_status} == True
+      Execute JavaScript               window.document.evaluate("(//button[@title='Drop Player'])[1]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
+      Click Element      (//button[@title='Drop Player'])[1]
+      # Clicking on continue button
+      Click on continue button 
+      # Clicking on confirm button
+      Click on confirm button 
+    ELSE 
+      log    Droppable players are not available.
+    END
+  ELSE
+      Log    Please fill your roster by addding players to the roster.
+  END
+  Click on the my team link
