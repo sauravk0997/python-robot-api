@@ -21,7 +21,7 @@ As a Team Owner, drop and then add player to my team
     validate the user is navigated to the teams page
     Drop a player from my fantasy team
     Validate whether player is dropped from team
-    Add players to the team as an TO
+    Add players to the team as a Team Owner
     Validate the player is added to a team
 
 As a League Manager, drop and then add player to other team
@@ -42,14 +42,19 @@ As a League Manager, drop and then add player to my team
     Validate whether player is dropped from team
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 1
     Add players to the team as an LM
+    Click on the my team link
     Validate the player is added to a team
 
 As a Team Owner, add and drop a player from my team
     [Tags]    fantasy-ui    drop-add-player    valid    CSEAUTO-29716    CSEAUTO-29764
     Add and drop a player when team roster is full
     Validate the player is added to a team
-  
-    
-    
 
-
+As a League Manager, add and drop a player from another team
+    [Tags]    fantasy-ui    drop-add-player    valid    CSEAUTO-29716    CSEAUTO-29765
+    Click on the my team link
+    Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 3
+    Click on the my team link
+    Add and drop a player when team roster is full as an LM
+    Click on the my team link
+    Validate the player is added to a team

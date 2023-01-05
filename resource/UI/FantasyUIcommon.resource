@@ -146,3 +146,6 @@ Reset draft
     Log To Console    ***** User logged out *****
     FantasyUIcommon.Close the current Browser
     Log To Console    ***** All browsers closed *****
+
+Scroll up 
+    execute javascript             window.scrollTo(document.body.scrollHeight, 100)
