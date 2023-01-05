@@ -14,7 +14,7 @@ Suite Teardown       Delete the league, test account and close browser
 As a team owner move the Players by swaping the position of the players in current scoring period
     [Tags]    moveplayers    valid     CSEAUTO-29542
     Select any fantasy league TestLeague to move players
-     User is navigated to teams page
+    User is navigated to teams page
     Check for the players in the team who are available to move from there existing positions
     Swap the Position of the players in the current scoring period
     Verify whether the player swapped their Position
@@ -58,5 +58,30 @@ As a League Manager Move Player from the Bench to the lineup of any other team i
     Navigate to LM Tools
     select edit rosters from LM Tools page
     Select any team in the league from edit roster page
+    Move any eligible Bench Player to lineup
+    Verify whether the Player is Moved to Lineup
+
+As a Fantasy Team Owner swap the positions of the player in Upcoming ScoringPeriod
+    [Tags]    moveplayers    valid     CSEAUTO-29545
+    Select any fantasy league TestLeague to move players
+    User is navigated to teams page
+    Select any Future Date
+    Check for the players in the team who are available to move from there existing positions
+    Swap the Position of the players in the current scoring period
+    Verify whether the player swapped their Position
+
+As a Fantasy Team Owner move any player to Bench in Upcoming ScoringPeriod
+    [Tags]    moveplayers    valid     CSEAUTO-29777
+    Select any fantasy league TestLeague to move players
+    User is navigated to teams page
+    Select any Future Date
+    Check and Move any eligible existing lineup player to Bench
+    Verify whether the Player is Moved to Bench
+
+As a Fantasy Team Owner move any player from Bench to lineup in an Upcoming ScoringPeriod
+    [Tags]    moveplayers    valid     CSEAUTO-29778
+    Select any fantasy league TestLeague to move players
+    User is navigated to teams page
+    Select any Future Date
     Move any eligible Bench Player to lineup
     Verify whether the Player is Moved to Lineup

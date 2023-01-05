@@ -51,7 +51,7 @@ ${ROSTER_MOVES}                            xpath://a[text()='Roster Moves']
 ${DELETE_LEAGUE_LINK}                      xpath://a[text()='Delete League']
 ${DELETE_LEAGUE_BUTTON}                    xpath://button[text()='Delete League']
 ${CONFIRM_DELETE_LEAGUE_BUTTON}            xpath://span[text()='Confirm']//parent::button
-@{USER_EMAILS}                             test_ui_user1@test.com        test_ui_user2@test.com      test_ui_user3@test.com
+@{USER_EMAILS}                             test_ui_user4@test.com     test_ui_user5@test.com      test_ui_user6@test.com
 
 *** Keywords ***
 Launch the Browser and Navigate to Espn site
@@ -159,10 +159,10 @@ select input offline results and start inputing players for the teams
     click element    ${INPUT_OFFLINE_RESULTS_LINK}
     wait until element is visible    ${BEGIN_OFFLINE_DRAFT}              timeout=10s
     click element    ${BEGIN_OFFLINE_DRAFT}
-    Add players for first team
-    Add players for second team
-    Add players for third team
-    Add players for fourth team
+    Add players to team 1
+    Add players to team 2
+    Add players to team 3
+    Add players to team 4
     sleep    2s
     scroll element into view    ${FINISH_ROSTER_BUTTON}
     click button                ${FINISH_ROSTER_BUTTON}
@@ -170,10 +170,10 @@ select input offline results and start inputing players for the teams
     click element                ${RELEASE_ROSTER}
 
 
-Add players for first team
+Add players to team ${team_no}
     wait until element is visible             ${PLAYER_NAMES}           timeout=10s
     @{players_elements}    get webelements    ${PLAYER_NAMES}
-    ${json}     load json from file           resource/UI/team1_players.json
+    ${json}     load json from file           resource/UI/team${team_no}_players.json
     FOR    ${no}    IN RANGE    13
       ${name}     get value from json     ${json}      $.Player${no}
       input text    ${players_elements}[${no}]      ${name}
@@ -184,47 +184,6 @@ Add players for first team
     scroll element into view         ${SAVE_ROSTER}
     click element                    ${SAVE_ROSTER}
 
-Add players for second team
-    wait until element is visible             ${PLAYER_NAMES}           timeout=10s
-    @{players_elements}    get webelements    ${PLAYER_NAMES}
-    ${json}     load json from file           resource/UI/team2_players.json
-    FOR    ${no}    IN RANGE    13
-      ${name}     get value from json     ${json}      $.Player${no}
-      input text    ${players_elements}[${no}]      ${name}
-      wait until element is visible      //button[@data-player-search-playername="${name}"]
-      click button    //button[@data-player-search-playername="${name}"]
-    END
-    sleep    3s
-    scroll element into view         ${SAVE_ROSTER}
-    click element                    ${SAVE_ROSTER}
-
-Add players for third team
-    wait until element is visible             ${PLAYER_NAMES}           timeout=10s
-    @{players_elements}    get webelements    ${PLAYER_NAMES}
-    ${json}     load json from file           resource/UI/team3_players.json
-    FOR    ${no}    IN RANGE    13
-      ${name}     get value from json     ${json}      $.Player${no}
-      input text    ${players_elements}[${no}]      ${name}
-      wait until element is visible      //button[@data-player-search-playername="${name}"]
-      click button    //button[@data-player-search-playername="${name}"]
-    END
-    sleep    3s
-    scroll element into view         ${SAVE_ROSTER}
-    click element                    ${SAVE_ROSTER}
-
-Add players for fourth team
-    wait until element is visible             ${PLAYER_NAMES}           timeout=10s
-    @{players_elements}    get webelements    ${PLAYER_NAMES}
-    ${json}     load json from file           resource/UI/team4_players.json
-    FOR    ${no}    IN RANGE    13
-      ${name}     get value from json     ${json}      $.Player${no}
-      input text    ${players_elements}[${no}]      ${name}
-      wait until element is visible      //button[@data-player-search-playername="${name}"]
-      click button    //button[@data-player-search-playername="${name}"]
-    END
-    sleep    3s
-    scroll element into view         ${SAVE_ROSTER}
-    click element                    ${SAVE_ROSTER}
 
 Login into the espn site from Homepage
     [Arguments]            ${email}
@@ -270,6 +229,7 @@ Delete the fantasy League
     click button      ${DELETE_LEAGUE_BUTTON}
     wait until element is visible    ${CONFIRM_DELETE_LEAGUE_BUTTON}       timeout=10s
     click button      ${CONFIRM_DELETE_LEAGUE_BUTTON}
+    sleep    2s
 
 Delete the ESPN Account
      go to                           ${HOMEPAGE_URL}

@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation    All the page objects and keywords of landing page
-Library          SeleniumLibrary
+Library          SeleniumLibrary    run_on_failure=None
 Library          Collections
 Library          lib/fantasyUI/FantasyUIutils.py
 Library          String
@@ -18,6 +18,7 @@ ${LINEUP_PLAYER_HERE_BUTTON}              xpath://button[@title='HERE']
 ${BENCH_MOVEABLE_PLAYER_NAME}             xpath://button[@title='MOVE']//preceding::td[2]/div[text()='Bench']//following::div[1]
 ${DROPDOWNS}                              xpath://select[@class='dropdown__select']
 ${CONTINUE_BUTTON}                        xpath://button[text()='Continue']
+${FUTURE_DATES}                           xpath://div[contains(@class,'custom--day is-current')]//following::div[contains(@class,'custom--day')]/span[contains(@class,'day day--date')]
 
 *** Keywords ***
 Select any team in the league from edit roster page
@@ -108,8 +109,11 @@ Move any eligible Bench Player to lineup
     IF    ${length_of_moveable_bench_player} != 0
         ${random_no}     Get random player no in range of ${bench_players}
         @{player}      get webelements       ${BENCH_MOVEABLE_PLAYER_NAME}
+        sleep    5s
         scroll element into view    ${bench_players}[${random_no}]
+        sleep    5s
         click button    ${bench_players}[${random_no}]
+        sleep    5s
         ${bench_player_moved_lineup}    get element attribute   ${player}[${random_no}]     title
         set global variable     ${bench_player_moved_lineup}
         ${empty_lineup}    run keyword and return status   wait until element is visible    ${EMPTY_LINEUP_SLOT}     timeout=10s
@@ -145,3 +149,15 @@ Verify whether the Player is Moved to Lineup
       END
    END
 
+Select any Future Date
+    @{future_dates}     get webelements        ${FUTURE_DATES}
+    ${length_of_future_dates}  get length      ${future_dates}
+    ${random_date}      Get random player no in range of ${future_dates}
+    Scroll Element Into View    ${future_dates}[${random_date}]
+    ${get_date}         get text   ${future_dates}[${random_date}]
+    Reload Page
+    register keyword to run on failure    Get the Web element based on the ${length_of_future_dates} and ${get_date}
+    ${element}   Get the Web element based on the ${length_of_future_dates} and ${get_date}
+    click element         ${element}
+    sleep    2s
+    
