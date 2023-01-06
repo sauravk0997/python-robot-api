@@ -21,14 +21,6 @@ ${OUT_STATUS}                 //span[@title='Out']
 ${DTD_STATUS}                 //span[@title='Day-To-Day'']
 
 *** Keywords ***
-
-Load players
-    Initialize the user cookie
-    Close the current active browser
-    Schedule Offline Draft
-    Begin Offline Draft
-    Add players to all teams as league creator user and save the roster
-
 Login into the espn site for drop
     ${decrypted_password}=    Get decrypted password ${encrypted_password}
     mouse over        ${profile_icon}
@@ -69,38 +61,27 @@ Click on drop player and continue in LM tools
     Scroll Element Into View    ${DROP_PLAYERS_LIST}
     Sleep    5s
     Click Element    ${DROP_PLAYERS_LIST}
-    wait until element is visible    ${CONTINUE_BUTTON}
-    Click Element    ${CONTINUE_BUTTON}
+    Click on continue
     Sleep    5s
 
 Click on drop undroppable player and continue in LM tools
-    
     Scroll Element Into View    ${UNDROPPABLE_PLAYER}
     wait until element is visible   ${UNDROPPABLE_PLAYER}
     Click Element    ${UNDROPPABLE_PLAYER}
-    wait until element is visible    ${CONTINUE_BUTTON}
-    Click Element    ${CONTINUE_BUTTON}
+    Click on continue
     Sleep    5s
 
 Click on multiple players to drop
     wait until element is visible   ${DROP_PLAYERS_LIST}
     Execute JavaScript    window.document.evaluate("//button[contains(@title,'Drop Player')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
     Sleep    5s
-    Wait Until Element Is Visible   //button[@aria-label="Drop Player Rudy Gobert"]
-    Click Element    //button[@aria-label="Drop Player Rudy Gobert"]
-    Wait Until Element Is Visible    //button[@aria-label='Drop Player Brandon Ingram']
-    Click Element    //button[@aria-label='Drop Player Brandon Ingram']
-    wait until element is visible    ${CONTINUE_BUTTON}
-    Click Element    ${CONTINUE_BUTTON}
+    Select multiple players
+    Click on continue
     Sleep    5s
 
 Click on multiple players to drop in LM tools
-    wait until element is visible    //button[@aria-label="Can't drop Julius Randle"]
-    Click Element    //button[@aria-label="Can't drop Julius Randle"]
-    wait until element is visible    //button[@aria-label='Drop Player Domantas Sabonis']
-    Click Element    //button[@aria-label='Drop Player Domantas Sabonis']
-    wait until element is visible    ${CONTINUE_BUTTON}
-    Click Element    ${CONTINUE_BUTTON}
+    Select multiple players
+    Click on continue
     Sleep    5s
 
 Click on drop player and continue
@@ -108,21 +89,22 @@ Click on drop player and continue
     Execute JavaScript    window.document.evaluate("//button[contains(@title,'Drop Player')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
     Sleep    5s
     Click Element    ${DROP_PLAYERS_LIST}
-    wait until element is visible    ${CONTINUE_BUTTON}
-    Click Element    ${CONTINUE_BUTTON}
+    Click on continue
     Sleep    5s
 
-Click on drop player who is DTD and continue in LM tools
-    Set Selenium Implicit Wait    5s
-    Scroll Element Into View    //span[@title='Day-To-Day']
-    ${c} =   Get Element Count   //span[@title='Day-To-Day']
-    Run Keyword If   ${c}>0    Get player name and drop    ELSE    Click on LM tools
-
-Get player name and drop
-    ${DTD_player}=    Get Element Attribute    //span[@title='Day-To-Day']//parent::div    title
+Get player name whose status is ${status}
+    ${player_name}=    Get Element Attribute    //span[@title='${status}']//parent::div    title
     Sleep    2s
-    Scroll Element Into View    //button[@aria-label='Drop Player ${DTD_player}']
-    Click Element    //button[@aria-label='Drop Player ${DTD_player}']
+    Check if ${player_name} is an undroppable player
+    IF    ${undroppable_check} == ${TRUE}
+            Scroll Element Into View    //button[@aria-label="Can't drop ${player_name}"]
+            Click Element    //button[@aria-label="Can't drop ${player_name}"]
+    ELSE
+            Execute JavaScript    window.document.evaluate("//button[@aria-label='Drop Player ${player_name}']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
+            Click Element    //button[@aria-label='Drop Player ${player_name}']
+    END
+    Click on continue
+    Click on confirm drop
 
 check no of players available to drop
     @{player_list}=       Get WebElements    ${DROP_PLAYERS_LIST}
@@ -133,3 +115,43 @@ Click on confirm drop
     Wait Until Element Is Visible    ${CONFIRM_BUTTON}
     Click Element    ${CONFIRM_BUTTON}
     Sleep    10s
+
+Select roster moves in LM tools
+    Click on LM tools
+    Click on roster moves
+    Select options from dropdown
+
+Check availability for ${status} player and drop
+    Set availability true
+    # ${avail}         convert to boolean    true
+    Scroll Element Into View    //span[@title='${status}']
+    ${c} =   Get Element Count   //span[@title='${status}']
+    # ${c}    Set Variable    0
+    Run Keyword If   ${c}>0    Get player name whose status is ${status}    ELSE    Set availability false
+    
+Set availability ${avail}
+    ${avail}         convert to boolean    ${avail}
+    Set Global Variable       ${avail}
+
+Check if ${player_name} is an undroppable player
+    ${json}     load json from file           resource/UI/undroppable_players.json
+    ${undroppable_check}    Set Variable    False
+    Convert To Boolean    ${undroppable_check}
+    FOR    ${no}    IN RANGE    21
+      ${name}     get value from json     ${json}      $.Player${no}
+      IF    "${player_name}" == "${name}"
+          ${undroppable_check}    Set Variable    True
+          Convert To Boolean    ${undroppable_check}
+      END
+    END
+    Set Global Variable       ${undroppable_check}
+
+Click on continue
+    wait until element is visible    ${CONTINUE_BUTTON}
+    Click Element    ${CONTINUE_BUTTON}
+
+Select multiple players
+    Wait Until Element Is Visible   (//button[contains(@title,'Drop Player')])[1]
+    Click Element    (//button[contains(@title,'Drop Player')])[1]
+    Wait Until Element Is Visible    (//button[contains(@title,'Drop Player')])[2]
+    Click Element    (//button[contains(@title,'Drop Player')])[2]
