@@ -51,6 +51,9 @@ ${ROSTER_MOVES}                            xpath://a[text()='Roster Moves']
 ${DELETE_LEAGUE_LINK}                      xpath://a[text()='Delete League']
 ${DELETE_LEAGUE_BUTTON}                    xpath://button[text()='Delete League']
 ${CONFIRM_DELETE_LEAGUE_BUTTON}            xpath://span[text()='Confirm']//parent::button
+${TAKE_ME_TO_LEAGUE_ROSTERS}               xpath://div[contains(@class,'tc')]/a[text()='Take me to League Rosters']
+${CONTINUE_TO_THE_FANTASY_HOMEPAGE}        xpath://a[text()='Continue to the Fantasy Homepage']
+${ENCRYPTED_PASSWORD}                      dGVzdF91aQ==
 @{USER_EMAILS}                             test_ui_user4@test.com     test_ui_user5@test.com      test_ui_user6@test.com
 
 *** Keywords ***
@@ -85,7 +88,8 @@ create a test account
     input text                       ${LAST_NAME_FIELD}        Ui
     ${random_email}                  generate a random email
     input text                       ${NEW_EMAIL_FIELD}        ${random_email}
-    input password                   ${NEW_PASSWORD_FIELD}     test_ui
+    ${decrypted_password}            get decrypted password ${ENCRYPTED_PASSWORD}
+    input password                   ${NEW_PASSWORD_FIELD}     ${decrypted_password}
     sleep     4s
     wait until element is visible    ${SIGNUP_BUTTON}          timeout=10s
     click button                     ${SIGNUP_BUTTON}
@@ -163,12 +167,14 @@ select input offline results and start inputing players for the teams
     Add players to team 2
     Add players to team 3
     Add players to team 4
-    sleep    2s
     scroll element into view    ${FINISH_ROSTER_BUTTON}
-    click button                ${FINISH_ROSTER_BUTTON}
     sleep    2s
-    click element                ${RELEASE_ROSTER}
-
+    click button                ${FINISH_ROSTER_BUTTON}
+    click element                    ${RELEASE_ROSTER}
+    wait until element is visible    ${TAKE_ME_TO_LEAGUE_ROSTERS}        timeout=10s
+    sleep    2s
+    click element                    ${TAKE_ME_TO_LEAGUE_ROSTERS}
+    sleep    2s
 
 Add players to team ${team_no}
     wait until element is visible             ${PLAYER_NAMES}           timeout=10s
@@ -180,7 +186,6 @@ Add players to team ${team_no}
       wait until element is visible      //button[@data-player-search-playername="${name}"]
       click button    //button[@data-player-search-playername="${name}"]
     END
-    sleep    3s
     scroll element into view         ${SAVE_ROSTER}
     click element                    ${SAVE_ROSTER}
 
@@ -205,7 +210,8 @@ Login into the espn site
     wait until element is visible    ${USER_EMAIL_FIELD}
     input text                       ${USER_EMAIL_FIELD}        ${email}
     wait until element is visible    ${USER_PASSWORD_FIELD}
-    input password                   ${USER_PASSWORD_FIELD}     test_ui
+    ${decrypted_password}            get decrypted password ${ENCRYPTED_PASSWORD}
+    input password                   ${USER_PASSWORD_FIELD}     ${decrypted_password}
     click button                     ${LOGIN_BUTTON}
     Unselect Frame
 
@@ -230,9 +236,10 @@ Delete the fantasy League
     wait until element is visible    ${CONFIRM_DELETE_LEAGUE_BUTTON}       timeout=10s
     click button      ${CONFIRM_DELETE_LEAGUE_BUTTON}
     sleep    2s
+    wait until element is visible    ${CONTINUE_TO_THE_FANTASY_HOMEPAGE}    timeout=10s
+    click element                    ${CONTINUE_TO_THE_FANTASY_HOMEPAGE}
 
 Delete the ESPN Account
-     go to                           ${HOMEPAGE_URL}
      wait until element is visible   ${PROFILE_LOCATOR}           timeout=10s
      mouse over                      ${PROFILE_LOCATOR}
      wait until element is visible   ${ESPN_PROFILE}              timeout=10s

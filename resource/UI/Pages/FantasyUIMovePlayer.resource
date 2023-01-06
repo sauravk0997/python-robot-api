@@ -19,8 +19,13 @@ ${BENCH_MOVEABLE_PLAYER_NAME}             xpath://button[@title='MOVE']//precedi
 ${DROPDOWNS}                              xpath://select[@class='dropdown__select']
 ${CONTINUE_BUTTON}                        xpath://button[text()='Continue']
 ${FUTURE_DATES}                           xpath://div[contains(@class,'custom--day is-current')]//following::div[contains(@class,'custom--day')]/span[contains(@class,'day day--date')]
+${MY_TEAM}                                xpath://span[text() ='My Team']
 
 *** Keywords ***
+Navigate to Fantasy Team Page
+     wait until element is visible    ${MY_TEAM}       timeout=10s
+     click element                    ${MY_TEAM}
+
 Select any team in the league from edit roster page
     @{options}     get webelements    ${DROPDOWNS}
     wait until element is visible     ${options}[0]
@@ -30,13 +35,11 @@ Select any team in the league from edit roster page
     select from list by value         ${options}[1]        ${random_value}
     click button                      ${CONTINUE_BUTTON}
 
-
-User is navigated to teams page
-    execute javascript             window.scrollTo(0, document.body.scrollHeight)
-    page should contain            My Team
+validate the user is navigated to the teams page
     wait until element is visible  ${My_TEAM_ACTIVE}
     page should contain element    ${My_TEAM_ACTIVE}
-    sleep    3s
+    page should contain            My Team
+    execute javascript             window.scrollTo(0, document.body.scrollHeight)
 
 Check for the players in the team who are available to move from there existing positions
     @{move_button_players}    Get WebElements    ${MOVEABLE_LINEUP_PLAYER}
@@ -75,12 +78,10 @@ Check and Move any eligible existing lineup player to Bench
            ${random_player}     Get random player no in range of ${move_button_lineup_players}
            ${player_names}      Get WebElements         ${LINEUP_MOVEABLE_PLAYER_NAME}
            ${Player_name_for_moving_to_Bench}       get element attribute    ${player_names}[${random_player}]     title
-           sleep    2s
            scroll element into view    ${move_button_lineup_players}[${random_player}]
            click button     ${move_button_lineup_players}[${random_player}]
            ${bench_status}    RUN KEYWORD AND RETURN STATUS    wait until element is visible    ${EMPTY_BENCH_LOCATOR}     timeout=10s
            IF    ${bench_status} == True
-              sleep    2s
               scroll element into view    ${EMPTY_BENCH_LOCATOR}
               click button    ${EMPTY_BENCH_LOCATOR}
               set global variable    ${Player_name_for_moving_to_Bench}
@@ -109,16 +110,12 @@ Move any eligible Bench Player to lineup
     IF    ${length_of_moveable_bench_player} != 0
         ${random_no}     Get random player no in range of ${bench_players}
         @{player}      get webelements       ${BENCH_MOVEABLE_PLAYER_NAME}
-        sleep    5s
         scroll element into view    ${bench_players}[${random_no}]
-        sleep    5s
         click button    ${bench_players}[${random_no}]
-        sleep    5s
         ${bench_player_moved_lineup}    get element attribute   ${player}[${random_no}]     title
         set global variable     ${bench_player_moved_lineup}
         ${empty_lineup}    run keyword and return status   wait until element is visible    ${EMPTY_LINEUP_SLOT}     timeout=10s
         IF    ${empty_lineup} == True
-           sleep    2s
            scroll element into view    ${EMPTY_LINEUP_SLOT}
            click button    ${EMPTY_LINEUP_SLOT}
            ${bench_player_moved_lineup_status}    convert to boolean    true
@@ -129,7 +126,6 @@ Move any eligible Bench Player to lineup
           ${length_of_moveable_lineup_player}     get length    ${lineup_players}
           IF    ${length_of_moveable_lineup_player} != 0
              ${random_player}    Get random player no in range of ${lineup_players}
-             sleep    2s
              scroll element into view    ${lineup_players}[${random_player}]
              click button    ${lineup_players}[${random_player}]
              ${bench_player_moved_lineup_status}    convert to boolean    true
@@ -159,5 +155,4 @@ Select any Future Date
     register keyword to run on failure    Get the Web element based on the ${length_of_future_dates} and ${get_date}
     ${element}   Get the Web element based on the ${length_of_future_dates} and ${get_date}
     click element         ${element}
-    sleep    2s
     
