@@ -38,7 +38,7 @@ ${OFFLINE_DRAFT_TYPE}                      xpath://label[text()="Offline"]
 ${SAVE_DRAFT_TYPE}                         xpath://button[text()='Save Changes']
 ${SAVE_ROSTER_TEAM1}                       xpath://button[text()='Save Roster'and @data-team-id='1']
 ${SAVE_ROSTER_TEAM2}                       xpath://button[text()='Save Roster'and @data-team-id='2']
-${RELEASE_ROSTER}                          xpath://span[text()='Release Rosters']
+${RELEASE_ROSTER}                          xpath://button[@class='Button Button--lg Button--default Button--custom']
 ${INPUT_OFFLINE_RESULTS_LINK}              xpath://a[text()='Input Offline Draft Results']
 ${BEGIN_OFFLINE_DRAFT}                     xpath://button[text()='Begin Offline Draft']
 ${PLAYER_NAMES}                            xpath://input[@placeholder='Player Name']
@@ -71,11 +71,10 @@ Launch the Browser and Navigate to the ${url} site
     Go To                    ${url}
     Maximize Browser Window
 
-Select my fantasy ${MY_LEAGUE}
-    wait until element is visible   ${profile_icon}
-    mouse over        ${profile_icon}
-    wait until element is visible   xpath:(//span[contains(text(),'${MY_LEAGUE}')])[1]
-    click element      xpath:(//span[contains(text(),'${MY_LEAGUE}')])[1]
+Select my fantasy team
+    Sleep    15s
+    wait until element is visible   //span[text()='My Team']
+    click element      //span[text()='My Team']
 
 Click on roster moves
     wait until element is visible    ${ROSTER_MOVES_OPTION}
@@ -87,17 +86,16 @@ Close the current Browser
     close browser
 
 Create a League to drop players
+    Sleep    4s
     go to                            ${LEAGUE_CREATE_URL}
-    set selenium implicit wait       10s
     wait until element is visible    ${LEAGUE_NAME_FIELD}     timeout=10s
     input text                       ${LEAGUE_NAME_FIELD}    TestLeague
     click element                    ${NO_OF_TEAMS}
     click button                     ${LEAGUE_CREATE_BUTTON}
     wait until element is visible    ${DISMISS_INVITE}       timeout=10s
     click element                    ${DISMISS_INVITE}
-    Begin Draft and start inputing players for the team
-    # Reload Page
-    Execute JavaScript    window.scrollTo(0, 0) 
+    Begin Draft and start inputing players for the team 
+    Scroll Element Into View         ${FINISH_ENTERING_BUTTON}
     wait until element is visible    ${FINISH_ENTERING_BUTTON}
     click element                    ${FINISH_ENTERING_BUTTON}
     wait until element is visible    ${RELEASE_ROSTER}      timeout=10s
