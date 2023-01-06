@@ -1,6 +1,6 @@
 *** Settings ***
 Library             RPA.JSON
-Library             SeleniumLibrary
+Library             SeleniumLibrary    implicit_wait=5
 Library             lib/fantasyUI/FantasyUIutils.py
 Library             lib/fantasyAPI/FantasyUtils.py
 Library             String
@@ -8,8 +8,9 @@ Resource            resource/UI/Pages/CreateLeaguePage.resource
 
 *** Variables ***
 ${FANTASY_URL}                        https://fantasy.espn.com/
-${user}                               test_user_account2@test.com
+${user}                               test_user_account3@test.com
 ${encrypted_password}                 U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
+${ENCRYPTED_PASSWORD1}                QVBJdXNlckBFU1BO
 @{user_emails}                        test_api_user7@test.com    test_api_user2@test.com    test_api_user3@test.com
 ${ROSTER_MOVES_DROPDOWN1}             (//select[@class="dropdown__select"])[1]
 ${LM_TOOLS_CONTINUE_BUTTON}           //button[normalize-space()='Continue']
@@ -78,6 +79,7 @@ Log in to the Fantasy Application
     Unselect Frame
 
 Re-login to the fantasy application as a root user
+    Sleep    2
     Select Frame      ${DISNEY_ID_IFRAME}
     wait until element is visible    ${username_field}
     input text        ${username_field}       ${user}
@@ -87,8 +89,25 @@ Re-login to the fantasy application as a root user
     click button      ${login_button}
     Unselect Frame
 
+Re-login to the fantasy application as a ${team_no} user
+    Sleep    1
+    Select Frame      ${DISNEY_ID_IFRAME}
+    ${int_value}=    Convert To Integer    ${team_no}
+    ${user_email_index}=    Evaluate    ${int_value}-2
+    wait until element is visible    ${username_field}
+    input text        ${username_field}       ${user_emails}[${user_email_index}]
+    ${decrypted_password}=     Get decrypted password ${ENCRYPTED_PASSWORD1}
+    wait until element is visible    ${password_field}
+    input password    ${password_field}    ${decrypted_password}
+    click button      ${login_button}
+    Sleep    3
+    Unselect Frame
+
 Logout from Fantasy Application
-    Mouse Over    css:[role='button']
+    Sleep    2
+    Reload Page
+    Wait Until Element Is Enabled    ${FANTASY_PROFILE_ICON}
+    Scroll Element Into View    ${FANTASY_PROFILE_ICON}
     Wait Until Element Is Visible    ${LOGOUT_LINK}
     Click Element    ${LOGOUT_LINK}
 

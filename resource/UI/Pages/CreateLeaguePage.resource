@@ -21,6 +21,7 @@ ${TEAM_ABBREVIATION}          css:[data-name='teamAbbrev']
 ${FINISH_BUTTON}              css:.join-league-form__finish
 ${MY_TEAMS_ICON}              css:.myTeams.NavSecondary__Item>a>svg
 ${LM_TOOLS}                   xpath://span[text()='LM Tools']
+${OPPOSING_TEAMS}             xpath://span[text()='Opposing Teams']
 ${DELETE_LEAGUE_TEXT}         xpath://a[text()='Delete League']
 ${DELETE_LEAGUE_BUTTON}       xpath://button[text()='Delete League']
 ${CONFIRM_TEXT}               xpath://span[text()='Confirm']
@@ -34,14 +35,16 @@ ${PLAYER_NAMES}               xpath://input[@placeholder='Player Name']
 ${SAVE_ROSTER}                xpath:(//button[text()='Save Roster'])[4]
 ${FINISHED_RESULT_BUTTON}     xpath://button[text()='I Am Finished Entering Results']
 ${RELEASE_ROSTER}             xpath://span[text()='Release Rosters']
-${TAKE_ME_TO_LEAGUE_ROSTERS}    xpath://div[@class='lightbox__content lightbox__content--desktop lightbox__content--isContent']//a[text()='Take me to League Rosters']
-${ASSIGN_LM_POWERS}            xpath://a[text()='Assign League Manager Powers']
+${ASSIGN_LM_POWERS}           xpath://a[text()='Assign League Manager Powers']
 ${SUBMIT_CHANGES_BUTTON}      xpath://button[text()='Submit Changes']
 ${CONTINUE_LEAGUE_OFFICE}     xpath://a[text()='Continue to League Office']
+${SAVE_ROSTER_DEFAULT_BUTTON}    xpath://button[@class='Button Button--default rosterButton']
+${TAKE_ME_TO_LEAGUE_ROSTERS}     xpath://div[@class='lightbox__content lightbox__content--desktop lightbox__content--isContent']//a[text()='Take me to League Rosters']
+
 
 *** Keywords ***
 Create a league
-    Sleep    5
+    Sleep    6
     Wait Until Element Is Enabled    ${CREATE_A_LEAGUE_BUTTON}  timeout=10s
     Click Button    ${CREATE_A_LEAGUE_BUTTON}
     ${random_string}=    Generate Random String    4    0123456789
@@ -54,7 +57,7 @@ Create a league
     Click Element    ${CREATE_LEAGUE_BUTTON}
     Wait Until Element Is Visible     ${CLOSE_ICON}
     Click Element    ${CLOSE_ICON}
-    Sleep    1
+    Sleep    2
     Wait Until Element Is Visible    ${INVITE_MANAGERS}
     Click Element    ${INVITE_MANAGERS}
     sleep  3
@@ -85,8 +88,10 @@ Delete the league
     Wait Until Element Is Visible    ${MY_TEAMS_ICON}
     Mouse Over       ${MY_TEAMS_ICON}
     click element    xpath://span[text()='${league_name}']
-    Wait Until Element Is Visible     ${LM_TOOLS}
-    Click Element   ${LM_TOOLS}
+    Mouse Over    ${OPPOSING_TEAMS}
+    Wait Until Element Is Visible     ${LM_TOOLS}    timeout=10
+    Mouse Over    ${LM_TOOLS}
+    Double Click Element    ${LM_TOOLS}
     Sleep    2
     Wait Until Element Is Visible    ${DELETE_LEAGUE_TEXT}
     click element    ${DELETE_LEAGUE_TEXT}
@@ -123,19 +128,22 @@ Schedule Offline Draft
     click button     ${SAVE_DRAFT_TYPE}
 
 Begin Offline Draft
-    Wait Until Element Is Visible     ${LM_TOOLS}
+    Mouse Over    ${OPPOSING_TEAMS}
+    Wait Until Element Is Visible     ${LM_TOOLS}    timeout=10
+    Mouse Over    ${LM_TOOLS}
+    Sleep    1
+    Double Click Element    ${LM_TOOLS}
     Sleep    3
-    Click Element   ${LM_TOOLS}
     Wait Until Element Is Visible    ${INPUT_OFFLINE_DRAFT}
     click element     ${INPUT_OFFLINE_DRAFT}
     Wait Until Element Is Visible    ${BEGIN_OFFLINE_DRAFT}
     Click Button     ${BEGIN_OFFLINE_DRAFT}
 
 Add players to all teams as league creator user and save the roster
-    Add players to team 1
-    Add players to team 2
-    Add players to team 3
-    Add players to team 4
+    Add players to team 1 as league creator user
+    Add players to team 2 as league creator user
+    Add players to team 3 as league creator user
+    Add players to team 4 as league creator user
     Scroll Element Into View    ${FINISHED_RESULT_BUTTON}
     Wait Until Element Is Visible    ${FINISHED_RESULT_BUTTON}
     Sleep    2
@@ -145,7 +153,7 @@ Add players to all teams as league creator user and save the roster
     Wait Until Element Is Visible    ${TAKE_ME_TO_LEAGUE_ROSTERS}
     Click element     ${TAKE_ME_TO_LEAGUE_ROSTERS}
 
-Add players to team ${team_no}
+Add players to team ${team_no} as league creator user
     wait until element is visible             ${PLAYER_NAMES}           timeout=10s
     @{players_elements}    get webelements    ${PLAYER_NAMES}
     ${players_list}     load json from file           resource/UI/offlineDraftTeam${team_no}.json
@@ -155,9 +163,7 @@ Add players to team ${team_no}
       wait until element is visible      //button[@data-player-search-playername="${name}"]
       click button    //button[@data-player-search-playername="${name}"]
       Scroll Element Into View    ${SAVE_ROSTER}
-      Sleep    1
     END
-    Click Button    ${SAVE_ROSTER}
     IF    ${team_no} == 3
         Scroll Element Into View    ${SAVE_ROSTER}
         Click Button    xpath:(//button[text()='Save Roster'])[${team_no}]
@@ -167,8 +173,11 @@ Add players to team ${team_no}
     END
 
 Assign League Manager Roles to Team2, Team3 and Team4 owners
-    Wait Until Element Is Visible     ${LM_TOOLS}
-    Click Element   ${LM_TOOLS}
+    Mouse Over    ${OPPOSING_TEAMS}
+    Wait Until Element Is Visible     ${LM_TOOLS}    timeout=10
+    Mouse Over    ${LM_TOOLS}
+    Sleep    1
+    Double Click Element    ${LM_TOOLS}
     Sleep    2
     Wait Until Element Is Visible     ${ASSIGN_LM_POWERS}
     Click Element    ${ASSIGN_LM_POWERS}
@@ -179,3 +188,26 @@ Assign League Manager Roles to Team2, Team3 and Team4 owners
     Click Button    ${SUBMIT_CHANGES_BUTTON}
     Wait Until Element Is Visible     ${CONTINUE_LEAGUE_OFFICE}
     click element    ${CONTINUE_LEAGUE_OFFICE}
+
+Add players to team ${team_id} as team owner ${team_owner_id}
+    Logout from Fantasy Application
+    Re-login to the fantasy application as a ${team_id} user
+    Reload Page
+    wait until element is visible             ${PLAYER_NAMES}           timeout=10s
+    @{players_elements}    get webelements    ${PLAYER_NAMES}
+    ${players_list}     load json from file           resource/UI/offlineDraftTeam${team_id}.json
+    FOR    ${index}    IN RANGE    13
+      ${name}     get value from json     ${players_list}      $.Player${index}
+      ${int_value}=    Convert To Integer    ${team_id}
+      ${expressioin status}=    Evaluate    ${int_value} == 3
+        IF    ${expressioin status} == True
+            Scroll Element Into View    xpath:(//button[text()='Save Roster'])[2]
+            input text    ${players_elements}[${index}]      ${name}
+            click button    //button[@data-player-search-playername="${name}"]
+        ELSE
+            input text    ${players_elements}[${index}]      ${name}
+            wait until element is visible      //button[@data-player-search-playername="${name}"]
+            click button    //button[@data-player-search-playername="${name}"]
+        END
+    END
+    click button     ${SAVE_ROSTER_DEFAULT_BUTTON}
