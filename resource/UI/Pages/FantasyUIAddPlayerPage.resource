@@ -144,6 +144,8 @@ Add players to the team as an LM
   ELSE
      Log    Free Agent players are not available 
   END 
+  Click on the my team link
+  Scroll up
   
 Performing dropping action to drop a player in the fantasy league
   ${droppable_players_status}    Run Keyword And Return Status    wait until element is visible            ${ACTIVE_DROP_BUTTON}    timeout=7 
@@ -157,7 +159,6 @@ Performing dropping action to drop a player in the fantasy league
   ELSE 
     log    Droppable players are not available.
   END
-
 
 Drop players fom the team as an LM
   ${droppable_players_status}    Run Keyword And Return Status    wait until element is visible            ${ACTIVE_DROP_BUTTON} 
