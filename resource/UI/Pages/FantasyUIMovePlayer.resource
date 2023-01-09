@@ -7,15 +7,15 @@ Library          String
 
 *** Variables ***
 ${My_TEAM_ACTIVE}                         xpath://li[@class='myTeam active NavSecondary__Item']
-${MOVEABLE_LINEUP_PLAYER}                 xpath://div[not(@title='Bench') and @class='jsx-2810852873 table--cell']//ancestor::tr//child::td[3]//descendant::button
+${MOVEABLE_LINEUP_PLAYER}                 xpath://div[not(@title='Bench') and @class='jsx-2810852873 table--cell']//ancestor::tr//descendant::button
 ${LINEUP_PLAYERS_ELIGIBLE_SLOTS}          xpath://div[not(@title='Bench') and @class='jsx-2810852873 table--cell']//ancestor::tr//child::button//preceding::td[1]//descendant::span[@class='playerinfo__playerpos ttu']
 ${LINEUP_MOVEABLE_PLAYER_NAME}            xpath://button[@title='MOVE']//preceding::td[2]/div[not(text()='Bench')]//following::div[1]
 ${LINEUP_PLAYERS_ON_SLOT_PREFIX}          xpath://button[@title='MOVE']//preceding::td[2]/div[not(text()='Bench')]
-${EMPTY_BENCH_LOCATOR}                    xpath://div[@title='Bench']//following::div[1][contains(@title,"Player")]//following::button
-${MOVEABLE_BENCH_PLAYER}                  xpath://div[@title='Bench']//following::div[1]//following::button
-${EMPTY_LINEUP_SLOT}                      xpath://div[@title='Player']//parent::td//preceding::td[1]/div[not(text()='IR')]//following::div[6]/button[@title="HERE"]
+${EMPTY_BENCH_LOCATOR}                    xpath://div[@title='Bench']//following::div[contains(@title,"Player")]//following::button
+${MOVEABLE_BENCH_PLAYER}                  xpath://div[@title='Bench']//following::button
+${EMPTY_LINEUP_SLOT}                      xpath://div[@title='Player']//preceding::td[@style='width: 60px;']/div[not(text()='IR')]//following::div[@aria-label="Move"]//descendant::button
 ${LINEUP_PLAYER_HERE_BUTTON}              xpath://button[@title='HERE']
-${BENCH_MOVEABLE_PLAYER_NAME}             xpath://button[@title='MOVE']//preceding::td[2]/div[text()='Bench']//following::div[1]
+${BENCH_MOVEABLE_PLAYER_NAME}             xpath://button[@title='MOVE']//preceding::div[text()='Bench']//following::div[contains(@class,'cell player__column') and not(@title='Player')]
 ${DROPDOWNS}                              xpath://select[@class='dropdown__select']
 ${CONTINUE_BUTTON}                        xpath://button[text()='Continue']
 ${FUTURE_DATES}                           xpath://div[contains(@class,'custom--day is-current')]//following::div[contains(@class,'custom--day')]/span[contains(@class,'day day--date')]
@@ -99,6 +99,7 @@ Check and Move any eligible existing lineup player to Bench
 
 Verify whether the Player is Moved to Bench
     IF    ${bench_status} == True
+        sleep    2
         ${slot_of_player}    get text    //div[@title="${Player_name_for_moving_to_Bench}"]//preceding::div[1][contains(@class,"table--cell")]
         should be equal    ${slot_of_player}        Bench
     END
@@ -110,9 +111,9 @@ Move any eligible Bench Player to lineup
     IF    ${length_of_moveable_bench_player} != 0
         ${random_no}     Get random player no in range of ${bench_players}
         @{player}      get webelements       ${BENCH_MOVEABLE_PLAYER_NAME}
+        ${bench_player_moved_lineup}    get element attribute   ${player}[${random_no}]     title
         scroll element into view    ${bench_players}[${random_no}]
         click button    ${bench_players}[${random_no}]
-        ${bench_player_moved_lineup}    get element attribute   ${player}[${random_no}]     title
         set global variable     ${bench_player_moved_lineup}
         ${empty_lineup}    run keyword and return status   wait until element is visible    ${EMPTY_LINEUP_SLOT}     timeout=10s
         IF    ${empty_lineup} == True
@@ -140,6 +141,7 @@ Move any eligible Bench Player to lineup
 Verify whether the Player is Moved to Lineup
    IF   ${length_of_moveable_bench_player} != 0
       IF   ${bench_player_moved_lineup_status} == True
+         sleep    2
          ${slot_of_player}    get text    //div[@title="${bench_player_moved_lineup}"]//preceding::div[1][contains(@class,"table--cell")]
          should not be equal    ${slot_of_player}     Bench
       END

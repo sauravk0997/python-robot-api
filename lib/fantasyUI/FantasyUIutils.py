@@ -74,15 +74,15 @@ class FantasyUIutils:
         actual_no_of_slide_click = round(no_of_slide_click)
         format_date = date.capitalize()
         before_slide_status = BuiltIn().run_keyword_and_return_status('wait_until_element_is_visible',
-                                                             f"//span[text()='{format_date}']", 3)
+                                                             f"//span[text()='{format_date}']")
         if before_slide_status is True:
             return f"//span[text()='{format_date}']"
         else:
             for slide in range(actual_no_of_slide_click):
                 self.selLib.click_button("//button[contains(@class,'Arrow--right')]")
 
-                status = BuiltIn().run_keyword_and_return_status('wait_until_element_is_visible',
-                                                                 f"//span[text()='{format_date}']", 3)
+                status = BuiltIn().run_keyword_and_return_status('page_should_contain_element',
+                                                                 f"//span[text()='{format_date}']")
                 if status is True:
                     return f"//span[text()='{format_date}']"
                 else:

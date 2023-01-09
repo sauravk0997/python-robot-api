@@ -170,6 +170,7 @@ select input offline results and start inputing players for the teams
     scroll element into view    ${FINISH_ROSTER_BUTTON}
     sleep    2s
     click button                ${FINISH_ROSTER_BUTTON}
+    wait until element is visible    ${RELEASE_ROSTER}        timeout=10s
     click element                    ${RELEASE_ROSTER}
     wait until element is visible    ${TAKE_ME_TO_LEAGUE_ROSTERS}        timeout=10s
     sleep    2s

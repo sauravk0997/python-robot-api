@@ -82,3 +82,30 @@ As a Fantasy Team Owner move any player from Bench to lineup in an Upcoming Scor
     Select any Future Date
     Move any eligible Bench Player to lineup
     Verify whether the Player is Moved to Lineup
+
+As a League Manager Swap the positions of players of any other team in Upcoming ScoringPeriod
+    [Tags]    moveplayers    valid     CSEAUTO-29779
+    Navigate to LM Tools
+    select edit rosters from LM Tools page
+    Select any team in the league from edit roster page
+    Select any Future Date
+    Move any eligible Bench Player to lineup
+    Verify whether the Player is Moved to Lineup
+
+As a League Manager Move any Player to Bench of any other team in Upcoming ScoringPeriod
+    [Tags]    moveplayers    valid     CSEAUTO-29780
+    Navigate to LM Tools
+    select edit rosters from LM Tools page
+    Select any team in the league from edit roster page
+    Select any Future Date
+    Check and Move any eligible existing lineup player to Bench
+    Verify whether the Player is Moved to Bench
+
+As a League Manager Move Player from Bench to lineup of any other team in Upcoming ScoringPeriod
+    [Tags]    moveplayers    valid     CSEAUTO-29781
+    Navigate to LM Tools
+    select edit rosters from LM Tools page
+    Select any team in the league from edit roster page
+    Select any Future Date
+    Move any eligible Bench Player to lineup
+    Verify whether the Player is Moved to Lineup
