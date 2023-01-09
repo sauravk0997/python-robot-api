@@ -10,8 +10,8 @@ Resource            resource/UI/Pages/CreateLeaguePage.resource
 ${FANTASY_URL}                        https://fantasy.espn.com/
 ${user}                               test_user_account3@test.com
 ${encrypted_password}                 U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
-${ENCRYPTED_PASSWORD1}                QVBJdXNlckBFU1BO
-@{user_emails}                        test_api_user7@test.com    test_api_user2@test.com    test_api_user3@test.com
+${ENCRYPTED_PASSWORD1}                VUl1c2VyQEVTUE4=
+@{user_emails}                        ui_test_user1@test.com    ui_test_user2@test.com    ui_test_user3@test.com
 ${ROSTER_MOVES_DROPDOWN1}             (//select[@class="dropdown__select"])[1]
 ${LM_TOOLS_CONTINUE_BUTTON}           //button[normalize-space()='Continue']
 ${ROSTER_MOVES_DROPDOWN2}             (//select[@class="dropdown__select"])[2]
@@ -122,7 +122,8 @@ log in to the site
     wait until element is visible    ${username_field}
     input text        ${username_field}       ${username}
     wait until element is visible    ${password_field}
-    input password    ${password_field}    APIuser@ESPN
+    ${decrypted_password}=     Get decrypted password ${ENCRYPTED_PASSWORD1}
+    input password    ${password_field}    ${decrypted_password}
     click button      ${login_button}
     Unselect Frame
 

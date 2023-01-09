@@ -56,6 +56,7 @@ Create a league
     Click Element    ${SCORING_H2H_POINTS}
     Click Element    ${CREATE_LEAGUE_BUTTON}
     Wait Until Element Is Visible     ${CLOSE_ICON}
+    Sleep    1
     Click Element    ${CLOSE_ICON}
     Sleep    2
     Wait Until Element Is Visible    ${INVITE_MANAGERS}
@@ -91,6 +92,7 @@ Delete the league
     Mouse Over    ${OPPOSING_TEAMS}
     Wait Until Element Is Visible     ${LM_TOOLS}    timeout=10
     Mouse Over    ${LM_TOOLS}
+    Sleep    2
     Double Click Element    ${LM_TOOLS}
     Sleep    2
     Wait Until Element Is Visible    ${DELETE_LEAGUE_TEXT}
@@ -101,6 +103,7 @@ Delete the league
     Wait Until Element Is Visible    ${CONFIRM_TEXT}
     Click Element   ${CONFIRM_TEXT}
     Wait Until Element Is Visible    ${SUCCESS_HEADING}
+    Sleep    2
     ${success_text}=    Get Text    ${SUCCESS_HEADING}
     Should Be Equal As Strings    ${success_text}    Success!    msg=The expected and actual strings are not Equal
     Close the current Browser
@@ -149,6 +152,7 @@ Add players to all teams as league creator user and save the roster
     Sleep    2
     Click Button    ${FINISHED_RESULT_BUTTON}
     Wait Until Element Is Visible    ${RELEASE_ROSTER}
+    Sleep    2
     Click Element    ${RELEASE_ROSTER}
     Wait Until Element Is Visible    ${TAKE_ME_TO_LEAGUE_ROSTERS}
     Click element     ${TAKE_ME_TO_LEAGUE_ROSTERS}
