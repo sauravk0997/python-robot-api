@@ -5,11 +5,15 @@ import logging
 from webdriver_manager.chrome import ChromeDriverManager
 
 @library(scope='GLOBAL', version='5.0.2')
-class FantasyUIutils:
-    @not_keyword
+class FantasyUIutils(object):
+    
     def __init__(self):
-        self.selLib = BuiltIn().get_library_instance("SeleniumLibrary")
-
+        pass
+    
+    @property
+    def selLib(self):
+        return BuiltIn().get_library_instance("SeleniumLibrary")
+    
     @keyword('get chromedriver path')
     def get_chromedriver_path(self):
         return ChromeDriverManager().install()
