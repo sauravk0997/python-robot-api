@@ -5,7 +5,6 @@ Library             lib/fantasyUI/FantasyUIutils.py
 Library             lib/fantasyAPI/FantasyUtils.py
 Library             String
 Resource            resource/UI/Pages/CreateLeaguePage.resource
-# Resource            resource/UI/FantasyUICommonMove.resource
 
 *** Variables ***
 ${FANTASY_URL}                        https://fantasy.espn.com/
@@ -32,7 +31,7 @@ ${LEAGUE_CREATE_URL}                       https://fantasy.espn.com/basketball/l
 ${LEAGUE_NAME_FIELD}                       xpath://input[@class='form__control LeagueNameInput']
 ${NO_OF_TEAMS}                             xpath://div[text()=4]//parent::div
 ${LEAGUE_CREATE_BUTTON}                    xpath://button[text()='Create League']
-${DISMISS_INVITE}                          xpath://div[@class='lightbox__closebtn__wrap flex items-center justify-center']
+${DISMISS_INVITE}                          css:button[aria-label='Close dialog'] div
 ${SCHEDULE_DRAFT_BUTTON}                   xpath://a[text()="Schedule Your Draft"]
 ${OFFLINE_DRAFT_TYPE}                      xpath://label[text()="Offline"]
 ${SAVE_DRAFT_TYPE}                         xpath://button[text()='Save Changes']
@@ -72,7 +71,6 @@ Launch the Browser and Navigate to the ${url} site
     Maximize Browser Window
 
 Select my fantasy team
-    Sleep    15s
     wait until element is visible   //span[text()='My Team']
     click element      //span[text()='My Team']
 
@@ -169,7 +167,6 @@ Login into the espn site with user credentials ${username} and ${password}
     wait until element is visible    ${password_field}
     input password    ${password_field}    ${decrypted_password}
     click button      ${login_button}
-
 Click on LM tools
     Wait Until Element Is Visible    ${LM_TOOLS_OPTION}
     click element       ${LM_TOOLS_OPTION}

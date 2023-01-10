@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation    All the Common objects and keywords
 Library          SeleniumLibrary
+Library          SeleniumLibrary    implicit_wait=10
 Library          lib/fantasyAPI/FantasyUtils.py
 Resource             resource/suite_setup_teardown_moveplayer.resource
 Resource    ../FantasyUIcommon.resource
@@ -13,40 +14,19 @@ ${COMMON_DROP_BUTTON}         //div[@class='action-container absolute']//button[
 ${CONTINUE_BUTTON}            //span[normalize-space()='Continue']
 ${UNDROPPABLE_PLAYER}         //button[contains(@aria-label,"Can't drop")]
 ${CONFIRM_BUTTON}             //span[normalize-space()='Confirm']
-${user}                       uitest3_user_account@test.com
-${encrypted_password}         OXRmQi4zWTQjOGt1ayFqc2RramNid2l1Y2gyaXUzdTNocmtqNGZramV3Zg==
-${greeting}                   uitest!
-${league_id}                  792931688
 ${OUT_STATUS}                 //span[@title='Out']
 ${DTD_STATUS}                 //span[@title='Day-To-Day'']
 
 *** Keywords ***
-Login into the espn site for drop
-    ${decrypted_password}=    Get decrypted password ${encrypted_password}
-    mouse over        ${profile_icon}
-    click button      ${PROFILE_LOGIN_BUTTON}
-    Select Frame      ${oneid_frame}
-    wait until element is visible    ${username_field}
-    input text        ${username_field}       ${user}
-    wait until element is visible    ${Password_field}
-    input password    ${Password_field}    ${decrypted_password}
-    click button      ${PROFILE_LOGIN_BUTTON}
-
 Click on drop button
-    wait until element is visible   ${COMMON_DROP_BUTTON}
-    Click Element    ${COMMON_DROP_BUTTON}
-    Sleep    5s
-
-Click on drop button for verification
     wait until element is visible   ${COMMON_DROP_BUTTON}
     Scroll Element Into View    ${COMMON_DROP_BUTTON}
     Click Element    ${COMMON_DROP_BUTTON}
-    Sleep    5s
+    Wait Until Page Contains Element    @{DROP_PLAYERS_LIST}  
 
 Verify the player has been dropped
     Reload Page
-    Sleep    5s
-    Click on drop button for verification
+    Click on drop button
     ${after_drop}    check no of players available to drop
     [Return]    ${after_drop}
     
@@ -85,12 +65,10 @@ Click on multiple players to drop in LM tools
     Sleep    5s
 
 Click on drop player and continue
-    wait until element is visible   ${DROP_PLAYERS_LIST}
     Execute JavaScript    window.document.evaluate("//button[contains(@title,'Drop Player')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
-    Sleep    5s
+    wait until element is visible   ${DROP_PLAYERS_LIST}
     Click Element    ${DROP_PLAYERS_LIST}
     Click on continue
-    Sleep    5s
 
 Get player name whose status is ${status}
     ${player_name}=    Get Element Attribute    //span[@title='${status}']//parent::div    title
@@ -123,11 +101,9 @@ Select roster moves in LM tools
 
 Check availability for ${status} player and drop
     Set availability true
-    # ${avail}         convert to boolean    true
     Scroll Element Into View    //span[@title='${status}']
-    ${c} =   Get Element Count   //span[@title='${status}']
-    # ${c}    Set Variable    0
-    Run Keyword If   ${c}>0    Get player name whose status is ${status}    ELSE    Set availability false
+    ${count} =   Get Element Count   //span[@title='${status}']
+    Run Keyword If   ${count}>0    Get player name whose status is ${status}    ELSE    Set availability false
     
 Set availability ${avail}
     ${avail}         convert to boolean    ${avail}
