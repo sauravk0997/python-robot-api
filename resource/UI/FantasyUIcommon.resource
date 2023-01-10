@@ -199,6 +199,7 @@ Reset draft
 
 Scroll up 
     execute javascript             window.scrollTo(document.body.scrollHeight, 100)
+
 Begin Draft and start inputing players for the team
     wait until element is visible    ${SCHEDULE_DRAFT_BUTTON}    timeout=10s
     click element    ${SCHEDULE_DRAFT_BUTTON}
@@ -256,3 +257,4 @@ Add players for ${team} to drop
       wait until element is visible      //button[@data-player-search-playername="${name}"]
       click button    //button[@data-player-search-playername="${name}"]
     END
+  

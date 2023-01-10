@@ -1,8 +1,8 @@
 *** Settings ***
 Documentation    All the Common objects and keywords
 Library          lib/fantasyAPI/FantasyUtils.py
-Resource             resource/suite_setup_teardown_moveplayer.resource
-Resource    ../FantasyUIcommon.resource
+Resource         resource/suite_setup_teardown_moveplayer.resource
+Resource         resource/UI/FantasyUIcommon.resource
 
 *** Variables ***
 ${PROFILE_LOGIN_BUTTON}       xpath://button[text()='Log In']
@@ -39,29 +39,29 @@ Click on drop player button and continue in LM tools
     wait until element is visible   ${DROP_PLAYERS_LIST}
     Scroll Element Into View    ${DROP_PLAYERS_LIST}
     Click Element    ${DROP_PLAYERS_LIST}
-    Click on continue
+    Click on continue button
 
 Click on drop player button and continue
     wait until element is visible   ${DROP_PLAYERS_LIST}
     Execute JavaScript    window.document.evaluate("//button[contains(@title,'Drop Player')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
     Click Element    ${DROP_PLAYERS_LIST}
-    Click on continue
+    Click on continue button
 
 Click on drop undroppable player and continue in LM tools
     Scroll Element Into View    ${UNDROPPABLE_PLAYER}
     wait until element is visible   ${UNDROPPABLE_PLAYER}
     Click Element    ${UNDROPPABLE_PLAYER}
-    Click on continue
+    Click on continue button
 
 Click on multiple players to drop
     wait until element is visible   ${DROP_PLAYERS_LIST}
     Execute JavaScript    window.document.evaluate("//button[contains(@title,'Drop Player')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
     Select multiple players
-    Click on continue
+    Click on continue button
 
 Click on multiple players to drop in LM tools
     Select multiple players
-    Click on continue
+    Click on continue button
 
 Get player name whose status is ${status}
     ${player_name}=    Get Element Attribute    //span[@title='${status}']//parent::div    title
@@ -73,7 +73,7 @@ Get player name whose status is ${status}
             Execute JavaScript    window.document.evaluate("//button[@aria-label='Drop Player ${player_name}']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
             Click Element    //button[@aria-label='Drop Player ${player_name}']
     END
-    Click on continue
+    Click on continue button
     Click on confirm button
 
 check no of players available to drop
@@ -116,7 +116,7 @@ Check if ${player_name} is an undroppable player
     END
     Set Global Variable       ${undroppable_check}
 
-Click on continue
+Click on continue button
     wait until element is visible    ${CONTINUE_BUTTON}
     Click Element    ${CONTINUE_BUTTON}
 
