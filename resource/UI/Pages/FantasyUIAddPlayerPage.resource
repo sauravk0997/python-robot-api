@@ -1,17 +1,17 @@
 *** Settings ***
 Documentation    All the Common objects and keywords for adding player in the fantasy league
-Library          SeleniumLibrary
+Library          SeleniumLibrary    implicit_wait=10
 Library          Collections
 Library          String
 Resource         resource/UI/FantasyUIcommon.resource
 Resource    ../FantasyUICommonMove.resource
 
 *** Variables ***
-${DROP_PLAYER_BUTTON}               xpath://button[@data-myteam-mode='drop']
+${DROP_PLAYER_BUTTON}               css:button[data-myteam-mode='drop']
 ${ALL_PLAYER_LIST}                  xpath://tbody[@class='Table__TBODY']//tr//div[@title='Action']//button
 ${CONTINUE_BUTTON}                  xpath://span[text()='Continue']
 ${CONFIRM_BUTTON}                   xpath://span[text()='Confirm']
-${ACTIVE_DROP_BUTTON}               xpath://button[@title='Drop Player']
+${ACTIVE_DROP_BUTTON}               css:button[title='Drop Player']
 ${MY_TEAM_LINK}                     xpath://span[text()='My Team']
 ${ADD_PLAYER_LINK}                  xpath://span[text()='Add Player']
 ${FILTER_DROPDOWN}                  id:filterStatus
@@ -30,19 +30,21 @@ validate the user is navigated to the teams page
   page should contain element      ${MY_TEAM_LINK}
 
 Click on the my team link
-  wait until element is visible    ${MY_TEAM_LINK}        timeout=15
-  Click Element    ${MY_TEAM_LINK}
+  wait until element is visible    ${MY_TEAM_LINK}        timeout=10
+  mouse over                       ${MY_TEAM_LINK} 
+  Click Element                    ${MY_TEAM_LINK}
 
 Click on continue button
-  wait until element is visible     ${CONTINUE_BUTTON}
+  wait until element is visible     ${CONTINUE_BUTTON}    timeout=10
   Click Element                     ${CONTINUE_BUTTON} 
 
 Click on confirm button
-  wait until element is visible     ${CONFIRM_BUTTON}
+  wait until element is visible     ${CONFIRM_BUTTON}     timeout=10
   Click Element                     ${CONFIRM_BUTTON} 
 
 Click on drop player button
-  Wait Until Element Is Visible    ${DROP_PLAYER_BUTTON}    timeout=12
+  Wait Until Element Is Visible     ${DROP_PLAYER_BUTTON}        timeout=10
+  mouse Over                        ${DROP_PLAYER_BUTTON}
   Click Element                     ${DROP_PLAYER_BUTTON}
 
 Click on the drop button and fetch the players length
@@ -116,7 +118,7 @@ Add a player as TO
 Add players to the team as a Team Owner
   Add a player as TO
   Click on the my team link
-
+  
 Navigate to LM tools, Click on Roster moves and do the ${action} on the Team ${team_id} 
   # Clicking on LM Tool button
   Wait Until Element Is Visible     ${LM_TOOL_BUTTON}
@@ -131,7 +133,6 @@ Navigate to LM tools, Click on Roster moves and do the ${action} on the Team ${t
   Select From List By Value        ${TEAM_DROPDOWN}          ${team_id}
   Wait Until Element Is Visible    ${LM_CONTINUE_BUTTON}
   click element                    ${LM_CONTINUE_BUTTON}
-  Sleep    3s
 
 Add players to the team as an LM
   wait until element is visible               ${ADD_ACTION_BUTTON}        timeout=8
@@ -158,6 +159,17 @@ Performing dropping action to drop a player in the fantasy league
     Click on confirm button 
   ELSE 
     log    Droppable players are not available.
+  END
+
+Add and drop a player from my team as an LM, when roster is full
+  Click on the drop button and fetch the players length
+  IF    ${length_after_dropping} == 13
+    Click on the my team link
+    Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 1
+    Add players to the team as an LM
+    Performing dropping action to drop a player in the fantasy league
+  ELSE 
+      Log    Please fill your roster by addding players to the roster.
   END
 
 Drop players fom the team as an LM
@@ -208,7 +220,7 @@ Add and drop a player when team roster is full
   END
   Click on the my team link
 
-Add and drop a player when team roster is full as an LM
+Add and drop a player from other team as an LM, when roster is full
   Click on the drop button and fetch the players length
   IF    ${length_after_dropping} == 13
     Click on the my team link
