@@ -107,8 +107,8 @@ log in to the site
     click button      ${login_button}
     Unselect Frame
 
-Login into the espn site with user credentials ${username} and ${encrypted_password}
-    ${decrypted_password}=     Get decrypted password ${encrypted_password}
+Login into the espn site with user credentials ${username} and ${password}
+    ${decrypted_password}=     Get decrypted password ${password}
     mouse over        ${profile_icon}
     click button      ${PROFILE_LOGIN_BUTTON}
     Select Frame      ${oneid_frame}

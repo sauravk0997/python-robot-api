@@ -1,10 +1,8 @@
 *** Settings ***
 Documentation    All the Common objects and keywords for adding player in the fantasy league
-Library          SeleniumLibrary    implicit_wait=10
 Library          Collections
-Library          String
 Resource         resource/UI/FantasyUIcommon.resource
-Resource    ../FantasyUICommonMove.resource
+Resource         resource/UI/FantasyUICommonMove.resource
 
 *** Variables ***
 ${DROP_PLAYER_BUTTON}               css:button[data-myteam-mode='drop']
@@ -30,20 +28,20 @@ validate the user is navigated to the teams page
   page should contain element      ${MY_TEAM_LINK}
 
 Click on the my team link
-  wait until element is visible    ${MY_TEAM_LINK}        timeout=10
+  wait until element is visible    ${MY_TEAM_LINK}        timeout=10s
   mouse over                       ${MY_TEAM_LINK} 
   Click Element                    ${MY_TEAM_LINK}
 
 Click on continue button
-  wait until element is visible     ${CONTINUE_BUTTON}    timeout=10
+  wait until element is visible     ${CONTINUE_BUTTON}    timeout=10s
   Click Element                     ${CONTINUE_BUTTON} 
 
 Click on confirm button
-  wait until element is visible     ${CONFIRM_BUTTON}     timeout=10
+  wait until element is visible     ${CONFIRM_BUTTON}     timeout=10s
   Click Element                     ${CONFIRM_BUTTON} 
 
 Click on drop player button
-  Wait Until Element Is Visible     ${DROP_PLAYER_BUTTON}        timeout=10
+  Wait Until Element Is Visible     ${DROP_PLAYER_BUTTON}        timeout=10s
   mouse Over                        ${DROP_PLAYER_BUTTON}
   Click Element                     ${DROP_PLAYER_BUTTON}
 
@@ -60,9 +58,9 @@ Click on the drop button and fetch the players length
 
 Drop a player from my fantasy team
   Click on drop player button
-  ${Drop_players_status}    Run Keyword And Return Status    wait until element is visible            ${ACTIVE_DROP_BUTTON}    timeout=7 
+  ${drop_players_status}    Run Keyword And Return Status    wait until element is visible            ${ACTIVE_DROP_BUTTON}    timeout=7s
   # Storing all the droppable player to the list
-  IF    ${Drop_players_status} == True
+  IF    ${drop_players_status} == True
     @{drop_button}=       Get WebElements    ${ACTIVE_DROP_BUTTON}
     # Getting the length of all available players on the team
     ${drop}               Get Length         ${drop_button}
@@ -74,9 +72,7 @@ Drop a player from my fantasy team
       execute javascript             window.scrollTo(0, document.body.scrollHeight)
       # Selecting a player to be dropped from the team
       Click Button                      ${drop_button}[0]   
-      # Clicking on continue button
       Click on continue button  
-      # Clicking on confirm button
       Click on confirm button  
     ELSE
       Log    Droppable players are not available 
@@ -97,34 +93,34 @@ Validate whether player is dropped from team
   END  
   Click Element    ${CANCEL_BUTTON}
 
-Add a player as TO
+Add a player as Team Owner
   # Clicking on add player button on top right
   wait until element is visible    ${ADD_PLAYER_LINK} 
   Click Element                    ${ADD_PLAYER_LINK} 
   wait until element is visible    ${FILTER_DROPDOWN}
   Select From List By Value        ${FILTER_DROPDOWN}        FREEAGENT
-  wait until element is visible    ${ADD_ACTION_BUTTON}    timeout=8
+  wait until element is visible    ${ADD_ACTION_BUTTON}    timeout=8s
   # Storing all the free agent player to the list
   @{addable_players}=       Get WebElements    ${ADD_ACTION_BUTTON}
   ${addable_players_length}                Get Length         ${addable_players}
   IF    ${addable_players_length} != 0
     # Selecting a player for adding to the team
-    Wait Until Element Is Visible    ${addable_players}[0]    timeout=8 
+    Wait Until Element Is Visible    ${addable_players}[0]    timeout=8s
     Click Button    ${addable_players}[0]   
   ELSE
      Log    Free Agent players are not available 
   END
   
 Add players to the team as a Team Owner
-  Add a player as TO
+  Add a player as Team Owner
   Click on the my team link
-  
+
 Navigate to LM tools, Click on Roster moves and do the ${action} on the Team ${team_id} 
   # Clicking on LM Tool button
   Wait Until Element Is Visible     ${LM_TOOL_BUTTON}
   click element                     ${LM_TOOL_BUTTON}
-  #vClicking on Roster Moves
-  wait until element is visible    ${roster_moves}        timeout=10
+  #Clicking on Roster Moves
+  wait until element is visible    ${roster_moves}        timeout=10s
   Execute JavaScript               window.document.evaluate("//a[normalize-space()='Roster Moves']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
   Click element                    ${roster_moves}
   # Selecting action and teams from the dropdown 
@@ -135,27 +131,25 @@ Navigate to LM tools, Click on Roster moves and do the ${action} on the Team ${t
   click element                    ${LM_CONTINUE_BUTTON}
 
 Add players to the team as an LM
-  wait until element is visible               ${ADD_ACTION_BUTTON}        timeout=8
+  wait until element is visible               ${ADD_ACTION_BUTTON}        timeout=8s
   # Storing all free agents to the list
   @{lm_addable_players}=       Get WebElements    ${ADD_ACTION_BUTTON}
   ${lm_add_players_length}               Get Length          ${lm_addable_players}
   IF    ${lm_add_players_length} != 0
   # Adding a player to the team as league manager
-    Click Button    ${lm_addable_players}[0]   
+    Click Button    ${lm_addable_players}[0]
   ELSE
-     Log    Free Agent players are not available 
+     Log    Free Agent players are not available
   END 
   Click on the my team link
   Scroll up
   
-Performing dropping action to drop a player in the fantasy league
-  ${droppable_players_status}    Run Keyword And Return Status    wait until element is visible            ${ACTIVE_DROP_BUTTON}    timeout=7 
+Perform drop action to drop a player
+  ${droppable_players_status}    Run Keyword And Return Status    wait until element is visible            ${ACTIVE_DROP_BUTTON}    timeout=7s 
   IF    ${droppable_players_status} == True
     Execute JavaScript               window.document.evaluate("(//button[@title='Drop Player'])[1]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
     Click Element      (//button[@title='Drop Player'])[1]
-    # Clicking on continue button
     Click on continue button 
-    # Clicking on confirm button
     Click on confirm button 
   ELSE 
     log    Droppable players are not available.
@@ -167,9 +161,9 @@ Add and drop a player from my team as an LM, when roster is full
     Click on the my team link
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 1
     Add players to the team as an LM
-    Performing dropping action to drop a player in the fantasy league
+    Perform drop action to drop a player
   ELSE 
-      Log    Please fill your roster by addding players to the roster.
+      Log    Please fill your roster by addding players to it.
   END
 
 Drop players fom the team as an LM
@@ -185,9 +179,7 @@ Drop players fom the team as an LM
     # Dropping a player from the team as league manager
       Scroll up
       Click Button    ${lm_droppable_players}[0]  
-      # Clicking on continue button
       Click on continue button  
-      # Clicking on confirm button
       Click on confirm button
     ELSE
       Log    Droppable players are not available 
@@ -214,9 +206,9 @@ Add and drop a player when team roster is full
   IF    ${length_after_dropping} == 13
     Click on the my team link
     Add players to the team as a Team Owner
-    Performing dropping action to drop a player in the fantasy league
+    Perform drop action to drop a player
   ELSE
-      Log    Please fill your roster by addding players to the roster.
+      Log    Please fill your roster by addding players to it.
   END
   Click on the my team link
 
@@ -226,7 +218,7 @@ Add and drop a player from other team as an LM, when roster is full
     Click on the my team link
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 3
     Add players to the team as an LM
-    Performing dropping action to drop a player in the fantasy league
+    Perform drop action to drop a player
   ELSE 
-      Log    Please fill your roster by addding players to the roster.
+      Log    Please fill your roster by addding players to it.
   END
