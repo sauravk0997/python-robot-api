@@ -8,7 +8,7 @@ Resource             resource/UI/FantasyUIcommon.resource
 Resource             resource/UI/FantasyUICommonMove.resource
 Resource             resource/UI/Pages/FantasyUIMovePlayer.resource
 Suite Setup          FantasyUIcommon.Launch the site and create a test account and a fantasy league
-Suite Teardown       Delete the account and close browser
+Suite Teardown       Delete the league, test account and close browser
 
 
 *** Variables ***
