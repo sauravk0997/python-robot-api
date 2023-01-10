@@ -6,13 +6,13 @@ Metadata             Date        26-12-2022
 Resource             resource/UI/Pages/FantasyUIAddPlayerPage.resource
 Resource             resource/UI/FantasyUIcommon.resource
 Suite Setup           Run Keywords    Launch the Browser and Navigate to the https://www.espn.com/ site
-...        AND        Login into the espn site with user credentials ${username} and ${password}
+...        AND        Login into the espn site with user credentials ${username} and ${encrypted_password}
 ...        AND        Select my fantasy ${LEAGUE_NAME}
 Suite Teardown        Close the current Browser
 
 *** Variables ***
 ${username}        sauravk0997@gmail.com
-${password}        U2F1cmF2QDExMDM=
+${encrypted_password}        U2F1cmF2QDExMDM=
 ${LEAGUE_NAME}     UI-Automation-Testing-League-1
 
 *** Test Cases ***
