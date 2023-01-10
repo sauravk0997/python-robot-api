@@ -1,6 +1,4 @@
 import random
-import time
-
 from robot.api.deco import keyword, not_keyword, library
 from robot.libraries.BuiltIn import BuiltIn
 import logging
@@ -82,16 +80,14 @@ class FantasyUIutils(object):
         before_slide_status = BuiltIn().run_keyword_and_return_status('wait_until_element_is_visible',
                                                              f"//span[text()='{format_date}']")
         if before_slide_status is True:
-            return f"//span[text()='{format_date}']//parent::div"
+            return f"//span[text()='{format_date}']"
         else:
             for slide in range(actual_no_of_slide_click):
                 self.selLib.click_button("//button[contains(@class,'Arrow--right')]")
-
                 status = BuiltIn().run_keyword_and_return_status('wait_until_element_is_visible',
                                                                  f"//span[text()='{format_date}']")
                 if status is True:
-                    return f"//span[text()='{format_date}']//parent::div"
+                    return f"//span[text()='{format_date}']"
                 else:
                     continue
         return None
-

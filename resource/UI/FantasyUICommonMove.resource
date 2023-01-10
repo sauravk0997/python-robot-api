@@ -4,6 +4,7 @@ Library          SeleniumLibrary
 Library          lib/fantasyAPI/FantasyUtils.py
 Library          lib/fantasyUI/FantasyUIutils.py
 Library          RPA.JSON
+Resource         resource/UI/Pages/CreateLeaguePage.resource
 
 *** Variables ***
 ${HOMEPAGE_URL}                            https://www.espn.com/
@@ -66,7 +67,7 @@ Launch the Browser and Navigate to Espn site
 Create test account and a fantasy League
     create a test account
     Create a Fantasy League
-    Send invitations, Accept Invitation send by the inviter and create teams
+    Send invitations to the users,Accept Invitation send by the inviter and create teams
     Login to the site using the created test account
     Begin Draft
     Navigate to LM Tools
@@ -116,7 +117,7 @@ Create a Fantasy League
     click button           ${LOGOUT_BUTTON}
     sleep    2s
 
-Send invitations, Accept Invitation send by the inviter and create teams
+Send invitations to the users,Accept Invitation send by the inviter and create teams
     FOR    ${index}    IN RANGE    0    3
         Execute Javascript   window.open('${invite_link}')
         ${handles}=  Get Window Handles
@@ -140,7 +141,6 @@ Send invitations, Accept Invitation send by the inviter and create teams
 
 Login to the site using the created test account
     Login into the espn site from Homepage        ${random_email}
-    sleep    2s
     wait until element is visible   ${PROFILE_LOCATOR}     timeout=10s
     mouse over                      ${PROFILE_LOCATOR}
     click element                   xpath://span[text()='TestLeague']
@@ -163,10 +163,10 @@ select input offline results and start inputing players for the teams
     click element    ${INPUT_OFFLINE_RESULTS_LINK}
     wait until element is visible    ${BEGIN_OFFLINE_DRAFT}              timeout=10s
     click element    ${BEGIN_OFFLINE_DRAFT}
-    Add players to team 1
-    Add players to team 2
-    Add players to team 3
-    Add players to team 4
+    Add players to team 1 as league creator user
+    Add players to team 2 as league creator user
+    Add players to team 3 as league creator user
+    Add players to team 4 as league creator user
     scroll element into view    ${FINISH_ROSTER_BUTTON}
     sleep    2s
     click button                ${FINISH_ROSTER_BUTTON}
@@ -177,24 +177,9 @@ select input offline results and start inputing players for the teams
     click element                    ${TAKE_ME_TO_LEAGUE_ROSTERS}
     sleep    2s
 
-Add players to team ${team_no}
-    wait until element is visible             ${PLAYER_NAMES}           timeout=10s
-    @{players_elements}    get webelements    ${PLAYER_NAMES}
-    ${json}     load json from file           resource/UI/team${team_no}_players.json
-    FOR    ${no}    IN RANGE    13
-      ${name}     get value from json     ${json}      $.Player${no}
-      input text    ${players_elements}[${no}]      ${name}
-      wait until element is visible      //button[@data-player-search-playername="${name}"]
-      click button    //button[@data-player-search-playername="${name}"]
-    END
-    scroll element into view         ${SAVE_ROSTER}
-    click element                    ${SAVE_ROSTER}
-
-
 Login into the espn site from Homepage
     [Arguments]            ${email}
     go to                            ${HOMEPAGE_URL}
-    sleep    2s
     mouse over                       ${PROFILE_LOCATOR}
     click button                     ${LOGIN_BUTTON}
     Select Frame                     ${ONEID_FRAME}
@@ -228,15 +213,12 @@ select edit rosters from LM Tools page
       sleep    2s
 
 Delete the fantasy League
-    go to                           ${HOMEPAGE_URL}
-    Select any fantasy league TestLeague to move players
     Navigate to LM Tools
     click element     ${DELETE_LEAGUE_LINK}
     wait until element is visible    ${DELETE_LEAGUE_BUTTON}               timeout=10s
     click button      ${DELETE_LEAGUE_BUTTON}
     wait until element is visible    ${CONFIRM_DELETE_LEAGUE_BUTTON}       timeout=10s
     click button      ${CONFIRM_DELETE_LEAGUE_BUTTON}
-    sleep    2s
     wait until element is visible    ${CONTINUE_TO_THE_FANTASY_HOMEPAGE}    timeout=10s
     click element                    ${CONTINUE_TO_THE_FANTASY_HOMEPAGE}
 

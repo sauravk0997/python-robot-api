@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation    All the page objects and keywords of landing page
-Library          SeleniumLibrary    run_on_failure=None
+Library          SeleniumLibrary
 Library          Collections
 Library          lib/fantasyUI/FantasyUIutils.py
 Library          String
@@ -68,11 +68,10 @@ Select any Future Date
     Scroll Element Into View    ${future_dates}[${random_date}]
     ${get_date}         get text   ${future_dates}[${random_date}]
     Reload Page
-    register keyword to run on failure    Get the Web element based on the ${length_of_future_dates} and ${get_date}
+    register keyword to run on failure   Nothing
     ${element}   Get the Web element based on the ${length_of_future_dates} and ${get_date}
     click element         ${element}
     sleep    2
-
 
 Check and Move any eligible existing lineup player to Bench
        @{move_button_lineup_players}       Get WebElements    ${MOVEABLE_LINEUP_PLAYER}
@@ -109,7 +108,7 @@ Move any eligible Bench Player to lineup
         @{player}      get webelements       ${BENCH_MOVEABLE_PLAYER_NAME}
         scroll element into view    ${bench_players}[${random_no}]
         ${bench_player_moved_lineup}    get element attribute   ${player}[${random_no}]     title
-        click button    ${bench_players}[${random_no}]
+        click button    //div[@title="${bench_player_moved_lineup}"]//following::button[contains(@aria-label,"${bench_player_moved_lineup}")]
         set global variable     ${bench_player_moved_lineup}
         ${empty_lineup}    run keyword and return status   wait until element is visible    ${EMPTY_LINEUP_SLOT}     timeout=10s
         IF    ${empty_lineup} == True
@@ -156,5 +155,3 @@ Verify whether the Player is Moved to Lineup
        should not be equal    ${slot_of_player}     Bench
    END
 
-
-    
