@@ -93,7 +93,7 @@ create a test account
     sleep     4s
     wait until element is visible    ${SIGNUP_BUTTON}          timeout=10s
     click button                     ${SIGNUP_BUTTON}
-    sleep     8s
+    sleep     4s
     set global variable              ${random_email}
 
 Create a Fantasy League
@@ -140,7 +140,7 @@ Send invitations, Accept Invitation send by the inviter and create teams
 
 Login to the site using the created test account
     Login into the espn site from Homepage        ${random_email}
-    sleep    3s
+    sleep    2s
     wait until element is visible   ${PROFILE_LOCATOR}     timeout=10s
     mouse over                      ${PROFILE_LOCATOR}
     click element                   xpath://span[text()='TestLeague']
@@ -194,7 +194,7 @@ Add players to team ${team_no}
 Login into the espn site from Homepage
     [Arguments]            ${email}
     go to                            ${HOMEPAGE_URL}
-    sleep    4s
+    sleep    2s
     mouse over                       ${PROFILE_LOCATOR}
     click button                     ${LOGIN_BUTTON}
     Select Frame                     ${ONEID_FRAME}

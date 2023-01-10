@@ -89,8 +89,9 @@ As a League Manager Swap the positions of players of any other team in Upcoming 
     select edit rosters from LM Tools page
     Select any team in the league from edit roster page
     Select any Future Date
-    Move any eligible Bench Player to lineup
-    Verify whether the Player is Moved to Lineup
+    Check for the players in the team who are available to move from there existing positions
+    Swap the Position of the players in the current scoring period
+    Verify whether the player swapped their Position
 
 As a League Manager Move any Player to Bench of any other team in Upcoming ScoringPeriod
     [Tags]    moveplayers    valid     CSEAUTO-29780

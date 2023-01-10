@@ -12,7 +12,7 @@ ${LINEUP_PLAYERS_ELIGIBLE_SLOTS}          xpath://div[not(@title='Bench') and @c
 ${LINEUP_MOVEABLE_PLAYER_NAME}            xpath://button[@title='MOVE']//preceding::td[2]/div[not(text()='Bench')]//following::div[1]
 ${LINEUP_PLAYERS_ON_SLOT_PREFIX}          xpath://button[@title='MOVE']//preceding::td[2]/div[not(text()='Bench')]
 ${EMPTY_BENCH_LOCATOR}                    xpath://div[@title='Bench']//following::div[contains(@title,"Player")]//following::button
-${MOVEABLE_BENCH_PLAYER}                  xpath://div[@title='Bench']//following::button
+${MOVEABLE_BENCH_PLAYER}                  xpath://div[@title='Bench']//following::button[@title="MOVE"]
 ${EMPTY_LINEUP_SLOT}                      xpath://div[@title='Player']//preceding::td[@style='width: 60px;']/div[not(text()='IR')]//following::div[@aria-label="Move"]//descendant::button
 ${LINEUP_PLAYER_HERE_BUTTON}              xpath://button[@title='HERE']
 ${BENCH_MOVEABLE_PLAYER_NAME}             xpath://button[@title='MOVE']//preceding::div[text()='Bench']//following::div[contains(@class,'cell player__column') and not(@title='Player')]
@@ -61,15 +61,18 @@ Swap the Position of the players in the current scoring period
        set global variable    ${Before_swapping_player_details}
     END
 
-Verify whether the player swapped their Position
-  IF  ${status} == True
-  ${length}    get length    ${Before_swapping_player_details}
-    IF    ${length} != 0
-       Assert whether the player swapped their Position      ${Before_swapping_player_details}
-    ELSE
-       log    currently no players are available to swap their positions
-    END
-  END
+Select any Future Date
+    @{future_dates}     get webelements        ${FUTURE_DATES}
+    ${length_of_future_dates}  get length      ${future_dates}
+    ${random_date}      Get random player no in range of ${future_dates}
+    Scroll Element Into View    ${future_dates}[${random_date}]
+    ${get_date}         get text   ${future_dates}[${random_date}]
+    Reload Page
+    register keyword to run on failure    Get the Web element based on the ${length_of_future_dates} and ${get_date}
+    ${element}   Get the Web element based on the ${length_of_future_dates} and ${get_date}
+    click element         ${element}
+    sleep    2
+
 
 Check and Move any eligible existing lineup player to Bench
        @{move_button_lineup_players}       Get WebElements    ${MOVEABLE_LINEUP_PLAYER}
@@ -77,9 +80,9 @@ Check and Move any eligible existing lineup player to Bench
        IF   ${length_moveable_lineup_Player} != 0
            ${random_player}     Get random player no in range of ${move_button_lineup_players}
            ${player_names}      Get WebElements         ${LINEUP_MOVEABLE_PLAYER_NAME}
-           ${Player_name_for_moving_to_Bench}       get element attribute    ${player_names}[${random_player}]     title
            scroll element into view    ${move_button_lineup_players}[${random_player}]
-           click button     ${move_button_lineup_players}[${random_player}]
+           ${Player_name_for_moving_to_Bench}       get element attribute    ${player_names}[${random_player}]     title
+           click button     //div[@title="${Player_name_for_moving_to_Bench}"]//following::button[contains(@aria-label,"${Player_name_for_moving_to_Bench}")]
            ${bench_status}    RUN KEYWORD AND RETURN STATUS    wait until element is visible    ${EMPTY_BENCH_LOCATOR}     timeout=10s
            IF    ${bench_status} == True
               scroll element into view    ${EMPTY_BENCH_LOCATOR}
@@ -97,13 +100,6 @@ Check and Move any eligible existing lineup player to Bench
           set global variable    ${bench_status}
        END
 
-Verify whether the Player is Moved to Bench
-    IF    ${bench_status} == True
-        sleep    2
-        ${slot_of_player}    get text    //div[@title="${Player_name_for_moving_to_Bench}"]//preceding::div[1][contains(@class,"table--cell")]
-        should be equal    ${slot_of_player}        Bench
-    END
-
 Move any eligible Bench Player to lineup
     @{bench_players}      get webelements    ${MOVEABLE_BENCH_PLAYER}
     ${length_of_moveable_bench_player}    get length    ${bench_players}
@@ -111,8 +107,8 @@ Move any eligible Bench Player to lineup
     IF    ${length_of_moveable_bench_player} != 0
         ${random_no}     Get random player no in range of ${bench_players}
         @{player}      get webelements       ${BENCH_MOVEABLE_PLAYER_NAME}
-        ${bench_player_moved_lineup}    get element attribute   ${player}[${random_no}]     title
         scroll element into view    ${bench_players}[${random_no}]
+        ${bench_player_moved_lineup}    get element attribute   ${player}[${random_no}]     title
         click button    ${bench_players}[${random_no}]
         set global variable     ${bench_player_moved_lineup}
         ${empty_lineup}    run keyword and return status   wait until element is visible    ${EMPTY_LINEUP_SLOT}     timeout=10s
@@ -138,23 +134,27 @@ Move any eligible Bench Player to lineup
         END
     END
 
+Verify whether the player swapped their Position
+  IF  ${status} == True
+  ${length}    get length    ${Before_swapping_player_details}
+    IF    ${length} != 0
+       Assert whether the player swapped their Position      ${Before_swapping_player_details}
+    ELSE
+       log    currently no players are available to swap their positions
+    END
+  END
+
+Verify whether the Player is Moved to Bench
+    IF  ${bench_status} == True
+        ${slot_of_player}    get text    //div[@title="${Player_name_for_moving_to_Bench}"]//preceding::div[1][contains(@class,"table--cell")]
+        should be equal    ${slot_of_player}        Bench
+    END
+
 Verify whether the Player is Moved to Lineup
-   IF   ${length_of_moveable_bench_player} != 0
-      IF   ${bench_player_moved_lineup_status} == True
-         sleep    2
-         ${slot_of_player}    get text    //div[@title="${bench_player_moved_lineup}"]//preceding::div[1][contains(@class,"table--cell")]
-         should not be equal    ${slot_of_player}     Bench
-      END
+   IF  ${bench_player_moved_lineup_status} == True
+       ${slot_of_player}    get text    //div[@title="${bench_player_moved_lineup}"]//preceding::div[1][contains(@class,"table--cell")]
+       should not be equal    ${slot_of_player}     Bench
    END
 
-Select any Future Date
-    @{future_dates}     get webelements        ${FUTURE_DATES}
-    ${length_of_future_dates}  get length      ${future_dates}
-    ${random_date}      Get random player no in range of ${future_dates}
-    Scroll Element Into View    ${future_dates}[${random_date}]
-    ${get_date}         get text   ${future_dates}[${random_date}]
-    Reload Page
-    register keyword to run on failure    Get the Web element based on the ${length_of_future_dates} and ${get_date}
-    ${element}   Get the Web element based on the ${length_of_future_dates} and ${get_date}
-    click element         ${element}
+
     
