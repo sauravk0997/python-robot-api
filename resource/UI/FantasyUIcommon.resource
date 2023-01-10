@@ -1,6 +1,6 @@
 *** Settings ***
 Library             RPA.JSON
-Library             SeleniumLibrary    implicit_wait=5
+Library             SeleniumLibrary    timeout=10s    implicit_wait=10s
 Library             lib/fantasyUI/FantasyUIutils.py
 Library             lib/fantasyAPI/FantasyUtils.py
 Library             String
@@ -79,7 +79,6 @@ Log in to the Fantasy Application
     Unselect Frame
 
 Re-login to the fantasy application as a root user
-    Sleep    2
     Select Frame      ${DISNEY_ID_IFRAME}
     wait until element is visible    ${username_field}
     input text        ${username_field}       ${user}
@@ -90,7 +89,6 @@ Re-login to the fantasy application as a root user
     Unselect Frame
 
 Re-login to the fantasy application as a ${team_no} user
-    Sleep    1
     Select Frame      ${DISNEY_ID_IFRAME}
     ${int_value}=    Convert To Integer    ${team_no}
     ${user_email_index}=    Evaluate    ${int_value}-2
@@ -100,11 +98,9 @@ Re-login to the fantasy application as a ${team_no} user
     wait until element is visible    ${password_field}
     input password    ${password_field}    ${decrypted_password}
     click button      ${login_button}
-    Sleep    3
     Unselect Frame
 
 Logout from Fantasy Application
-    Sleep    2
     Reload Page
     Wait Until Element Is Enabled    ${FANTASY_PROFILE_ICON}
     Scroll Element Into View    ${FANTASY_PROFILE_ICON}
@@ -115,7 +111,6 @@ log in to the site
     [Arguments]    ${username}
     Logout from Fantasy Application 
     Mouse Over    ${FANTASY_PROFILE_ICON}
-    Sleep    1
     Wait Until Element Is Visible    ${FANTASY_LOGIN_LINK}
     Click Element    ${FANTASY_LOGIN_LINK}
     Select Frame      ${DISNEY_ID_IFRAME} 
@@ -136,6 +131,7 @@ Login into the espn site with user credentials ${username} and ${password}
     wait until element is visible    ${password_field}
     input password    ${password_field}    ${password}
     click button      ${login_button}
+
 Click on LM tools
     Wait Until Element Is Visible    ${LM_TOOLS_OPTION}
     click element       ${LM_TOOLS_OPTION}

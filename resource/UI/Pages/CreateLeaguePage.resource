@@ -45,6 +45,7 @@ ${TAKE_ME_TO_LEAGUE_ROSTERS}     xpath://div[@class='lightbox__content lightbox_
 *** Keywords ***
 Create a league
     Sleep    6
+    Wait Until Page Contains Element    ${CREATE_A_LEAGUE_BUTTON}
     Wait Until Element Is Enabled    ${CREATE_A_LEAGUE_BUTTON}  timeout=10s
     Click Button    ${CREATE_A_LEAGUE_BUTTON}
     ${random_string}=    Generate Random String    4    0123456789
@@ -56,12 +57,10 @@ Create a league
     Click Element    ${SCORING_H2H_POINTS}
     Click Element    ${CREATE_LEAGUE_BUTTON}
     Wait Until Element Is Visible     ${CLOSE_ICON}
-    Sleep    1
     Click Element    ${CLOSE_ICON}
-    Sleep    2
     Wait Until Element Is Visible    ${INVITE_MANAGERS}
     Click Element    ${INVITE_MANAGERS}
-    sleep  3
+    Wait Until Page Contains Element    ${INVITE_LINK_TEXT}
     ${invite_link}=    Get Element Attribute    ${INVITE_LINK_TEXT}    value
     Log    "Invite Link ::::"${invite_link}
     Set Global Variable    ${invite_link}
@@ -72,6 +71,7 @@ Send invitations, Accept Invitation send by the inviter and create teams
         ${handles}=  Get Window Handles
         Switch Window   ${handles}[1]
         log in to the site    ${user_emails}[${index}]
+        Page Should Contain Button    ${JOIN_THIS_LEAGUE_BUTTON}
         Wait Until Element Is Enabled    ${JOIN_THIS_LEAGUE_BUTTON}
         sleep     2
         Click Button    ${JOIN_THIS_LEAGUE_BUTTON}
@@ -86,6 +86,7 @@ Send invitations, Accept Invitation send by the inviter and create teams
 
 Delete the league
     check iframe and re-login into the application
+    Wait Until Page Contains Element    ${MY_TEAMS_ICON}
     Wait Until Element Is Visible    ${MY_TEAMS_ICON}
     Mouse Over       ${MY_TEAMS_ICON}
     click element    xpath://span[text()='${league_name}']
@@ -99,11 +100,9 @@ Delete the league
     click element    ${DELETE_LEAGUE_TEXT}
     Wait Until Element Is Visible    ${DELETE_LEAGUE_BUTTON}
     Click Button    ${DELETE_LEAGUE_BUTTON}
-    Sleep    1
     Wait Until Element Is Visible    ${CONFIRM_TEXT}
     Click Element   ${CONFIRM_TEXT}
     Wait Until Element Is Visible    ${SUCCESS_HEADING}
-    Sleep    2
     ${success_text}=    Get Text    ${SUCCESS_HEADING}
     Should Be Equal As Strings    ${success_text}    Success!    msg=The expected and actual strings are not Equal
     Close the current Browser
@@ -115,10 +114,11 @@ check iframe and re-login into the application
     ...  ELSE    Run Keywords
     ...    Logout from Fantasy Application
     ...    Re-login to the fantasy application as a root user
-    Sleep    3
+    Sleep    2
 
 Schedule Offline Draft
     check iframe and re-login into the application
+    Wait Until Page Contains Element    ${MY_TEAMS_ICON}
     Wait Until Element Is Visible    ${MY_TEAMS_ICON}
     Mouse Over       ${MY_TEAMS_ICON}
     click element    xpath://span[text()='${league_name}']
@@ -131,16 +131,20 @@ Schedule Offline Draft
     click button     ${SAVE_DRAFT_TYPE}
 
 Begin Offline Draft
+    Click on LM Tools Tab
+    Wait Until Page Contains Element    ${INPUT_OFFLINE_DRAFT}
+    click element     ${INPUT_OFFLINE_DRAFT}
+    Wait Until Element Is Visible    ${BEGIN_OFFLINE_DRAFT}
+    Click Button     ${BEGIN_OFFLINE_DRAFT}
+
+Click on LM Tools Tab
     Mouse Over    ${OPPOSING_TEAMS}
+    Wait Until Page Contains Element    ${LM_TOOLS}
     Wait Until Element Is Visible     ${LM_TOOLS}    timeout=10
     Mouse Over    ${LM_TOOLS}
     Sleep    1
     Double Click Element    ${LM_TOOLS}
-    Sleep    3
-    Wait Until Element Is Visible    ${INPUT_OFFLINE_DRAFT}
-    click element     ${INPUT_OFFLINE_DRAFT}
-    Wait Until Element Is Visible    ${BEGIN_OFFLINE_DRAFT}
-    Click Button     ${BEGIN_OFFLINE_DRAFT}
+    Sleep    2
 
 Add players to all teams as league creator user and save the roster
     Add players to team 1 as league creator user
@@ -177,12 +181,7 @@ Add players to team ${team_no} as league creator user
     END
 
 Assign League Manager Roles to Team2, Team3 and Team4 owners
-    Mouse Over    ${OPPOSING_TEAMS}
-    Wait Until Element Is Visible     ${LM_TOOLS}    timeout=10
-    Mouse Over    ${LM_TOOLS}
-    Sleep    1
-    Double Click Element    ${LM_TOOLS}
-    Sleep    2
+    Click on LM Tools Tab
     Wait Until Element Is Visible     ${ASSIGN_LM_POWERS}
     Click Element    ${ASSIGN_LM_POWERS}
     FOR    ${index}    IN RANGE    1    4
@@ -196,7 +195,8 @@ Assign League Manager Roles to Team2, Team3 and Team4 owners
 Add players to team ${team_id} as team owner ${team_owner_id}
     Logout from Fantasy Application
     Re-login to the fantasy application as a ${team_id} user
-    Reload Page
+    #Reload Page
+    Wait Until Page Contains Element    ${PLAYER_NAMES}
     wait until element is visible             ${PLAYER_NAMES}           timeout=10s
     @{players_elements}    get webelements    ${PLAYER_NAMES}
     ${players_list}     load json from file           resource/UI/offlineDraftTeam${team_id}.json
