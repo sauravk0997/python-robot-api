@@ -37,7 +37,7 @@ ${OFFLINE_DRAFT_TYPE}                      xpath://label[text()="Offline"]
 ${SAVE_DRAFT_TYPE}                         xpath://button[text()='Save Changes']
 ${SAVE_ROSTER_TEAM1}                       xpath://button[text()='Save Roster'and @data-team-id='1']
 ${SAVE_ROSTER_TEAM2}                       xpath://button[text()='Save Roster'and @data-team-id='2']
-${RELEASE_ROSTER}                          xpath://button[@class='Button Button--lg Button--default Button--custom']
+${RELEASE_ROSTER_BUTTON}                   xpath://button[@class='Button Button--lg Button--default Button--custom']
 ${INPUT_OFFLINE_RESULTS_LINK}              xpath://a[text()='Input Offline Draft Results']
 ${BEGIN_OFFLINE_DRAFT}                     xpath://button[text()='Begin Offline Draft']
 ${PLAYER_NAMES}                            xpath://input[@placeholder='Player Name']
@@ -96,8 +96,8 @@ Create a League to drop players
     Scroll Element Into View         ${FINISH_ENTERING_BUTTON}
     wait until element is visible    ${FINISH_ENTERING_BUTTON}
     click element                    ${FINISH_ENTERING_BUTTON}
-    wait until element is visible    ${RELEASE_ROSTER}      timeout=10s
-    click element                    ${RELEASE_ROSTER}
+    wait until element is visible    ${RELEASE_ROSTER_BUTTON}      timeout=10s
+    click element                    ${RELEASE_ROSTER_BUTTON}
     sleep       2s
 
 Log in to the Fantasy Application
@@ -199,3 +199,60 @@ Reset draft
 
 Scroll up 
     execute javascript             window.scrollTo(document.body.scrollHeight, 100)
+Begin Draft and start inputing players for the team
+    wait until element is visible    ${SCHEDULE_DRAFT_BUTTON}    timeout=10s
+    click element    ${SCHEDULE_DRAFT_BUTTON}
+    wait until element is visible    ${OFFLINE_DRAFT_TYPE}       timeout=10s
+    click element    ${OFFLINE_DRAFT_TYPE}
+    click button     ${SAVE_DRAFT_TYPE}
+    sleep       3s
+    Click on LM tools
+    wait until element is visible     ${INPUT_OFFLINE_RESULTS_LINK}      timeout=10s
+    click element    ${INPUT_OFFLINE_RESULTS_LINK}
+    wait until element is visible    ${BEGIN_OFFLINE_DRAFT}              timeout=10s
+    click element    ${BEGIN_OFFLINE_DRAFT}
+    Add players for team 1 to drop
+    click element                    ${SAVE_ROSTER_TEAM1}
+    Sleep    3s
+    Add players for team 2 to drop
+    click element                    ${SAVE_ROSTER_TEAM2}
+    Sleep    3s
+
+Launch the site and create a test account and a fantasy league
+    Launch the Browser and Navigate to the ${FANTASY_URL} site
+    mouse over                       ${profile_icon}
+    click button                     ${PROFILE_LOGIN_BUTTON}
+    Select Frame                     ${ONEID_FRAME}
+    click button                     ${SIGNUP_BUTTON}
+    wait until element is visible    ${FIRST_NAME_FIELD}
+    input text                       ${FIRST_NAME_FIELD}       Test
+    input text                       ${LAST_NAME_FIELD}        Ui
+    ${random_email}                  generate a random email
+    input text                       ${NEW_EMAIL_FIELD}        ${random_email}
+    ${random_password}               generate a random password
+    input password                   ${NEW_PASSWORD_FIELD}     ${random_password}
+    sleep     4s
+    wait until element is visible    ${SIGNUP_BUTTON}          timeout=10s
+    click button                     ${SIGNUP_BUTTON}
+    sleep     4s
+    set global variable              ${random_email}
+    set selenium implicit wait       5s
+    Create a League to drop players
+    Reload Page
+    Sleep    2s
+
+Add players for ${team} to drop
+    wait until element is visible             ${PLAYER_NAMES}           timeout=10s
+    @{players_elements}    get webelements    ${PLAYER_NAMES}
+    Convert To String    ${team}
+    IF    '${team}' == 'team 1'
+        ${json}     load json from file           resource/UI/team1_players.json
+    ELSE
+        ${json}     load json from file           resource/UI/team2_players.json
+    END 
+    FOR    ${index}    IN RANGE    13
+      ${name}     get value from json     ${json}      $.Player${index}
+      input text    ${players_elements}[${index}]      ${name}
+      wait until element is visible      //button[@data-player-search-playername="${name}"]
+      click button    //button[@data-player-search-playername="${name}"]
+    END

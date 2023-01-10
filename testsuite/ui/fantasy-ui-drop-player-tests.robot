@@ -13,104 +13,67 @@ Suite Teardown       Delete the account and close browser
 
 *** Variables ***
 ${ESPN_URL}        https://www.espn.com/
-${MY_LEAGUE}       My-Fantasy-League-5324
 
 *** Test Cases ***
 Drop a player from my team as a team manager
     [Documentation]    E2E - Add and drop players as a team manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Select my fantasy team
-    Click on drop button
-    ${before_drop}    check no of players available to drop
-    Click on drop player and continue
-    Click on confirm drop
-    ${after_drop}    Verify the player has been dropped
-    Should Be Equal    ${${before_drop}-1}    ${after_drop}
+    Select my team and check the available players
+    Drop a player from the team
+    Verify if the player has been dropped from teams page
 
 Drop a player from my team as a league manager
     [Documentation]    E2E - Add and drop players as a league manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Select roster moves in LM tools
-    ${before_drop}    check no of players available to drop
-    Click on drop player and continue in LM tools
-    Click on confirm drop
-    ${after_drop}    Verify the player has been dropped inside LM tools
-    Should Be Equal    ${${before_drop}-1}    ${after_drop}
+    Select a team from LM tools
+    Drop a player from the team inside LM tools
+    Verify if the player has been dropped from LM tools page
 
 Drop a player from droppable list as a team manager
     [Documentation]    E2E - Add and drop players as a team manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Select my fantasy team
-    Click on drop button
-    ${before_drop}    check no of players available to drop
-    Click on drop player and continue
-    Click on confirm drop
-    ${after_drop}    Verify the player has been dropped
-    Should Be Equal    ${${before_drop}-1}    ${after_drop}
+    Select my team and check the available players
+    Drop a player from the team
+    Verify if the player has been dropped from teams page
 
 Drop a player from undroppable list as a league manager
     [Documentation]    E2E - Add and drop players as a league manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29461
-    Select roster moves in LM tools
-    ${before_drop}    check no of players available to drop
-    Click on drop undroppable player and continue in LM tools
-    Click on confirm drop
-    ${after_drop}    Verify the player has been dropped inside LM tools
-    Should Be Equal    ${${before_drop}-1}    ${after_drop}
+    Select a team from LM tools
+    Select undroppable player and drop
+    Verify if the player has been dropped from LM tools page
 
  Drop an undroppable player from the team as a league manager
     [Documentation]    E2E - Add and drop players as a league manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29718
-    Select roster moves in LM tools
-    ${before_drop}    check no of players available to drop
-    Click on drop undroppable player and continue in LM tools
-    Click on confirm drop
-    ${after_drop}    Verify the player has been dropped inside LM tools
-    Should Be Equal    ${${before_drop}-1}    ${after_drop}
+    Select a team from LM tools
+    Select undroppable player and drop
+    Verify if the player has been dropped from LM tools page
 
  Drop multiple players from the team at the same time as a league manager
     [Documentation]    E2E - Add and drop players as a league manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29718
-    Select roster moves in LM tools
-    ${before_drop}    check no of players available to drop
-    Click on multiple players to drop in LM tools
-    Click on confirm drop
-    ${after_drop}    Verify the player has been dropped inside LM tools
-    Should Be Equal    ${${before_drop}-2}    ${after_drop}
+    Select a team from LM tools
+    Select multiple players and drop inside LM tools
+    Verify multiple players have been dropped inside LM tools
 
  Drop multiple players from the team at the same time as a Team manager
     [Documentation]    E2E - Add and drop players as a league manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29718
-    Select my fantasy team
-    Click on drop button
-    ${before_drop}    check no of players available to drop
-    Click on multiple players to drop
-    Click on confirm drop
-    ${after_drop}    Verify the player has been dropped
-    Should Be Equal    ${${before_drop}-2}    ${after_drop}
+    Select my team and check the available players
+    Select multiple players and drop
+    Verify multiple players have been dropped
 
  Drop 'DTD' player from a team as a League manager
     [Documentation]    E2E - Add and drop players as a league manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29718
-    Select roster moves in LM tools
-    ${before_drop}    check no of players available to drop
+    Select a team from LM tools
     Check availability for Day-To-Day player and drop
-    IF    ${avail} == ${TRUE}
-      ${after_drop}    Verify the player has been dropped inside LM tools
-      Should Be Equal    ${${before_drop}-1}    ${after_drop}
-    ELSE 
-      Log To Console    "No DTD players in the team"
-    END
+    Verify that DTD player has been dropped
 
  Drop 'OUT' player from a team as a League manager
     [Documentation]    E2E - Add and drop players as a league manager
     [Tags]    valid    fantasy-ui    CSEAUTO-29718
-    Select roster moves in LM tools
-    ${before_drop}    check no of players available to drop
+    Select a team from LM tools
     Check availability for Out player and drop
-    IF    ${avail} == ${TRUE}
-      ${after_drop}    Verify the player has been dropped inside LM tools
-      Should Be Equal    ${${before_drop}-1}    ${after_drop}
-    ELSE
-      Log To Console    "No OUT players in the team"
-    END
+    Verify that OUT player has been dropped
