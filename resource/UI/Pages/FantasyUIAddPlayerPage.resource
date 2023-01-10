@@ -67,7 +67,8 @@ Drop a player from my fantasy team
     wait until element is visible            ${ALL_PLAYER_LIST}
     # Getting the length of player before the player is dropped from the team
     @{players_before_dropping}=       Get WebElements    ${ALL_PLAYER_LIST}
-    ${length_before_dropping}        Get Length         ${players_before_dropping}   
+    ${length_before_dropping}        Get Length         ${players_before_dropping}
+    set global variable   ${length_before_dropping}
     IF    ${drop} != 0
       execute javascript             window.scrollTo(0, document.body.scrollHeight)
       # Selecting a player to be dropped from the team
@@ -76,11 +77,11 @@ Drop a player from my fantasy team
       Click on confirm button  
     ELSE
       Log    Droppable players are not available 
-  END
+    END
   ELSE
       Log    Please add players to your team!!
   END
-  set global variable   ${length_before_dropping}
+  
 
 Validate whether player is dropped from team
   Click on the my team link
