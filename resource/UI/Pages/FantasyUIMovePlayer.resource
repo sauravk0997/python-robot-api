@@ -1,12 +1,12 @@
 *** Settings ***
 Documentation    All the page objects and keywords of landing page
-Library          SeleniumLibrary    timeout=10s    implicit_wait=10s
+Library          SeleniumLibrary
 Library          Collections
 Library          lib/fantasyUI/FantasyUIutils.py
 Library          String
 
 *** Variables ***
-${My_TEAM_ACTIVE}                         xpath://li[@class='myTeam active NavSecondary__Item']
+${MY_TEAM_ACTIVE}                         xpath://li[@class='myTeam active NavSecondary__Item']
 ${MOVEABLE_LINEUP_PLAYER}                 xpath://div[not(@title='Bench') and @class='jsx-2810852873 table--cell']//ancestor::tr//descendant::button
 ${LINEUP_PLAYERS_ELIGIBLE_SLOTS}          xpath://div[not(@title='Bench') and @class='jsx-2810852873 table--cell']//ancestor::tr//child::button//preceding::td[1]//descendant::span[@class='playerinfo__playerpos ttu']
 ${LINEUP_MOVEABLE_PLAYER_NAME}            xpath://button[@title='MOVE']//preceding::td[2]/div[not(text()='Bench')]//following::div[1]
@@ -23,24 +23,26 @@ ${MY_TEAM}                                xpath://span[text() ='My Team']
 
 *** Keywords ***
 Navigate to Fantasy Team Page
-     wait until element is visible    ${MY_TEAM}       timeout=10s
+     wait until element is visible    ${MY_TEAM}         timeout=10s
      click element                    ${MY_TEAM}
+     sleep     3
      validate user is navigated to teams page
 
 validate user is navigated to teams page
-     wait until element is visible  ${My_TEAM_ACTIVE}
+     wait until element is visible  ${My_TEAM_ACTIVE}     timeout=10s
      page should contain element    ${My_TEAM_ACTIVE}
      page should contain            My Team
      execute javascript             window.scrollTo(0, document.body.scrollHeight)
 
 Select any team in the league from edit roster page
     @{options}     get webelements    ${DROPDOWNS}
-    wait until element is visible     ${options}[0]
+    wait until element is visible     ${options}[0]        timeout=10s
     select from list by value         ${options}[0]        editRoster
     ${random_value}    generate random string            1        234
-    wait until element is visible     ${options}[1]
+    wait until element is visible     ${options}[1]        timeout=10s
     select from list by value         ${options}[1]        ${random_value}
     click button                      ${CONTINUE_BUTTON}
+    sleep    3
 
 Check for the players in the team who are available to move from there existing positions
     @{move_button_players}    Get WebElements    ${MOVEABLE_LINEUP_PLAYER}
@@ -155,4 +157,3 @@ Verify whether the Player is Moved to Lineup
        ${slot_of_player}    get text    //div[@title="${bench_player_moved_lineup}"]//preceding::div[1][contains(@class,"table--cell")]
        should not be equal    ${slot_of_player}     Bench
    END
-
