@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation    All the page objects and keywords of landing page
-Library          SeleniumLibrary
+Library          SeleniumLibrary        implicit_wait=10s
 Library          Collections
 Library          lib/fantasyUI/FantasyUIutils.py
 Library          String
@@ -25,6 +25,13 @@ ${MY_TEAM}                                xpath://span[text() ='My Team']
 Navigate to Fantasy Team Page
      wait until element is visible    ${MY_TEAM}       timeout=10s
      click element                    ${MY_TEAM}
+     validate user is navigated to teams page
+
+validate user is navigated to teams page
+     wait until element is visible  ${My_TEAM_ACTIVE}
+     page should contain element    ${My_TEAM_ACTIVE}
+     page should contain            My Team
+     execute javascript             window.scrollTo(0, document.body.scrollHeight)
 
 Select any team in the league from edit roster page
     @{options}     get webelements    ${DROPDOWNS}
@@ -34,12 +41,6 @@ Select any team in the league from edit roster page
     wait until element is visible     ${options}[1]
     select from list by value         ${options}[1]        ${random_value}
     click button                      ${CONTINUE_BUTTON}
-
-validate the user is navigated to the teams page
-    wait until element is visible  ${My_TEAM_ACTIVE}
-    page should contain element    ${My_TEAM_ACTIVE}
-    page should contain            My Team
-    execute javascript             window.scrollTo(0, document.body.scrollHeight)
 
 Check for the players in the team who are available to move from there existing positions
     @{move_button_players}    Get WebElements    ${MOVEABLE_LINEUP_PLAYER}
@@ -57,14 +58,14 @@ Swap the Position of the players in the current scoring period
        @{move_button_lineup_player}       Get WebElements     ${MOVEABLE_LINEUP_PLAYER}
        @{locators}          create list         ${move_button_lineup_player}    ${LINEUP_PLAYERS_ELIGIBLE_SLOTS}  ${LINEUP_MOVEABLE_PLAYER_NAME}  ${LINEUP_PLAYERS_ON_SLOT_PREFIX}
        @{player_details}    get the player details    ${locators}
-       @{Before_swapping_player_details}    Get the details of the players before swapping and then swap their position    ${player_details}
-       set global variable    ${Before_swapping_player_details}
+       @{before_swapping_player_details}    Get the details of the players before swapping and then swap their position    ${player_details}
+       set global variable    ${before_swapping_player_details}
     END
 
-Select any Future Date
+Select any future date
     @{future_dates}     get webelements        ${FUTURE_DATES}
     ${length_of_future_dates}  get length      ${future_dates}
-    ${random_date}      Get random player no in range of ${future_dates}
+    ${random_date}      Get random number in range of ${future_dates}
     Scroll Element Into View    ${future_dates}[${random_date}]
     ${get_date}         get text   ${future_dates}[${random_date}]
     Reload Page
@@ -77,16 +78,16 @@ Check and Move any eligible existing lineup player to Bench
        @{move_button_lineup_players}       Get WebElements    ${MOVEABLE_LINEUP_PLAYER}
        ${length_moveable_lineup_Player}    get length        ${move_button_lineup_players}
        IF   ${length_moveable_lineup_Player} != 0
-           ${random_player}     Get random player no in range of ${move_button_lineup_players}
+           ${random_player}     Get random number in range of ${move_button_lineup_players}
            ${player_names}      Get WebElements         ${LINEUP_MOVEABLE_PLAYER_NAME}
            scroll element into view    ${move_button_lineup_players}[${random_player}]
-           ${Player_name_for_moving_to_Bench}       get element attribute    ${player_names}[${random_player}]     title
-           click button     //div[@title="${Player_name_for_moving_to_Bench}"]//following::button[contains(@aria-label,"${Player_name_for_moving_to_Bench}")]
+           ${player_name_for_moving_to_Bench}       get element attribute    ${player_names}[${random_player}]     title
+           click button     //div[@title="${player_name_for_moving_to_Bench}"]//following::button[contains(@aria-label,"${player_name_for_moving_to_Bench}")]
            ${bench_status}    RUN KEYWORD AND RETURN STATUS    wait until element is visible    ${EMPTY_BENCH_LOCATOR}     timeout=10s
            IF    ${bench_status} == True
               scroll element into view    ${EMPTY_BENCH_LOCATOR}
               click button    ${EMPTY_BENCH_LOCATOR}
-              set global variable    ${Player_name_for_moving_to_Bench}
+              set global variable    ${player_name_for_moving_to_Bench}
               set global variable    ${bench_status}
            ELSE
               log    currently no lineup player can be moved to Bench
@@ -104,7 +105,7 @@ Move any eligible Bench Player to lineup
     ${length_of_moveable_bench_player}    get length    ${bench_players}
     set global variable    ${length_of_moveable_bench_player}
     IF    ${length_of_moveable_bench_player} != 0
-        ${random_no}     Get random player no in range of ${bench_players}
+        ${random_no}     Get random number in range of ${bench_players}
         @{player}      get webelements       ${BENCH_MOVEABLE_PLAYER_NAME}
         scroll element into view    ${bench_players}[${random_no}]
         ${bench_player_moved_lineup}    get element attribute   ${player}[${random_no}]     title
@@ -121,7 +122,7 @@ Move any eligible Bench Player to lineup
           @{lineup_players}     Get WebElements    ${LINEUP_PLAYER_HERE_BUTTON}
           ${length_of_moveable_lineup_player}     get length    ${lineup_players}
           IF    ${length_of_moveable_lineup_player} != 0
-             ${random_player}    Get random player no in range of ${lineup_players}
+             ${random_player}    Get random number in range of ${lineup_players}
              scroll element into view    ${lineup_players}[${random_player}]
              click button    ${lineup_players}[${random_player}]
              ${bench_player_moved_lineup_status}    convert to boolean    true
@@ -135,9 +136,9 @@ Move any eligible Bench Player to lineup
 
 Verify whether the player swapped their Position
   IF  ${status} == True
-  ${length}    get length    ${Before_swapping_player_details}
+  ${length}    get length    ${before_swapping_player_details}
     IF    ${length} != 0
-       Assert whether the player swapped their Position      ${Before_swapping_player_details}
+       Assert whether the player swapped their Position      ${before_swapping_player_details}
     ELSE
        log    currently no players are available to swap their positions
     END
@@ -145,7 +146,7 @@ Verify whether the player swapped their Position
 
 Verify whether the Player is Moved to Bench
     IF  ${bench_status} == True
-        ${slot_of_player}    get text    //div[@title="${Player_name_for_moving_to_Bench}"]//preceding::div[1][contains(@class,"table--cell")]
+        ${slot_of_player}    get text    //div[@title="${player_name_for_moving_to_Bench}"]//preceding::div[1][contains(@class,"table--cell")]
         should be equal    ${slot_of_player}        Bench
     END
 

@@ -14,7 +14,6 @@ Suite Teardown       Delete the league, test account and close browser
 As a team owner move the Players by swaping the position of the players in current scoring period
     [Tags]    moveplayers    valid     CSEAUTO-29542
     Navigate to Fantasy Team Page
-    validate the user is navigated to the teams page
     Check for the players in the team who are available to move from there existing positions
     Swap the Position of the players in the current scoring period
     Verify whether the player swapped their Position
@@ -22,14 +21,12 @@ As a team owner move the Players by swaping the position of the players in curre
 As a Team Owner of a fantasy league I am able to move any player to the Bench from my team for the current scoring period
     [Tags]    moveplayers    valid     CSEAUTO-29543
     Navigate to Fantasy Team Page
-    validate the user is navigated to the teams page
     Check and Move any eligible existing lineup player to Bench
     Verify whether the Player is Moved to Bench
 
 As a Fantasy Team Owner move any player from the Bench to the lineup for the current scoring period
     [Tags]    moveplayers    valid     CSEAUTO-29544
     Navigate to Fantasy Team Page
-    validate the user is navigated to the teams page
     Move any eligible Bench Player to lineup
     Verify whether the Player is Moved to Lineup
 
@@ -61,8 +58,7 @@ As a League Manager Move Player from the Bench to the lineup of any other team i
 As a Fantasy Team Owner swap the positions of the player in Upcoming ScoringPeriod
     [Tags]    moveplayers    valid     CSEAUTO-29545
     Navigate to Fantasy Team Page
-    validate the user is navigated to the teams page
-    Select any Future Date
+    Select any future date
     Check for the players in the team who are available to move from there existing positions
     Swap the Position of the players in the current scoring period
     Verify whether the player swapped their Position
@@ -70,16 +66,14 @@ As a Fantasy Team Owner swap the positions of the player in Upcoming ScoringPeri
 As a Fantasy Team Owner move any player to Bench in Upcoming ScoringPeriod
     [Tags]    moveplayers    valid     CSEAUTO-29777
     Navigate to Fantasy Team Page
-    validate the user is navigated to the teams page
-    Select any Future Date
+    Select any future date
     Check and Move any eligible existing lineup player to Bench
     Verify whether the Player is Moved to Bench
 
 As a Fantasy Team Owner move any player from Bench to lineup in an Upcoming ScoringPeriod
     [Tags]    moveplayers    valid     CSEAUTO-29778
     Navigate to Fantasy Team Page
-    validate the user is navigated to the teams page
-    Select any Future Date
+    Select any future date
     Move any eligible Bench Player to lineup
     Verify whether the Player is Moved to Lineup
 
@@ -88,7 +82,7 @@ As a League Manager Swap the positions of players of any other team in Upcoming 
     Navigate to LM Tools
     select edit rosters from LM Tools page
     Select any team in the league from edit roster page
-    Select any Future Date
+    Select any future date
     Check for the players in the team who are available to move from there existing positions
     Swap the Position of the players in the current scoring period
     Verify whether the player swapped their Position
@@ -98,7 +92,7 @@ As a League Manager Move any Player to Bench of any other team in Upcoming Scori
     Navigate to LM Tools
     select edit rosters from LM Tools page
     Select any team in the league from edit roster page
-    Select any Future Date
+    Select any future date
     Check and Move any eligible existing lineup player to Bench
     Verify whether the Player is Moved to Bench
 
@@ -107,6 +101,6 @@ As a League Manager Move Player from Bench to lineup of any other team in Upcomi
     Navigate to LM Tools
     select edit rosters from LM Tools page
     Select any team in the league from edit roster page
-    Select any Future Date
+    Select any future date
     Move any eligible Bench Player to lineup
     Verify whether the Player is Moved to Lineup

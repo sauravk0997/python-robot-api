@@ -67,7 +67,7 @@ class FantasyUIutils(object):
             logging.info('Players failed to swap positions')
             return False
 
-    @keyword('Get random player no in range of ${player}')
+    @keyword('Get random number in range of ${player}')
     def random(self, player):
         random_number = random.randint(0, (len(player)-1))
         return random_number
@@ -76,18 +76,18 @@ class FantasyUIutils(object):
     def click_on_the_date(self, length, date) -> str or None:
         no_of_slide_click = int(length)/5
         actual_no_of_slide_click = round(no_of_slide_click)
-        format_date = date.capitalize()
+        formatted_date = date.capitalize()
         before_slide_status = BuiltIn().run_keyword_and_return_status('wait_until_element_is_visible',
-                                                             f"//span[text()='{format_date}']")
+                                                             f"//span[text()='{formatted_date}']")
         if before_slide_status is True:
-            return f"//span[text()='{format_date}']"
+            return f"//span[text()='{formatted_date}']"
         else:
             for slide in range(actual_no_of_slide_click):
                 self.selLib.click_button("//button[contains(@class,'Arrow--right')]")
                 status = BuiltIn().run_keyword_and_return_status('wait_until_element_is_visible',
-                                                                 f"//span[text()='{format_date}']")
+                                                                 f"//span[text()='{formatted_date}']")
                 if status is True:
-                    return f"//span[text()='{format_date}']"
+                    return f"//span[text()='{formatted_date}']"
                 else:
                     continue
         return None
