@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation    All the page objects and keywords of landing page
-Library          SeleniumLibrary        implicit_wait=10s
+Library          SeleniumLibrary    timeout=10s    implicit_wait=10s
 Library          Collections
 Library          lib/fantasyUI/FantasyUIutils.py
 Library          String

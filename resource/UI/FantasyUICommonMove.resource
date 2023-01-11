@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation    All the Common objects and keywords
-Library          SeleniumLibrary            implicit_wait=10s
+Library          SeleniumLibrary           timeout=10s    implicit_wait=10s
 Library          lib/fantasyAPI/FantasyUtils.py
 Library          lib/fantasyUI/FantasyUIutils.py
 Library          RPA.JSON
@@ -54,7 +54,7 @@ ${CONFIRM_DELETE_LEAGUE_BUTTON}            xpath://span[text()='Confirm']//paren
 ${TAKE_ME_TO_LEAGUE_ROSTERS}               xpath://div[contains(@class,'tc')]/a[text()='Take me to League Rosters']
 ${CONTINUE_TO_THE_FANTASY_HOMEPAGE}        xpath://a[text()='Continue to the Fantasy Homepage']
 ${ENCRYPTED_PASSWORD}                      dGVzdF91aQ==
-@{USER_EMAILS}                             test_ui_user5@test.com      test_ui_user6@test.com      test_ui_user6@test.com
+@{USER_EMAILS}                             test_ui_user5@test.com      test_ui_user6@test.com      test_ui_user7@test.com
 
 *** Keywords ***
 Launch the Browser and Navigate to Espn site
@@ -138,6 +138,7 @@ Send invitations to the users,Accept Invitation send by the inviter and create t
 
 Login to the site using the created test account
     Login into the espn site from Homepage        ${random_email}
+    sleep      2
     wait until element is visible   ${PROFILE_LOCATOR}
     mouse over                      ${PROFILE_LOCATOR}
     click element                   xpath://span[text()='TestLeague']
@@ -171,6 +172,7 @@ select input offline results and start inputing players for the teams
     click element                    ${RELEASE_ROSTER}
     wait until element is visible    ${TAKE_ME_TO_LEAGUE_ROSTERS}
     click element                    ${TAKE_ME_TO_LEAGUE_ROSTERS}
+    sleep    2s
 
 Login into the espn site from Homepage
     [Arguments]            ${email}
