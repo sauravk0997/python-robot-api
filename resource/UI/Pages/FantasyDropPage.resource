@@ -20,17 +20,18 @@ Click on drop button
     wait until element is visible   ${COMMON_DROP_BUTTON}
     Scroll Element Into View    ${COMMON_DROP_BUTTON}
     Click Element    ${COMMON_DROP_BUTTON}
+    Wait Until Element Is Visible    ${DROP_PLAYERS_LIST}
 
 Verify the player has been dropped
     Reload Page
+    Sleep    5s
     Click on drop button
-    wait until element is visible    @{DROP_PLAYERS_LIST}
     ${after_drop}    check no of players available to drop
     [Return]    ${after_drop}
     
 Verify the player has been dropped inside LM tools
     Reload Page
-    Sleep    5s
+    wait until element is visible    @{DROP_PLAYERS_LIST}
     ${after_drop}    check no of players available to drop
     [Return]    ${after_drop}
 
@@ -41,14 +42,13 @@ Click on drop player button and continue in LM tools
     Click on continue button
 
 Click on drop player button and continue
-    wait until element is visible   ${DROP_PLAYERS_LIST}
     Execute JavaScript    window.document.evaluate("//button[contains(@title,'Drop Player')]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
     Click Element    ${DROP_PLAYERS_LIST}
     Click on continue button
 
 Click on drop undroppable player and continue in LM tools
-    Scroll Element Into View    ${UNDROPPABLE_PLAYER}
     wait until element is visible   ${UNDROPPABLE_PLAYER}
+    Scroll Element Into View    ${UNDROPPABLE_PLAYER}
     Click Element    ${UNDROPPABLE_PLAYER}
     Click on continue button
 
@@ -83,6 +83,7 @@ check no of players available to drop
 Click on confirm button
     Wait Until Element Is Visible    ${CONFIRM_BUTTON}
     Click Element    ${CONFIRM_BUTTON}
+    Sleep    3s
 
 Select roster moves in LM tools
     Click on LM tools
@@ -116,8 +117,8 @@ Check if ${player_name} is an undroppable player
     Set Global Variable       ${undroppable_check}
 
 Click on continue button
-    wait until element is visible    ${CONTINUE_BUTTON}
     Click Element    ${CONTINUE_BUTTON}
+    Sleep    3s
 
 Select multiple players
     Wait Until Element Is Visible   (//button[contains(@title,'Drop Player')])[1]

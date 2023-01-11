@@ -96,9 +96,9 @@ Create a League to drop players
     Scroll Element Into View         ${FINISH_ENTERING_BUTTON}
     wait until element is visible    ${FINISH_ENTERING_BUTTON}
     click element                    ${FINISH_ENTERING_BUTTON}
+    Sleep    2s
     wait until element is visible    ${RELEASE_ROSTER_BUTTON}
     click element                    ${RELEASE_ROSTER_BUTTON}
-    sleep       2s
 
 Log in to the Fantasy Application
     Mouse Over    ${FANTASY_PROFILE_ICON}
