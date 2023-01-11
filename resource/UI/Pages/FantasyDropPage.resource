@@ -20,12 +20,11 @@ Click on drop button
     wait until element is visible   ${COMMON_DROP_BUTTON}
     Scroll Element Into View    ${COMMON_DROP_BUTTON}
     Click Element    ${COMMON_DROP_BUTTON}
-    Wait Until Page Contains Element    @{DROP_PLAYERS_LIST}  
 
 Verify the player has been dropped
     Reload Page
-    Sleep    3s
     Click on drop button
+    wait until element is visible    @{DROP_PLAYERS_LIST}
     ${after_drop}    check no of players available to drop
     [Return]    ${after_drop}
     
