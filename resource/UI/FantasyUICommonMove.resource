@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation    All the Common objects and keywords
-Library          SeleniumLibrary           timeout=10s    implicit_wait=10s
+Library          SeleniumLibrary
 Library          lib/fantasyAPI/FantasyUtils.py
 Library          lib/fantasyUI/FantasyUIutils.py
 Library          RPA.JSON
@@ -54,7 +54,7 @@ ${CONFIRM_DELETE_LEAGUE_BUTTON}            xpath://span[text()='Confirm']//paren
 ${TAKE_ME_TO_LEAGUE_ROSTERS}               xpath://div[contains(@class,'tc')]/a[text()='Take me to League Rosters']
 ${CONTINUE_TO_THE_FANTASY_HOMEPAGE}        xpath://a[text()='Continue to the Fantasy Homepage']
 ${ENCRYPTED_PASSWORD}                      dGVzdF91aQ==
-@{USER_EMAILS}                             test_ui_user5@test.com      test_ui_user6@test.com      test_ui_user7@test.com
+@{USER_EMAILS}                             test_user1@test.com      test_user2@test.com      test_user3@test.com
 
 *** Keywords ***
 Launch the Browser and Navigate to Espn site
@@ -83,7 +83,7 @@ create a test account
     click button                     ${LOGIN_BUTTON}
     Select Frame                     ${ONEID_FRAME}
     click button                     ${SIGNUP_BUTTON}
-    wait until element is visible    ${FIRST_NAME_FIELD}
+    wait until element is visible    ${FIRST_NAME_FIELD}       timeout=10s
     input text                       ${FIRST_NAME_FIELD}       Test
     input text                       ${LAST_NAME_FIELD}        Ui
     ${random_email}                  generate a random email
@@ -91,27 +91,27 @@ create a test account
     ${decrypted_password}            get decrypted password ${ENCRYPTED_PASSWORD}
     input password                   ${NEW_PASSWORD_FIELD}     ${decrypted_password}
     sleep     4s
-    wait until element is visible    ${SIGNUP_BUTTON}
+    wait until element is visible    ${SIGNUP_BUTTON}           timeout=10s
     click button                     ${SIGNUP_BUTTON}
     sleep     5s
     set global variable              ${random_email}
 
 Create a Fantasy League
     go to                            ${LEAGUE_CREATE_URL}
-    wait until element is visible    ${LEAGUE_NAME_FIELD}
+    wait until element is visible    ${LEAGUE_NAME_FIELD}     timeout=10s
     input text                       ${LEAGUE_NAME_FIELD}     TestLeague
     click element                    ${NO_OF_TEAMS}
     click button                     ${LEAGUE_CREATE_BUTTON}
-    wait until element is visible    ${DISMISS_INVITE}
+    wait until element is visible    ${DISMISS_INVITE}        timeout=10s
     click element                    ${DISMISS_INVITE}
-    wait until element is visible    ${INVITE_MANAGERS}
+    wait until element is visible    ${INVITE_MANAGERS}       timeout=10s
     click element                    ${INVITE_MANAGERS}
     sleep  3s
     ${invite_link}=    Get Element Attribute    ${INVITE_LINK_TEXT}    value
     Log    "Invite Link ::::"${invite_link}
     Set Global Variable    ${invite_link}
     mouse over             ${PROFILE_ICON_AFTER_LOGIN}
-    wait until element is visible    ${LOGOUT_BUTTON}
+    wait until element is visible    ${LOGOUT_BUTTON}        timeout=10s
     click button           ${LOGOUT_BUTTON}
     sleep    2s
 
@@ -122,16 +122,16 @@ Send invitations to the users,Accept Invitation send by the inviter and create t
         Switch Window    ${handles}[0]
         close window
         Switch Window   ${handles}[1]
-        wait until element is visible    ${JOIN_LEAGUE_BUTTON}
+        wait until element is visible    ${JOIN_LEAGUE_BUTTON}     timeout=10s
         Click Button    ${JOIN_LEAGUE_BUTTON}
         Login into the espn site    ${USER_EMAILS}[${index}]
-        Wait Until Element Is Visible    ${TEAM_LOCATION}
+        Wait Until Element Is Visible    ${TEAM_LOCATION}          timeout=10s
         Input Text    ${TEAM_LOCATION}    FL${index}
         Input Text    ${TEAM_NICKNAME}   FN${index}
         Input Text    ${TEAM_ABBREVIATION}    FB${index}
         Click Button    ${FINISH_BUTTON}
         mouse over             ${PROFILE_ICON_AFTER_LOGIN}
-        wait until element is visible    ${LOGOUT_BUTTON}
+        wait until element is visible    ${LOGOUT_BUTTON}          timeout=10s
         click button           ${LOGOUT_BUTTON}
         sleep    2
     END
@@ -139,27 +139,27 @@ Send invitations to the users,Accept Invitation send by the inviter and create t
 Login to the site using the created test account
     Login into the espn site from Homepage        ${random_email}
     sleep      2
-    wait until element is visible   ${PROFILE_LOCATOR}
+    wait until element is visible   ${PROFILE_LOCATOR}            timeout=10s
     mouse over                      ${PROFILE_LOCATOR}
     click element                   xpath://span[text()='TestLeague']
 
 Begin Draft
-    wait until element is visible    ${SCHEDULE_DRAFT_BUTTON}
+    wait until element is visible    ${SCHEDULE_DRAFT_BUTTON}     timeout=10s
     click element    ${SCHEDULE_DRAFT_BUTTON}
-    wait until element is visible    ${OFFLINE_DRAFT_TYPE}
+    wait until element is visible    ${OFFLINE_DRAFT_TYPE}        timeout=10s
     click element    ${OFFLINE_DRAFT_TYPE}
     click button     ${SAVE_DRAFT_TYPE}
     sleep       2
 
 Navigate to LM Tools
-    wait until element is visible    ${LM_TOOL_OPTION}
+    wait until element is visible    ${LM_TOOL_OPTION}            timeout=10s
     click element    ${LM_TOOL_OPTION}
     sleep       2
 
 select input offline results and start inputing players for the teams
-    wait until element is visible     ${INPUT_OFFLINE_RESULTS_LINK}
+    wait until element is visible     ${INPUT_OFFLINE_RESULTS_LINK}       timeout=10s
     click element    ${INPUT_OFFLINE_RESULTS_LINK}
-    wait until element is visible    ${BEGIN_OFFLINE_DRAFT}
+    wait until element is visible    ${BEGIN_OFFLINE_DRAFT}               timeout=10s
     click element    ${BEGIN_OFFLINE_DRAFT}
     Add players to team 1 as league creator user
     Add players to team 2 as league creator user
@@ -168,9 +168,9 @@ select input offline results and start inputing players for the teams
     scroll element into view    ${FINISH_ROSTER_BUTTON}
     sleep    2s
     click button                ${FINISH_ROSTER_BUTTON}
-    wait until element is visible    ${RELEASE_ROSTER}
+    wait until element is visible    ${RELEASE_ROSTER}                    timeout=10s
     click element                    ${RELEASE_ROSTER}
-    wait until element is visible    ${TAKE_ME_TO_LEAGUE_ROSTERS}
+    wait until element is visible    ${TAKE_ME_TO_LEAGUE_ROSTERS}         timeout=10s
     click element                    ${TAKE_ME_TO_LEAGUE_ROSTERS}
     sleep    2s
 
@@ -180,9 +180,9 @@ Login into the espn site from Homepage
     mouse over                       ${PROFILE_LOCATOR}
     click button                     ${LOGIN_BUTTON}
     Select Frame                     ${ONEID_FRAME}
-    wait until element is visible    ${EMAIL_FIELD}
+    wait until element is visible    ${EMAIL_FIELD}                     timeout=10s
     input text                       ${EMAIL_FIELD}        ${email}
-    wait until element is visible    ${PASSWORD_FIELD}
+    wait until element is visible    ${PASSWORD_FIELD}                  timeout=10s
     ${decrypted_password}            get decrypted password ${ENCRYPTED_PASSWORD}
     input password                   ${USER_PASSWORD_FIELD}     ${decrypted_password}
     click button                     ${LOGIN_BUTTON}
@@ -191,9 +191,9 @@ Login into the espn site from Homepage
 Login into the espn site
     [Arguments]            ${email}
     Select Frame                     id:disneyid-iframe
-    wait until element is visible    ${USER_EMAIL_FIELD}
+    wait until element is visible    ${USER_EMAIL_FIELD}        timeout=10s
     input text                       ${USER_EMAIL_FIELD}        ${email}
-    wait until element is visible    ${USER_PASSWORD_FIELD}
+    wait until element is visible    ${USER_PASSWORD_FIELD}     timeout=10s
     ${decrypted_password}            get decrypted password ${ENCRYPTED_PASSWORD}
     input password                   ${USER_PASSWORD_FIELD}     ${decrypted_password}
     click button                     ${LOGIN_BUTTON}
@@ -201,33 +201,35 @@ Login into the espn site
 
 Select any fantasy league ${league_name} to move players
      go to                           ${HOMEPAGE_URL}
-     wait until element is visible   ${PROFILE_LOCATOR}
+     wait until element is visible   ${PROFILE_LOCATOR}       timeout=10s
      mouse over                      ${PROFILE_LOCATOR}
      click element                   xpath://span[text()='${league_name}']
 
 select edit rosters from LM Tools page
-      wait until element is visible    ${ROSTER_MOVES}
+      wait until element is visible    ${ROSTER_MOVES}        timeout=10s
       click element    ${ROSTER_MOVES}
+      sleep     2
 
 Delete the fantasy League
     Navigate to LM Tools
     click element     ${DELETE_LEAGUE_LINK}
-    wait until element is visible    ${DELETE_LEAGUE_BUTTON}
+    wait until element is visible    ${DELETE_LEAGUE_BUTTON}               timeout=10s
     click button      ${DELETE_LEAGUE_BUTTON}
-    wait until element is visible    ${CONFIRM_DELETE_LEAGUE_BUTTON}
+    wait until element is visible    ${CONFIRM_DELETE_LEAGUE_BUTTON}       timeout=10s
     click button      ${CONFIRM_DELETE_LEAGUE_BUTTON}
-    wait until element is visible    ${CONTINUE_TO_THE_FANTASY_HOMEPAGE}
+    wait until element is visible    ${CONTINUE_TO_THE_FANTASY_HOMEPAGE}   timeout=10s
     click element                    ${CONTINUE_TO_THE_FANTASY_HOMEPAGE}
 
 Delete the ESPN Account
-     wait until element is visible   ${PROFILE_LOCATOR}
+     wait until element is visible   ${PROFILE_LOCATOR}          timeout=10s
      mouse over                      ${PROFILE_LOCATOR}
-     wait until element is visible   ${ESPN_PROFILE}
+     wait until element is visible   ${ESPN_PROFILE}             timeout=10s
      click element                   ${ESPN_PROFILE}
      select frame                    ${ONEID_FRAME}
-     wait until element is visible   ${DELETE_ACCOUNT}
+     wait until element is visible   ${DELETE_ACCOUNT}           timeout=10s
+     scroll element into view        ${DELETE_ACCOUNT}
      click element                   ${DELETE_ACCOUNT}
-     wait until element is visible   ${CONFIRM_DELETE_ACCOUNT}
+     wait until element is visible   ${CONFIRM_DELETE_ACCOUNT}   timeout=10s
      click element                   ${CONFIRM_DELETE_ACCOUNT}
-     wait until element is visible   ${DELETE_ACCOUNT_INFO}
+     wait until element is visible   ${DELETE_ACCOUNT_INFO}      timeout=10s
      click element                   ${DELETE_ACCOUNT_INFO}
