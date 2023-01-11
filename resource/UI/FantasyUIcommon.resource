@@ -37,7 +37,7 @@ ${OFFLINE_DRAFT_TYPE}                      xpath://label[text()="Offline"]
 ${SAVE_DRAFT_TYPE}                         xpath://button[text()='Save Changes']
 ${SAVE_ROSTER_TEAM1}                       xpath://button[text()='Save Roster'and @data-team-id='1']
 ${SAVE_ROSTER_TEAM2}                       xpath://button[text()='Save Roster'and @data-team-id='2']
-${RELEASE_ROSTER_BUTTON}                   xpath://button[@class='Button Button--lg Button--default Button--custom']
+${RELEASE_ROSTER_BUTTON}                   xpath://span[text()='Release Rosters']
 ${INPUT_OFFLINE_RESULTS_LINK}              xpath://a[text()='Input Offline Draft Results']
 ${BEGIN_OFFLINE_DRAFT}                     xpath://button[text()='Begin Offline Draft']
 ${PLAYER_NAMES}                            xpath://input[@placeholder='Player Name']
@@ -86,7 +86,7 @@ Close the current Browser
 Create a League to drop players
     Sleep    4s
     go to                            ${LEAGUE_CREATE_URL}
-    wait until element is visible    ${LEAGUE_NAME_FIELD}     timeout=10s
+    wait until element is visible    ${LEAGUE_NAME_FIELD}
     input text                       ${LEAGUE_NAME_FIELD}    TestLeague
     click element                    ${NO_OF_TEAMS}
     click button                     ${LEAGUE_CREATE_BUTTON}
@@ -96,7 +96,7 @@ Create a League to drop players
     Scroll Element Into View         ${FINISH_ENTERING_BUTTON}
     wait until element is visible    ${FINISH_ENTERING_BUTTON}
     click element                    ${FINISH_ENTERING_BUTTON}
-    wait until element is visible    ${RELEASE_ROSTER_BUTTON}      timeout=10s
+    wait until element is visible    ${RELEASE_ROSTER_BUTTON}
     click element                    ${RELEASE_ROSTER_BUTTON}
     sleep       2s
 
@@ -201,16 +201,16 @@ Scroll up
     execute javascript             window.scrollTo(document.body.scrollHeight, 100)
 
 Begin Draft and start inputing players for the team
-    wait until element is visible    ${SCHEDULE_DRAFT_BUTTON}    timeout=10s
+    wait until element is visible    ${SCHEDULE_DRAFT_BUTTON}
     click element    ${SCHEDULE_DRAFT_BUTTON}
-    wait until element is visible    ${OFFLINE_DRAFT_TYPE}       timeout=10s
+    wait until element is visible    ${OFFLINE_DRAFT_TYPE}
     click element    ${OFFLINE_DRAFT_TYPE}
     click button     ${SAVE_DRAFT_TYPE}
     sleep       3s
     Click on LM tools
-    wait until element is visible     ${INPUT_OFFLINE_RESULTS_LINK}      timeout=10s
+    wait until element is visible     ${INPUT_OFFLINE_RESULTS_LINK}
     click element    ${INPUT_OFFLINE_RESULTS_LINK}
-    wait until element is visible    ${BEGIN_OFFLINE_DRAFT}              timeout=10s
+    wait until element is visible    ${BEGIN_OFFLINE_DRAFT}
     click element    ${BEGIN_OFFLINE_DRAFT}
     Add players for team 1 to drop
     click element                    ${SAVE_ROSTER_TEAM1}
@@ -233,17 +233,16 @@ Launch the site and create a test account and a fantasy league
     ${random_password}               generate a random password
     input password                   ${NEW_PASSWORD_FIELD}     ${random_password}
     sleep     4s
-    wait until element is visible    ${SIGNUP_BUTTON}          timeout=10s
+    wait until element is visible    ${SIGNUP_BUTTON}
     click button                     ${SIGNUP_BUTTON}
     sleep     4s
     set global variable              ${random_email}
-    set selenium implicit wait       5s
     Create a League to drop players
     Reload Page
     Sleep    2s
 
 Add players for ${team} to drop
-    wait until element is visible             ${PLAYER_NAMES}           timeout=10s
+    wait until element is visible             ${PLAYER_NAMES}
     @{players_elements}    get webelements    ${PLAYER_NAMES}
     Convert To String    ${team}
     IF    '${team}' == 'team 1'
