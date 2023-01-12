@@ -86,9 +86,9 @@ Close the current Browser
 Create a League to drop players
     Sleep    4s
     go to                            ${LEAGUE_CREATE_URL}
-    wait until element is visible    ${LEAGUE_NAME_FIELD}
-    input text                       ${LEAGUE_NAME_FIELD}    TestLeague
+    wait until element is visible    ${LEAGUE_NAME_FIELD}    timeout=10s
     click element                    ${NO_OF_TEAMS}
+    input text                       ${LEAGUE_NAME_FIELD}    TestLeague
     click button                     ${LEAGUE_CREATE_BUTTON}
     wait until element is visible    ${DISMISS_INVITE}       timeout=10s
     click element                    ${DISMISS_INVITE}
@@ -97,7 +97,7 @@ Create a League to drop players
     wait until element is visible    ${FINISH_ENTERING_BUTTON}
     click element                    ${FINISH_ENTERING_BUTTON}
     Sleep    2s
-    wait until element is visible    ${RELEASE_ROSTER_BUTTON}
+    wait until element is visible    ${RELEASE_ROSTER_BUTTON}    timeout=10s
     click element                    ${RELEASE_ROSTER_BUTTON}
 
 Log in to the Fantasy Application
