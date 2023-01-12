@@ -134,6 +134,10 @@ Move any eligible Bench Player to lineup
             log   currently no Bench player can be moved to lineup
           END
         END
+    ELSE
+        log      Lineup transaction could not be completed, as lineup is locked
+        ${bench_player_moved_lineup_status}    convert to boolean    false
+        set global variable     ${bench_player_moved_lineup_status}
     END
 
 Verify whether the player swapped their Position
