@@ -43,6 +43,13 @@ class FantasyUtils(object):
         length = 4
         random_string = ''.join(random.choice(string.ascii_lowercase) for x in range(length))
         random_number = str(random.randint(0, 10))
-        random_email = 'test' + '_' + random_string + '_' + random_number + '@test.com'
+        random_email = 'testui' + '_' + random_string + '_' + random_number + '@test.com'
         return random_email
-
+    
+    @keyword('Generate a random password')
+    def generate_random_password(self):
+        length = 12
+        random_string = ''.join(random.choice(string.ascii_lowercase) for x in range(length))
+        random_number = str(random.randint(0, 10))
+        random_pass = random_string + '@' + random_number
+        return random_pass
