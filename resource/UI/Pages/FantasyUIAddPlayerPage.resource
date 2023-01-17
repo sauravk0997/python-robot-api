@@ -5,21 +5,26 @@ Resource         resource/UI/FantasyUIcommon.resource
 Resource         resource/UI/FantasyUICommonMove.resource
 
 *** Variables ***
-${DROP_PLAYER_BUTTON}               css:button[data-myteam-mode='drop']
-${ALL_PLAYER_LIST}                  xpath://tbody[@class='Table__TBODY']//tr//div[@title='Action']//button
-${CONTINUE_BUTTON}                  xpath://span[text()='Continue']
-${CONFIRM_BUTTON}                   xpath://span[text()='Confirm']
-${ACTIVE_DROP_BUTTON}               css:button[title='Drop Player']
-${MY_TEAM_LINK}                     xpath://span[text()='My Team']
-${ADD_PLAYER_LINK}                  xpath://span[text()='Add Player']
-${FILTER_DROPDOWN}                  id:filterStatus
-${ADD_ACTION_BUTTON}                xpath://td//div[@title='Action']//button[1]
-${CANCEL_BUTTON}                    xpath://span[text()='Cancel']
-${LM_TOOL_BUTTON}                   xpath://span[text()='LM Tools']
-${ROSTER_MOVES}                     xpath://a[normalize-space()='Roster Moves']
-${ACTION_DROPDOWN}                  xpath:(//select[@class="dropdown__select"])[1]
-${TEAM_DROPDOWN}                    xpath:(//select[@class="dropdown__select"])[2]
-${LM_CONTINUE_BUTTON}               xpath://button[normalize-space()='Continue']
+${DROP_PLAYER_BUTTON}                    css:button[data-myteam-mode='drop']
+${ALL_PLAYER_LIST}                       xpath://tbody[@class='Table__TBODY']//tr//div[@title='Action']//button
+${CONTINUE_BUTTON}                       xpath://span[text()='Continue']
+${CONFIRM_BUTTON}                        xpath://span[text()='Confirm']
+${ACTIVE_DROP_BUTTON}                    css:button[title='Drop Player']
+${MY_TEAM_LINK}                          xpath://span[text()='My Team']
+${ADD_PLAYER_LINK}                       xpath://span[text()='Add Player']
+${FILTER_DROPDOWN}                       id:filterStatus
+${ADD_ACTION_BUTTON}                     xpath://td//div[@title='Action']//button[1]
+${CANCEL_BUTTON}                         xpath://span[text()='Cancel']
+${LM_TOOL_BUTTON}                        xpath://span[text()='LM Tools']
+${ROSTER_MOVES}                          xpath://a[normalize-space()='Roster Moves']
+${ACTION_DROPDOWN}                       xpath:(//select[@class="dropdown__select"])[1]
+${LM_CONTINUE_BUTTON}                    xpath://button[normalize-space()='Continue']
+${TEAM_DROPDOWN}                         xpath:(//span[text()='Team Kumar'])[1]
+${POSITION_C_PLAYERS}                    xpath://span[starts-with(text(),'C') and @class='playerinfo__playerpos ttu']
+${POSITION_C_PLAYERS_ADD_BUTTON}         xpath://span[starts-with(text(),'C') and @class='playerinfo__playerpos ttu']/ancestor::tr/td[3]/div/div/div/button[1]
+${CONTINUE_DISABLE}                      xpath://span[text()='Continue']/parent::button
+${FILTER_C_BUTTON}                       xpath://label[normalize-space()='C']
+${NON_POSITION_C_PLAYER_DROP_BUTTONS}    xpath://span[not(starts-with(text(),'C'))][@class='playerinfo__playerpos ttu']/ancestor::tr/td[3]/div/div/button[@title='Drop Player']
 
 *** Keywords ***
 validate the user is navigated to the teams page
@@ -94,12 +99,18 @@ Validate whether player is dropped from team
   END  
   Click Element    ${CANCEL_BUTTON}
 
-Add a player as Team Owner
-  # Clicking on add player button on top right
+Fetch all the Free agents
   wait until element is visible    ${ADD_PLAYER_LINK} 
   Click Element                    ${ADD_PLAYER_LINK} 
   wait until element is visible    ${FILTER_DROPDOWN}
   Select From List By Value        ${FILTER_DROPDOWN}        FREEAGENT
+
+Add a player as Team Owner
+  Fetch all the Free agents
+  # wait until element is visible    ${ADD_PLAYER_LINK} 
+  # Click Element                    ${ADD_PLAYER_LINK} 
+  # wait until element is visible    ${FILTER_DROPDOWN}
+  # Select From List By Value        ${FILTER_DROPDOWN}        FREEAGENT
   wait until element is visible    ${ADD_ACTION_BUTTON}    timeout=8s
   # Storing all the free agent player to the list
   @{addable_players}=       Get WebElements    ${ADD_ACTION_BUTTON}
@@ -222,4 +233,75 @@ Add and drop a player from other team as an LM, when roster is full
     Perform drop action to drop a player
   ELSE 
       Log    Please fill your roster by addding players to it.
+  END
+
+Switch to oher league ${league_name}
+    Click on the my team link
+    wait until element is visible    ${TEAM_DROPDOWN}       timeout=10s
+    mouse over 		                   ${TEAM_DROPDOWN}
+    click element                    //span[normalize-space()='${league_name}']
+
+Add a player when the roster is full
+    Click on the drop button and fetch the players length
+    IF    ${length_after_dropping} == 13
+      Click on the my team link
+      Add a player as Team Owner
+      Wait Until Element Is Visible    ${CONTINUE_DISABLE} 
+      Element Should Be Disabled       ${CONTINUE_DISABLE}
+    ELSE 
+      Log    Your roster is not full. Please add players to fill your roster
+    END
+
+Validate that the player is not added to your team with the error message ${message}.
+    ${error_message}   Convert to String     ${message}    
+    ${error_text}      get text              //div[text()='${message}']
+    Should Be Equal    ${error_message}      ${error_text}
+
+Add Position C player to my team as Team Owner
+    Click on the my team link
+    # Getting length of all the position C players 
+    Wait Until Element Is Visible              ${POSITION_C_PLAYERS}
+    @{droppable_position_C_players}=           Get WebElements    ${POSITION_C_PLAYERS}
+    ${length_of_position_C_players}            Get Length         ${droppable_position_C_players}
+    IF    ${length_of_position_C_players} == 4
+      Fetch all the Free agents
+      Click Element                    ${FILTER_C_BUTTON}
+      Sleep    2s
+      wait until element is visible    ${POSITION_C_PLAYERS_ADD_BUTTON}
+      # Storing all the p[osition C player to the list
+      @{addable_position_C_players}=           Get WebElements    ${POSITION_C_PLAYERS_ADD_BUTTON}
+      ${addable_position_C_players_length}     Get Length         ${addable_position_C_players}
+      IF    ${addable_position_C_players_length} != 0
+        # Selecting a position C player for adding to the team
+        Wait Until Element Is Visible    ${addable_position_C_players}[0]
+        Click Element    ${addable_position_C_players}[0]
+        sleep     3s
+      ELSE
+         Log    Position C Free Agent players are not available 
+      END
+    ELSE
+      log    Your roster is having less than 4 Position C player. Please add Position C players to the roster. There should be at least 4 Position C player in the roster. 
+    END
+
+Drop a non Position C Player from my team as Team Owner
+  ${drop_players_status}    Run Keyword And Return Status    wait until element is visible            ${ACTIVE_DROP_BUTTON}    timeout=7s
+  # Storing all the non Position C droppable player to the list
+  IF    ${drop_players_status} == True
+    Wait Until Element Is Visible        ${NON_POSITION_C_PLAYER_DROP_BUTTONS}
+    @{non_position_C_drop_button}=       Get WebElements    ${NON_POSITION_C_PLAYER_DROP_BUTTONS}
+    # Getting the length of all available non Position C players on the team
+    ${drop}               Get Length         ${non_position_C_drop_button}
+    IF    ${drop} != 0
+      execute javascript             window.scrollTo(0, document.body.scrollHeight)
+      # Selecting a non position C player to be dropped from the team
+      Wait Until Element Is Visible      ${non_position_C_drop_button}[0] 
+      Click Element                      ${non_position_C_drop_button}[0]
+      Click on continue button
+      Click on confirm button
+      Sleep    3s
+    ELSE
+      Log    Non Positoin C Droppable players are not available 
+    END
+  ELSE 
+    Log    Please add players to your team!!  
   END

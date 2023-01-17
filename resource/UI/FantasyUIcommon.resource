@@ -7,22 +7,22 @@ Library             String
 Resource            resource/UI/Pages/CreateLeaguePage.resource
 
 *** Variables ***
-${FANTASY_URL}                        https://fantasy.espn.com/
-${user}                               test_user_account3@test.com
-${encrypted_password}                 U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
-${ENCRYPTED_PASSWORD1}                VUl1c2VyQEVTUE4=
-@{user_emails}                        ui_test_user1@test.com    ui_test_user2@test.com    ui_test_user3@test.com
-${ROSTER_MOVES_DROPDOWN1}             (//select[@class="dropdown__select"])[1]
-${LM_TOOLS_CONTINUE_BUTTON}           //button[normalize-space()='Continue']
+${FANTASY_URL}                             https://fantasy.espn.com/
+${user}                                    test_user_account3@test.com
+${encrypted_password}                      U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
+${ENCRYPTED_PASSWORD1}                     VUl1c2VyQEVTUE4=
+@{user_emails}                             ui_test_user1@test.com    ui_test_user2@test.com    ui_test_user3@test.com
+${ROSTER_MOVES_DROPDOWN1}                  xpath:(//select[@class="dropdown__select"])[1]
+${LM_TOOLS_CONTINUE_BUTTON}                xpath://button[normalize-space()='Continue']
 ${SIGNUP_BUTTON}                           xpath://button[text()='Sign Up']
-${ROSTER_MOVES_DROPDOWN2}             (//select[@class="dropdown__select"])[2]
-${ROSTER_MOVES_OPTION}                //a[normalize-space()='Roster Moves']
-${LM_TOOLS_OPTION}                    //span[contains(text(),'LM Tools')]
-${RESET_DRAFT_OPTION}                 (//a[contains(text(),'Reset Draft')])
-${RESET_DRAFT_BUTTON1}                //button[normalize-space()='Reset Draft']
-${RESET_DRAFT_BUTTON2}                (//button[@aria-label='Reset Draft'])
-${CONTINUE_LEAGUE_OFFICE_BUTTON}      //a[normalize-space()='Continue to League Office']
-${PROFILE_LOGIN_BUTTON}               xpath://button[text()='Log In']
+${ROSTER_MOVES_DROPDOWN2}                  xpath:(//select[@class="dropdown__select"])[2]
+${ROSTER_MOVES_OPTION}                     xpath://a[normalize-space()='Roster Moves']
+${LM_TOOLS_OPTION}                         xpath://span[contains(text(),'LM Tools')]
+${RESET_DRAFT_OPTION}                      xpath:(//a[contains(text(),'Reset Draft')])
+${RESET_DRAFT_BUTTON1}                     xpath://button[normalize-space()='Reset Draft']
+${RESET_DRAFT_BUTTON2}                     xpath:(//button[@aria-label='Reset Draft'])
+${CONTINUE_LEAGUE_OFFICE_BUTTON}           xpath://a[normalize-space()='Continue to League Office']
+${PROFILE_LOGIN_BUTTON}                    xpath://button[text()='Log In']
 ${FIRST_NAME_FIELD}                        id:InputFirstName
 ${LAST_NAME_FIELD}                         id:InputLastName
 ${NEW_EMAIL_FIELD}                         id:InputEmail
@@ -30,6 +30,7 @@ ${NEW_PASSWORD_FIELD}                      id:password-new
 ${LEAGUE_CREATE_URL}                       https://fantasy.espn.com/basketball/league/create?ex_cid=FBA2018_RightRailCreate
 ${LEAGUE_NAME_FIELD}                       xpath://input[@class='form__control LeagueNameInput']
 ${NO_OF_TEAMS}                             xpath://div[text()=4]//parent::div
+${PROFILE_LOCATOR}                         id:global-user-trigger
 ${LEAGUE_CREATE_BUTTON}                    xpath://button[text()='Create League']
 ${DISMISS_INVITE}                          css:button[aria-label='Close dialog'] div
 ${SCHEDULE_DRAFT_BUTTON}                   xpath://a[text()="Schedule Your Draft"]
@@ -41,7 +42,7 @@ ${RELEASE_ROSTER_BUTTON}                   xpath://span[text()='Release Rosters'
 ${INPUT_OFFLINE_RESULTS_LINK}              xpath://a[text()='Input Offline Draft Results']
 ${BEGIN_OFFLINE_DRAFT}                     xpath://button[text()='Begin Offline Draft']
 ${PLAYER_NAMES}                            xpath://input[@placeholder='Player Name']
-${FINISH_ENTERING_BUTTON}                  //button[text()='I Am Finished Entering Results']
+${FINISH_ENTERING_BUTTON}                  xpath://button[text()='I Am Finished Entering Results']
 
 *** Keywords ***
 Initialize Variables
@@ -73,6 +74,11 @@ Launch the Browser and Navigate to the ${url} site
 Select my fantasy team
     wait until element is visible   //span[text()='My Team']
     click element      //span[text()='My Team']
+
+Select my fantasy ${LEAGUE_NAME}
+     wait until element is visible   ${PROFILE_LOCATOR}       timeout=10s
+     mouse over                      ${PROFILE_LOCATOR}
+     click element                   xpath://span[text()='${LEAGUE_NAME}']
 
 Click on roster moves
     wait until element is visible    ${ROSTER_MOVES_OPTION}
@@ -256,4 +262,3 @@ Add players for ${team} to drop
       wait until element is visible      //button[@data-player-search-playername="${name}"]
       click button    //button[@data-player-search-playername="${name}"]
     END
-  

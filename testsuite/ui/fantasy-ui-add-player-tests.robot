@@ -11,9 +11,12 @@ Suite Setup           Run Keywords    Launch the Browser and Navigate to the htt
 Suite Teardown        Close the current Browser
 
 *** Variables ***
-${username}        sauravk0997@gmail.com
+${username}                  sauravk0997@gmail.com
 ${encrypted_password}        U2F1cmF2QDExMDM=
-${LEAGUE_NAME}     UI-Automation-Testing-League-1
+${LEAGUE_NAME}               UI-Automation-Testing-League-1
+${OTHER_LEAGUE}              My 2023 League
+${MESSAGE1}                  You must drop a player to clear your roster for the incoming players.
+${MESSAGE2}                  You must drop a player with default position C to clear your roster for the incoming players.
 
 *** Test Cases ***
 As a Team Owner, drop and then add player to my team
@@ -73,3 +76,18 @@ As a League Manager, add and drop a player from my team
     Add and drop a player from my team as an LM, when roster is full
     Click on the my team link
     Validate the player is added to a team
+
+As a Team Owner, I should not be able to add a player to my team if the roster is full.
+    [Documentation]    As a Team Owner, I should not be able to add any player to my team if my roster is full.
+    [Tags]    fantasy-ui    add-player    invalid    CSEAUTO-30053    CSEAUTO-29766
+    Switch to oher league ${OTHER_LEAGUE}
+    Add a player when the roster is full
+    Validate that the player is not added to your team with the error message ${MESSAGE1}.
+
+As a Team Manager, I should not be able to add more than 4 Position C players to my team.
+    [Documentation]    As a Team Owner, I should not be able to add any player to my team if my roster is full.
+    [Tags]    fantasy-ui    add-player    invalid    CSEAUTO-30053    CSEAUTO-29766
+    Switch to oher league ${OTHER_LEAGUE}
+    Add Position C player to my team as Team Owner
+    Drop a non Position C Player from my team as Team Owner
+    Validate that the player is not added to your team with the error message ${MESSAGE2}.
