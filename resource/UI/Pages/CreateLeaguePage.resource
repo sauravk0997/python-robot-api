@@ -40,6 +40,7 @@ ${SUBMIT_CHANGES_BUTTON}      xpath://button[text()='Submit Changes']
 ${CONTINUE_LEAGUE_OFFICE}     xpath://a[text()='Continue to League Office']
 ${SAVE_ROSTER_DEFAULT_BUTTON}    xpath://button[@class='Button Button--default rosterButton']
 ${TAKE_ME_TO_LEAGUE_ROSTERS}     xpath://div[@class='lightbox__content lightbox__content--desktop lightbox__content--isContent']//a[text()='Take me to League Rosters']
+${INVALID_LEAGUE_NAME_LENGTH}    xpath://div[text()='League name is not the correct length.']
 
 
 *** Keywords ***
@@ -215,3 +216,19 @@ Add players to team ${team_id} as team owner ${team_owner_id}
         END
     END
     click button     ${SAVE_ROSTER_DEFAULT_BUTTON}
+
+Create a Fantasy League with a lengthy league name and validate the error message
+    Sleep    6
+    Wait Until Page Contains Element    ${CREATE_A_LEAGUE_BUTTON}
+    Wait Until Element Is Enabled    ${CREATE_A_LEAGUE_BUTTON}  timeout=10s
+    Click Button    ${CREATE_A_LEAGUE_BUTTON}
+    ${random_string}=    Generate Random String    25    0123456789
+    ${league_name}=   Convert To String     My-Fantasy-League-${random_string}
+    Wait Until Element Is Visible    ${LEAGUE_NAME_INPUT_FIELD}   timeout=10s
+    Input Text    ${LEAGUE_NAME_INPUT_FIELD}     ${league_name}
+    Click Element    ${LEAGUE_SIZE_4}
+    Click Element    ${SCORING_H2H_POINTS}
+    Click Element    ${CREATE_LEAGUE_BUTTON}
+    Wait Until Element Is Visible    ${INVALID_LEAGUE_NAME_LENGTH}
+    ${error_message}=    Get Text    ${INVALID_LEAGUE_NAME_LENGTH}
+    Should Be Equal As Strings    ${error_message}    League name is not the correct length.    msg=The expected and actual strings are not Equal\

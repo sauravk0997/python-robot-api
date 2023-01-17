@@ -44,3 +44,7 @@ E2E - UI - Validate User Steps as League Creator user to Create Teams and assign
     Add players to team 3 as team owner 3
     Add players to team 4 as team owner 4
     Delete the league
+
+Validate User steps as a League Creator user to Create a Fantasy League with a lengthy league name
+    [Tags]    invalid    fantasy-ui    CSEAUTO-28396    CSEAUTO-30052
+    Create a Fantasy League with a lengthy league name and validate the error message
