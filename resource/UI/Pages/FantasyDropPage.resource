@@ -90,6 +90,21 @@ Select roster moves in LM tools
     Click on roster moves
     Select options from dropdown
 
+Select a team from LM tools as a team manager
+    Click on LM tools
+    Click on roster moves
+    Select options from dropdown as a team manager
+
+Select options from dropdown as a team manager
+    wait until element is visible    ${ROSTER_MOVES_DROPDOWN1}
+    Select From List By Value       ${ROSTER_MOVES_DROPDOWN1}        dropPlayers
+    wait until element is visible    ${ROSTER_MOVES_DROPDOWN2}
+    Select From List By Value       ${ROSTER_MOVES_DROPDOWN2}        2
+    Click Element    (//div[@class='control__indicator'][1])[2]
+    Wait Until Element Is Visible    ${LM_TOOLS_CONTINUE_BUTTON}
+    click element       ${LM_TOOLS_CONTINUE_BUTTON}
+    Sleep    3s
+
 Check availability for ${status} player and drop
     Set availability true
     Scroll Element Into View    //span[@title='${status}']
@@ -180,3 +195,12 @@ Verify multiple players have been dropped inside LM tools
 Verify multiple players have been dropped
     ${after_drop}    Verify the player has been dropped
     Should Be Equal    ${${before_drop}-2}    ${after_drop}
+
+Drop all players from team and verify its empty
+    Scroll Element Into View    //button[contains(@title,'Drop Player')]
+    FOR    ${index}    IN RANGE    ${before_drop}
+      click button    //button[contains(@title,'Drop Player')]
+    END
+    Click on continue button
+    Click on confirm button
+    Reload Page
