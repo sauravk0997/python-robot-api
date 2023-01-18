@@ -7,7 +7,7 @@ Resource         resource/UI/FantasyUICommonMove.resource
 *** Variables ***
 ${DROP_PLAYER_BUTTON}                    css:button[data-myteam-mode='drop']
 ${ALL_PLAYER_LIST}                       xpath://tbody[@class='Table__TBODY']//tr//div[@title='Action']//button
-${CONTINUE_BUTTON}                       xpath://span[text()='Continue']
+${CONTINUE_BUTTON}                       xpath://span[text()='Continue']/parent::button
 ${CONFIRM_BUTTON}                        xpath://span[text()='Confirm']
 ${ACTIVE_DROP_BUTTON}                    css:button[title='Drop Player']
 ${MY_TEAM_LINK}                          xpath://span[text()='My Team']
@@ -22,7 +22,6 @@ ${LM_CONTINUE_BUTTON}                    xpath://button[normalize-space()='Conti
 ${TEAM_DROPDOWN}                         xpath:(//span[text()='Team Kumar'])[1]
 ${POSITION_C_PLAYERS}                    xpath://span[starts-with(text(),'C') and @class='playerinfo__playerpos ttu']
 ${POSITION_C_PLAYERS_ADD_BUTTON}         xpath://span[starts-with(text(),'C') and @class='playerinfo__playerpos ttu']/ancestor::tr/td[3]/div/div/div/button[1]
-${CONTINUE_DISABLE}                      xpath://span[text()='Continue']/parent::button
 ${FILTER_C_BUTTON}                       xpath://label[normalize-space()='C']
 ${NON_POSITION_C_PLAYER_DROP_BUTTONS}    xpath://span[not(starts-with(text(),'C'))][@class='playerinfo__playerpos ttu']/ancestor::tr/td[3]/div/div/button[@title='Drop Player']
 
@@ -107,10 +106,6 @@ Fetch all the Free agents
 
 Add a player as Team Owner
   Fetch all the Free agents
-  # wait until element is visible    ${ADD_PLAYER_LINK} 
-  # Click Element                    ${ADD_PLAYER_LINK} 
-  # wait until element is visible    ${FILTER_DROPDOWN}
-  # Select From List By Value        ${FILTER_DROPDOWN}        FREEAGENT
   wait until element is visible    ${ADD_ACTION_BUTTON}    timeout=8s
   # Storing all the free agent player to the list
   @{addable_players}=       Get WebElements    ${ADD_ACTION_BUTTON}
@@ -246,14 +241,15 @@ Add a player when the roster is full
     IF    ${length_after_dropping} == 13
       Click on the my team link
       Add a player as Team Owner
-      Wait Until Element Is Visible    ${CONTINUE_DISABLE} 
-      Element Should Be Disabled       ${CONTINUE_DISABLE}
+      Wait Until Element Is Visible    ${CONTINUE_BUTTON} 
+      Element Should Be Disabled       ${CONTINUE_BUTTON}
     ELSE 
       Log    Your roster is not full. Please add players to fill your roster
     END
 
 Validate that the player is not added to your team with the error message ${message}.
-    ${error_message}   Convert to String     ${message}    
+    ${error_message}   Convert to String     ${message}
+    Wait Until Element Is Visible            //div[text()='${message}'] 
     ${error_text}      get text              //div[text()='${message}']
     Should Be Equal    ${error_message}      ${error_text}
 
@@ -266,7 +262,6 @@ Add Position C player to my team as Team Owner
     IF    ${length_of_position_C_players} == 4
       Fetch all the Free agents
       Click Element                    ${FILTER_C_BUTTON}
-      Sleep    2s
       wait until element is visible    ${POSITION_C_PLAYERS_ADD_BUTTON}
       # Storing all the p[osition C player to the list
       @{addable_position_C_players}=           Get WebElements    ${POSITION_C_PLAYERS_ADD_BUTTON}
@@ -298,7 +293,6 @@ Drop a non Position C Player from my team as Team Owner
       Click Element                      ${non_position_C_drop_button}[0]
       Click on continue button
       Click on confirm button
-      Sleep    3s
     ELSE
       Log    Non Positoin C Droppable players are not available 
     END
