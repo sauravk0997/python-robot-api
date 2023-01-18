@@ -40,8 +40,8 @@ ${SUBMIT_CHANGES_BUTTON}      xpath://button[text()='Submit Changes']
 ${CONTINUE_LEAGUE_OFFICE}     xpath://a[text()='Continue to League Office']
 ${SAVE_ROSTER_DEFAULT_BUTTON}    xpath://button[@class='Button Button--default rosterButton']
 ${TAKE_ME_TO_LEAGUE_ROSTERS}     xpath://div[@class='lightbox__content lightbox__content--desktop lightbox__content--isContent']//a[text()='Take me to League Rosters']
-${INVALID_LEAGUE_NAME_LENGTH}    xpath://div[text()='League name is not the correct length.']
-
+${INVALID_LEAGUE_NAME_ERROR}     xpath://div[text()='League name is not the correct length.']
+${INVALID_LEAGUE_JOIN_ERROR}     xpath://div[text()='Oops! Looks like something went wrong. Please try again!']
 
 *** Keywords ***
 Create a league
@@ -71,7 +71,7 @@ Send invitations, Accept Invitation send by the inviter and create teams
         Execute Javascript   window.open('${invite_link}')
         ${handles}=  Get Window Handles
         Switch Window   ${handles}[1]
-        log in to the site    ${user_emails}[${index}]
+        log in to the site    ${user_emails}[${index}]    VUl1c2VyQEVTUE4=
         Page Should Contain Button    ${JOIN_THIS_LEAGUE_BUTTON}
         Wait Until Element Is Enabled    ${JOIN_THIS_LEAGUE_BUTTON}
         sleep     2
@@ -229,6 +229,29 @@ Create a Fantasy League with a lengthy league name and validate the error messag
     Click Element    ${LEAGUE_SIZE_4}
     Click Element    ${SCORING_H2H_POINTS}
     Click Element    ${CREATE_LEAGUE_BUTTON}
-    Wait Until Element Is Visible    ${INVALID_LEAGUE_NAME_LENGTH}
-    ${error_message}=    Get Text    ${INVALID_LEAGUE_NAME_LENGTH}
-    Should Be Equal As Strings    ${error_message}    League name is not the correct length.    msg=The expected and actual strings are not Equal\
+    Wait Until Element Is Visible    ${INVALID_LEAGUE_NAME_ERROR}
+    ${error_message}=    Get Text    ${INVALID_LEAGUE_NAME_ERROR}
+    Should Be Equal As Strings    ${error_message}    League name is not the correct length.    msg=The expected and actual strings are not Equal
+
+Join invalid invite id and valid the error message
+    Execute Javascript   window.open('${invite_link}12345')
+    ${handles}=  Get Window Handles
+    Switch Window   ${handles}[1]
+    Page Should Contain Element    ${INVALID_LEAGUE_JOIN_ERROR}
+    ${error_message}=    Get Text    ${INVALID_LEAGUE_JOIN_ERROR}
+    Should Be Equal As Strings    ${error_message}    Oops! Looks like something went wrong. Please try again!    msg=The expected and actual strings are not Equal
+    Switch Window    ${handles}[0]
+
+Join the league as an invalid user and valid the error message
+    ${invalid_username}=    Set Variable    xyz@test.com
+    ${invalid_password}=    Set Variable    YWJj
+    Execute Javascript   window.open('${invite_link}')
+    ${handles}=  Get Window Handles
+    Switch Window   ${handles}[1]
+    log in to the site    ${invalid_username}    ${invalid_password}
+    Select Frame      ${DISNEY_ID_IFRAME} 
+    sleep    1
+    Wait Until Element Is Visible    ${INVALID_USER_LOGIN_ERROR}
+    ${error_message}=    Get Text    ${INVALID_USER_LOGIN_ERROR}
+    Should Contain Any    ${error_message}    The credentials you entered are incorrect.    msg=The expected and actual strings are not Equal
+    Switch Window    ${handles}[0]

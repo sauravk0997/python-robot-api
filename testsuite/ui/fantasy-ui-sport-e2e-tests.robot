@@ -48,3 +48,15 @@ E2E - UI - Validate User Steps as League Creator user to Create Teams and assign
 Validate User steps as a League Creator user to Create a Fantasy League with a lengthy league name
     [Tags]    invalid    fantasy-ui    CSEAUTO-28396    CSEAUTO-30052
     Create a Fantasy League with a lengthy league name and validate the error message
+
+Validate User steps as Team Owner to Join the Fantasy League with an invalid invite Id
+    [Tags]    invalid    fantasy-ui    CSEAUTO-28396    CSEAUTO-30052
+    Create a league
+    Join invalid invite id and valid the error message
+    Delete the league
+
+Validate User steps to Join the Fantasy League as an invalid user
+    [Tags]    invalid    fantasy-ui    CSEAUTO-28396    CSEAUTO-30052
+    Create a league
+    Join the league as an invalid user and valid the error message
+    Delete the league
