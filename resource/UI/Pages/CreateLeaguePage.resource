@@ -42,6 +42,7 @@ ${SAVE_ROSTER_DEFAULT_BUTTON}    xpath://button[@class='Button Button--default r
 ${TAKE_ME_TO_LEAGUE_ROSTERS}     xpath://div[@class='lightbox__content lightbox__content--desktop lightbox__content--isContent']//a[text()='Take me to League Rosters']
 ${INVALID_LEAGUE_NAME_ERROR}     xpath://div[text()='League name is not the correct length.']
 ${INVALID_LEAGUE_JOIN_ERROR}     xpath://div[text()='Oops! Looks like something went wrong. Please try again!']
+${INVALID_USER_LOGIN_ERROR}      xpath://div[text()='The credentials you entered are incorrect.']
 
 *** Keywords ***
 Create a league
