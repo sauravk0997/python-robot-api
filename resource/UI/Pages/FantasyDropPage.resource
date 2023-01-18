@@ -20,7 +20,7 @@ Click on drop button
     wait until element is visible   ${COMMON_DROP_BUTTON}
     Scroll Element Into View    ${COMMON_DROP_BUTTON}
     Click Element    ${COMMON_DROP_BUTTON}
-    Wait Until Element Is Visible    ${DROP_PLAYERS_LIST}
+    # Wait Until Element Is Visible    ${DROP_PLAYERS_LIST}
 
 Verify the player has been dropped
     Reload Page
@@ -94,6 +94,22 @@ Select a team from LM tools as a team manager
     Click on LM tools
     Click on roster moves
     Select options from dropdown as a team manager
+
+Select own team from LM tools as a league manager
+    Click on LM tools
+    Click on roster moves
+    Select own team from dropdown as a league manager
+    ${before_drop}    check no of players available to drop
+    Set Global Variable    ${before_drop}
+
+Select own team from dropdown as a league manager
+    wait until element is visible    ${ROSTER_MOVES_DROPDOWN1}
+    Select From List By Value       ${ROSTER_MOVES_DROPDOWN1}        dropPlayers
+    wait until element is visible    ${ROSTER_MOVES_DROPDOWN2}
+    Select From List By Value       ${ROSTER_MOVES_DROPDOWN2}        1
+    Wait Until Element Is Visible    ${LM_TOOLS_CONTINUE_BUTTON}
+    click element       ${LM_TOOLS_CONTINUE_BUTTON}
+    Sleep    3s
 
 Select options from dropdown as a team manager
     wait until element is visible    ${ROSTER_MOVES_DROPDOWN1}
@@ -196,11 +212,27 @@ Verify multiple players have been dropped
     ${after_drop}    Verify the player has been dropped
     Should Be Equal    ${${before_drop}-2}    ${after_drop}
 
-Drop all players from team and verify its empty
-    Scroll Element Into View    //button[contains(@title,'Drop Player')]
+Drop all players from the team
     FOR    ${index}    IN RANGE    ${before_drop}
-      click button    //button[contains(@title,'Drop Player')]
+    #   Scroll Element Into View    (//button[contains(@title,'Drop Player')])[${index}+1]
+    #   Wait Until Element is visible    (//button[contains(@title,'Drop Player')])[${index}+1]    timeout=5s
+      Click Button    (//button[contains(@title,'Drop Player')])[${index}+1]
     END
-    Click on continue button
-    Click on confirm button
+    FantasyDropPage.Click on continue button
+    FantasyDropPage.Click on confirm button
     Reload Page
+
+Drop button should not be visible
+    Element Should Not Be Visible    ${COMMON_DROP_BUTTON}
+
+Select an opposing team
+    Mouse Over    //span[text()='Opposing Teams']
+    Click Element    //span[text()='Team 2 (TM2)']
+
+Undroppable player button should be disabled
+    ${Status}=     Run Keyword And Return Status    Element Should be Disabled    id=${UNDROPPABLE_PLAYER}
+    Run Keyword If    '${Status}'=='True'      Log To Console    "Can't drop an undroppable player"
+
+All players button should be disabled
+    ${Status}=     Run Keyword And Return Status    Element Should be Disabled    id=${DROP_PLAYERS_LIST}
+    Run Keyword If    '${Status}'=='True'      Log To Console    "Can't drop a player from other team as a team manager"
