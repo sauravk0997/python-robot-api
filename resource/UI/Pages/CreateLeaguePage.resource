@@ -224,9 +224,8 @@ Create a Fantasy League with a lengthy league name and validate the error messag
     Wait Until Element Is Enabled    ${CREATE_A_LEAGUE_BUTTON}  timeout=10s
     Click Button    ${CREATE_A_LEAGUE_BUTTON}
     ${random_string}=    Generate Random String    25    0123456789
-    ${league_name}=   Convert To String     My-Fantasy-League-${random_string}
     Wait Until Element Is Visible    ${LEAGUE_NAME_INPUT_FIELD}   timeout=10s
-    Input Text    ${LEAGUE_NAME_INPUT_FIELD}     ${league_name}
+    Input Text    ${LEAGUE_NAME_INPUT_FIELD}     My-Fantasy-League-${random_string}
     Click Element    ${LEAGUE_SIZE_4}
     Click Element    ${SCORING_H2H_POINTS}
     Click Element    ${CREATE_LEAGUE_BUTTON}
