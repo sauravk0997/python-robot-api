@@ -75,7 +75,7 @@ Select my fantasy team
     wait until element is visible   //span[text()='My Team']
     click element      //span[text()='My Team']
 
-Select my fantasy ${LEAGUE_NAME}
+Select my fantasy league ${LEAGUE_NAME}
      wait until element is visible   ${PROFILE_LOCATOR}       timeout=10s
      mouse over                      ${PROFILE_LOCATOR}
      click element                   xpath://span[text()='${LEAGUE_NAME}']
