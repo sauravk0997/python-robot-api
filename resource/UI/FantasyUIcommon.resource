@@ -8,7 +8,7 @@ Resource            resource/UI/Pages/CreateLeaguePage.resource
 
 *** Variables ***
 ${FANTASY_URL}                        https://fantasy.espn.com/
-${user}                               test_user_account3@test.com
+${user}                               test_user_account4@test.com
 ${encrypted_password}                 U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
 ${ENCRYPTED_PASSWORD1}                VUl1c2VyQEVTUE4=
 @{user_emails}                        ui_test_user1@test.com    ui_test_user2@test.com    ui_test_user3@test.com
@@ -113,7 +113,7 @@ Log in to the Fantasy Application
     click button      ${login_button}
     Unselect Frame
 
-Re-login to the fantasy application as a root user
+Re-login to the fantasy application as root default user
     Select Frame      ${DISNEY_ID_IFRAME}
     wait until element is visible    ${username_field}
     input text        ${username_field}       ${user}
@@ -143,7 +143,7 @@ Logout from Fantasy Application
     Click Element    ${LOGOUT_LINK}
 
 log in to the site
-    [Arguments]    ${username}
+    [Arguments]    ${username}    ${password}
     Logout from Fantasy Application 
     Mouse Over    ${FANTASY_PROFILE_ICON}
     Wait Until Element Is Visible    ${FANTASY_LOGIN_LINK}
@@ -152,7 +152,7 @@ log in to the site
     wait until element is visible    ${username_field}
     input text        ${username_field}       ${username}
     wait until element is visible    ${password_field}
-    ${decrypted_password}=     Get decrypted password ${ENCRYPTED_PASSWORD1}
+    ${decrypted_password}=     Get decrypted password ${password}
     input password    ${password_field}    ${decrypted_password}
     click button      ${login_button}
     Unselect Frame
@@ -167,6 +167,7 @@ Login into the espn site with user credentials ${username} and ${password}
     wait until element is visible    ${password_field}
     input password    ${password_field}    ${decrypted_password}
     click button      ${login_button}
+
 Click on LM tools
     Wait Until Element Is Visible    ${LM_TOOLS_OPTION}
     click element       ${LM_TOOLS_OPTION}
