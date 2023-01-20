@@ -71,7 +71,7 @@ Launch the Browser and Navigate to the ${url} site
     Go To                    ${url}
     Maximize Browser Window
 
-Select my fantasy team
+Select my team
     wait until element is visible   //span[text()='My Team']
     click element      //span[text()='My Team']
 
@@ -195,14 +195,9 @@ Reset draft
     wait until element is visible    ${RESET_DRAFT_BUTTON1}
     click element    ${RESET_DRAFT_BUTTON1}
     wait until element is visible    ${RESET_DRAFT_BUTTON2}
-    Sleep    5s
     click element    ${RESET_DRAFT_BUTTON2}
-    Sleep    5s
+    wait until element is visible    ${CONTINUE_LEAGUE_OFFICE_BUTTON}
     click element    ${CONTINUE_LEAGUE_OFFICE_BUTTON}
-    Logout from Fantasy Application
-    Log To Console    ***** User logged out *****
-    FantasyUIcommon.Close the current Browser
-    Log To Console    ***** All browsers closed *****
 
 Scroll up 
     execute javascript             window.scrollTo(document.body.scrollHeight, 100)
