@@ -78,7 +78,7 @@ Drop an undroppable player from my team as a team manager
  As a team manager, drop button not visible in other Team
     [Documentation]    E2E - Add and drop players as a team manager
     [Tags]    invalid    fantasy-ui    CSEAUTO-30214
-    Select an opposing team
+    Select an opposition team
     Drop button should not be visible
 
  As a team owner, you shouldn't be able to delete player from other team

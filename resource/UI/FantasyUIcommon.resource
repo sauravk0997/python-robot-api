@@ -75,11 +75,6 @@ Select my team
     wait until element is visible   //span[text()='My Team']
     click element      //span[text()='My Team']
 
-Select my fantasy ${LEAGUE_NAME}
-    wait until element is visible   ${PROFILE_LOCATOR}       timeout=10s
-    mouse over                      ${PROFILE_LOCATOR}
-    click element                   xpath://span[text()='${LEAGUE_NAME}']
-
 Click on roster moves
     wait until element is visible    ${ROSTER_MOVES_OPTION}
     Execute JavaScript    window.document.evaluate("//a[normalize-space()='Roster Moves']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)

@@ -212,18 +212,21 @@ Verify multiple players have been dropped
 Drop button should not be visible
     Element Should Not Be Visible    ${COMMON_DROP_BUTTON}
 
-Select an opposing team
+Select an opposition team
     Mouse Over    //span[text()='Opposing Teams']
     Click Element    //span[text()='Team 2 (TM2)']
 
 Undroppable player button should be disabled
     ${Status}=     Run Keyword And Return Status    Element Should be Disabled    id=${UNDROPPABLE_PLAYER}
-    Run Keyword If    '${Status}'=='True'      Log To Console    "Can't drop an undroppable player"
+    Run Keyword If    '${Status}'=='True'    
+    ...    Log To Console    "Can't drop an undroppable player" 
+
 
 All players button should be disabled
     ${Status}=     Run Keyword And Return Status    Element Should be Disabled    id=${DROP_PLAYERS_LIST}
-    Run Keyword If    '${Status}'=='True'      Log To Console    "Can't drop a player from other team as a team manager"
-
+    Run Keyword If    '${Status}'=='True'    
+    ...    Log To Console    "Can't drop a player from other team as a team manager"
+    
 Reset and schedule empty draft
     Reset draft    
     Click on LM tools
