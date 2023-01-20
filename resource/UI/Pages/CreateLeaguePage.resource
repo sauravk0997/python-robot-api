@@ -112,10 +112,10 @@ Delete the league
 check iframe and re-login into the application
     ${present}=    Run Keyword And Return Status    Element Should Be Visible    ${DISNEY_ID_IFRAME}
     Run Keyword If    ${present}    
-    ...    Re-login to the fantasy application as a root user
+    ...    Re-login to the fantasy application as root default user
     ...  ELSE    Run Keywords
     ...    Logout from Fantasy Application
-    ...    Re-login to the fantasy application as a root user
+    ...    Re-login to the fantasy application as root default user
     Sleep    2
 
 Schedule Offline Draft
@@ -233,18 +233,19 @@ Create a Fantasy League with a lengthy league name and validate the error messag
     Wait Until Element Is Visible    ${INVALID_LEAGUE_NAME_ERROR}
     ${error_message}=    Get Text    ${INVALID_LEAGUE_NAME_ERROR}
     Should Be Equal As Strings    ${error_message}    League name is not the correct length.    msg=The expected and actual strings are not Equal
+    Close the current Browser
 
 Join invalid invite id and valid the error message
     Execute Javascript   window.open('${invite_link}12345')
     ${handles}=  Get Window Handles
     Switch Window   ${handles}[1]
-    Page Should Contain Element    ${INVALID_LEAGUE_JOIN_ERROR}
+    Wait Until Page Contains Element    ${INVALID_LEAGUE_JOIN_ERROR}
     ${error_message}=    Get Text    ${INVALID_LEAGUE_JOIN_ERROR}
     Should Be Equal As Strings    ${error_message}    Oops! Looks like something went wrong. Please try again!    msg=The expected and actual strings are not Equal
     Switch Window    ${handles}[0]
 
 Join the league as an invalid user and valid the error message
-    ${invalid_username}=    Set Variable    xyz@test.com
+    ${invalid_username}=    Set Variable    xyz11@test.com
     ${invalid_password}=    Set Variable    YWJj
     Execute Javascript   window.open('${invite_link}')
     ${handles}=  Get Window Handles
@@ -256,3 +257,14 @@ Join the league as an invalid user and valid the error message
     ${error_message}=    Get Text    ${INVALID_USER_LOGIN_ERROR}
     Should Contain Any    ${error_message}    The credentials you entered are incorrect.    msg=The expected and actual strings are not Equal
     Switch Window    ${handles}[0]
+    Reload Page
+    Sleep    2
+    Wait Until Element Is Visible    ${DISNEY_ID_IFRAME}
+
+validate that the invalid league id is not present
+    Wait Until Page Contains Element    ${MY_TEAMS_ICON}
+    Wait Until Element Is Visible    ${MY_TEAMS_ICON}
+    Mouse Over       ${MY_TEAMS_ICON}
+    ${status}=    Run Keyword And Return Status    Element Should Be Visible    xpath://span[text()='invalid-league']
+    Run Keyword If    ${status} is not ${TRUE}
+    ...    Log    "Invalid league does not exists and it is expected."
