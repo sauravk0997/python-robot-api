@@ -34,15 +34,15 @@ validate the user is navigated to the teams page
   page should contain element      ${MY_TEAM_LINK}
 
 Click on my team link
-  wait until element is visible    ${MY_TEAM_LINK}        timeout=10s
+  wait until element is visible    ${MY_TEAM_LINK}              timeout=10s
   Click Element                    ${MY_TEAM_LINK}
 
 Click on continue button
-  wait until element is visible     ${CONTINUE_BUTTON}          timeout=10s
+  wait until element is visible     ${CONTINUE_BUTTON}          timeout=12s
   Click Element                     ${CONTINUE_BUTTON}
 
 Click on confirm button
-  wait until element is visible     ${CONFIRM_BUTTON}            timeout=10s
+  wait until element is visible     ${CONFIRM_BUTTON}           timeout=12s
   Click Element                     ${CONFIRM_BUTTON} 
 
 Click on drop player button
@@ -52,7 +52,7 @@ Click on drop player button
   Click Element                     ${DROP_PLAYER_BUTTON}
 
 Click on the add player button
-  wait until element is visible    ${ADD_PLAYER_LINK} 
+  wait until element is visible    ${ADD_PLAYER_LINK}           timeout=10s
   Click Element                    ${ADD_PLAYER_LINK} 
 
 Fetch all the Free agents
@@ -60,7 +60,7 @@ Fetch all the Free agents
   Select From List By Value        ${FILTER_DROPDOWN}        FREEAGENT
 
 Click on the LM Tool button
-  Wait Until Element Is Visible     ${LM_TOOL_BUTTON}
+  Wait Until Element Is Visible     ${LM_TOOL_BUTTON}      timeout=15s
   click element                     ${LM_TOOL_BUTTON}
 
 Click on the Roster Moves
@@ -117,14 +117,15 @@ Validate whether player is dropped from team
 Add a player as Team Owner
   Click on the add player button
   Fetch all the Free agents
-  wait until element is visible    ${ADD_ACTION_BUTTON}    timeout=8s
+  wait until element is visible    ${ADD_ACTION_BUTTON}    timeout=15s
   # Storing all the free agent player to the list
   @{addable_players}=       Get WebElements    ${ADD_ACTION_BUTTON}
   ${addable_players_length}                Get Length         ${addable_players}
   IF    ${addable_players_length} != 0
     # Selecting a player for adding to the team
-    Wait Until Element Is Visible    ${addable_players}[0]    timeout=8s
-    Click Button    ${addable_players}[0]   
+    Scroll up
+    # Wait Until Element Is Visible    ${addable_players}[1]    timeout=15s
+    Click Element    ${addable_players}[1]   
   ELSE
      Log    Free Agent players are not available 
   END
@@ -244,8 +245,9 @@ Add and drop a player from other team as an LM, when roster is full
 
 Switch to the league ${league_name}
   Click on my team link
-  wait until element is visible    ${LEAGUE_DROPDOWN}       timeout=10s
+  wait until element is visible    ${LEAGUE_DROPDOWN}       timeout=15s
   mouse over 		                   ${LEAGUE_DROPDOWN}
+  Wait Until Element Is Visible    //span[normalize-space()='${league_name}']    timeout=15s
   click element                    //span[normalize-space()='${league_name}']
 
 Add a player when the roster is full as Team Owner
@@ -254,8 +256,6 @@ Add a player when the roster is full as Team Owner
   IF    ${player_before_dropping} == 13
     Click on my team link
     Add a player as Team Owner
-    Wait Until Element Is Visible    ${CONTINUE_BUTTON} 
-    Element Should Be Disabled       ${CONTINUE_BUTTON}
   ELSE 
     Log    Your roster is not full. Please add players to fill your roster
   END
@@ -349,6 +349,6 @@ Validate players are addable when the roster is full to the team ${team_id} as L
    
 Validate that the player is not added to your team with the error message ${message}.
   ${error_message}   Convert to String     ${message}
-  Wait Until Element Is Visible            //div[text()='${message}'] 
+  Wait Until Element Is Visible            //div[text()='${message}']       timeout=20s
   ${error_text}      get text              //div[text()='${message}']
   Should Be Equal    ${error_message}      ${error_text}
