@@ -33,7 +33,7 @@ validate the user is navigated to the teams page
   wait until element is visible    ${MY_TEAM_LINK}
   page should contain element      ${MY_TEAM_LINK}
 
-Click on the my team link
+Click on my team link
   wait until element is visible    ${MY_TEAM_LINK}        timeout=10s
   Click Element                    ${MY_TEAM_LINK}
 
@@ -71,10 +71,10 @@ Click on the Roster Moves
 Fetch the size of roster of the team
   wait until element is visible    ${ALL_PLAYER_LIST}
   # Storing all the droppable player to the list
-  @{player_after_dropping}=       Get WebElements    ${ALL_PLAYER_LIST}
+  @{player_before_dropping}=       Get WebElements    ${ALL_PLAYER_LIST}
   # Getting length of all the droopable players 
-  ${length_after_dropping}        Get Length         ${player_after_dropping}
-  Set Global Variable                                ${length_after_dropping}
+  ${player_before_dropping}        Get Length         ${player_before_dropping}
+  Set Global Variable                                ${player_before_dropping}
 
 Drop a player from my fantasy team
   Click on drop player button
@@ -103,11 +103,11 @@ Drop a player from my fantasy team
   END
   
 Validate whether player is dropped from team
-  Click on the my team link
+  Click on my team link
   Click on drop player button
   Fetch the size of roster of the team
   ${total_players_in_a_team}    Evaluate    ${length_before_dropping}-1
-  IF    ${length_after_dropping} == ${total_players_in_a_team}
+  IF    ${player_before_dropping} == ${total_players_in_a_team}
     Log    Player is dropped
   ELSE
     Log    Player is not dropped
@@ -131,7 +131,7 @@ Add a player as Team Owner
   
 Add players to the team as a Team Owner
   Add a player as Team Owner
-  Click on the my team link
+  Click on my team link
 
 Navigate to LM tools, Click on Roster moves and do the ${action} on the Team ${team_id} 
   Click on the LM Tool button
@@ -169,11 +169,11 @@ Perform drop action to drop a player
 Add and drop a player from my team as an LM, when roster is full
   Click on drop player button
   Fetch the size of roster of the team
-  IF    ${length_after_dropping} == 13
-    Click on the my team link
+  IF    ${player_before_dropping} == 13
+    Click on my team link
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 1
     Add players to the team as an LM
-    Click on the my team link
+    Click on my team link
     Scroll up
     Perform drop action to drop a player
   ELSE 
@@ -206,11 +206,11 @@ Drop players fom the team as an LM
 Validate the player is added to a team
   Click on drop player button
   Fetch the size of roster of the team
-  Click on the my team link
+  Click on my team link
   wait until element is visible                    ${ALL_PLAYER_LIST}
   @{player_after_adding}=       Get WebElements    ${ALL_PLAYER_LIST}
   ${length_after_adding}    Get Length             ${player_after_adding}
-  IF    ${length_after_dropping} == ${length_after_adding}
+  IF    ${player_before_dropping} == ${length_after_adding}
     Log    Player is added to the team
   ELSE
     Log    Player is not added to the team
@@ -219,23 +219,23 @@ Validate the player is added to a team
 Add and drop a player when team roster is full
   Click on drop player button
   Fetch the size of roster of the team
-  IF    ${length_after_dropping} == 13
-    Click on the my team link
+  IF    ${player_before_dropping} == 13
+    Click on my team link
     Add players to the team as a Team Owner
     Perform drop action to drop a player
   ELSE
       Log    Please fill your roster by addding players to it.
   END
-  Click on the my team link
+  Click on my team link
 
 Add and drop a player from other team as an LM, when roster is full
   Click on drop player button
   Fetch the size of roster of the team
-  IF    ${length_after_dropping} == 13
-    Click on the my team link
+  IF    ${player_before_dropping} == 13
+    Click on my team link
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 3
     Add players to the team as an LM
-    Click on the my team link
+    Click on my team link
     Scroll up
     Perform drop action to drop a player
   ELSE 
@@ -243,7 +243,7 @@ Add and drop a player from other team as an LM, when roster is full
   END
 
 Switch to the league ${league_name}
-  Click on the my team link
+  Click on my team link
   wait until element is visible    ${LEAGUE_DROPDOWN}       timeout=10s
   mouse over 		                   ${LEAGUE_DROPDOWN}
   click element                    //span[normalize-space()='${league_name}']
@@ -251,9 +251,8 @@ Switch to the league ${league_name}
 Add a player when the roster is full as Team Owner
   Click on drop player button
   Fetch the size of roster of the team
-  ${size_of_the_team}=    ${length_after_dropping}
-  IF    ${size_of_the_team} == 13
-    Click on the my team link
+  IF    ${player_before_dropping} == 13
+    Click on my team link
     Add a player as Team Owner
     Wait Until Element Is Visible    ${CONTINUE_BUTTON} 
     Element Should Be Disabled       ${CONTINUE_BUTTON}
@@ -301,7 +300,7 @@ Drop a non Positon C Player
   END
 
 Add Position C player to my team as Team Owner
-  Click on the my team link
+  Click on my team link
   Fetch the length of Position C Players from the team
   IF    ${length_of_position_C_players} == 4
     Click on the add player button
@@ -312,7 +311,7 @@ Add Position C player to my team as Team Owner
     log    Your roster is having less than 4 Position C player. Please add Position C players to the roster. There should be at least 4 Position C player in the roster. 
   END
 
-Drop a non Position C Player from the team
+Drop a non-Position C Player from the team
   ${drop_players_status}    Run Keyword And Return Status    wait until element is visible            ${ACTIVE_DROP_BUTTON}    timeout=7s
   IF    ${drop_players_status} == True
     Drop a non Positon C Player
@@ -337,9 +336,9 @@ Add Position C player to another team ${team_id} as an LM
       Log       Your roster is having less than 4 Position C player. Please add Position C players to the roster. There should be at least 4 Position C player in the roster. 
   END
 
-Add a player when the roster is full to the team ${team_id} as League Manager
+Validate players are addable when the roster is full to the team ${team_id} as League Manager
   Fetch the size of roster of the team
-  IF    ${length_after_dropping} == 13
+  IF    ${player_before_dropping} == 13
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team ${team_id}
     Add players to the team as an LM
     Wait Until Element Is Visible    ${CONTINUE_BUTTON} 

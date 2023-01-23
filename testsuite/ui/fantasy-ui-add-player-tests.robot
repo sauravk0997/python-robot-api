@@ -37,7 +37,7 @@ As a League Manager, drop and then add player to other team
     Validate whether player is dropped from team
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 2
     Add players to the team as an LM
-    Click on the my team link
+    Click on my team link
     Validate the player is added to a team
 
 As a League Manager, drop and then add player to my team
@@ -49,7 +49,7 @@ As a League Manager, drop and then add player to my team
     Validate whether player is dropped from team
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 1
     Add players to the team as an LM
-    Click on the my team link
+    Click on my team link
     Validate the player is added to a team
 
 As a Team Owner, add and drop a player from my team
@@ -61,21 +61,21 @@ As a Team Owner, add and drop a player from my team
 As a League Manager, add and drop a player from another team
     [Documentation]    Add a player to another team and Drop a player from that team as a League Manager.
     [Tags]    fantasy-ui    add-player    valid    CSEAUTO-29716    CSEAUTO-28338    CSEAUTO-29765
-    Click on the my team link
+    Click on my team link
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 3
-    Click on the my team link
+    Click on my team link
     Add and drop a player from other team as an LM, when roster is full
-    Click on the my team link
+    Click on my team link
     Validate the player is added to a team
 
 As a League Manager, add and drop a player from my team
     [Documentation]    Add a player to my team and Drop a player from my team as a League Manager.
     [Tags]    fantasy-ui    add-player    valid    CSEAUTO-29716    CSEAUTO-28338    CSEAUTO-29766
-    Click on the my team link
+    Click on my team link
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 1
-    Click on the my team link
+    Click on my team link
     Add and drop a player from my team as an LM, when roster is full
-    Click on the my team link
+    Click on my team link
     Validate the player is added to a team
 
 As a Team Owner, I should not be able to add a player to my team if the roster is full.
@@ -90,22 +90,22 @@ As a Team Manager, I should not be able to add more than 4 Position C players to
     [Tags]    fantasy-ui    add-player    invalid    CSEAUTO-30053    CSEAUTO-28338    CSEAUTO-30135
     Switch to the league ${OTHER_LEAGUE}
     Add Position C player to my team as Team Owner
-    Drop a non Position C Player from the team
+    Drop a non-Position C Player from the team
     Validate that the player is not added to your team with the error message ${MESSAGE2}.
 
-As a League Manager, I should not be able to add more than 4 Positon C players to anothe team.
+As a League Manager, I should not be able to add more than 4 Positon C players to another team.
     [Documentation]    As a League Manager, I should not be able to add a Position C player to another team if that team's roster already has 4 Position C players.
     [Tags]    fantasy-ui    add-player    invalid    CSEAUTO-30053    CSEAUTO-28338    CSEAUTO-30136
     Switch to the league ${OTHER_LEAGUE}
-    Click on the my team link
+    Click on my team link
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 3
     Select any Opposition Team, Team 3
     Add Position C player to another team 3 as an LM
-    Drop a non Position C Player from the team 
+    Drop a non-Position C Player from the team 
     Validate that the player is not added to your team with the error message ${MESSAGE2}.
 
 As a League Manager, I should not be able to add a player to another team if the roster is full.
-    [Documentation]    As a League Manager, I should not be able to add a player to another team if my roster is full.
-    [Tags]    fantasy-ui    add-player    invalid    CSEAUTO-30053    CSEAUTO-28338    CSEAUTO-30136
+    [Documentation]    As a League Manager, I should not be able to add a player to another team if that team roster is full.
+    [Tags]    fantasy-ui    add-player    invalid    CSEAUTO-30053    CSEAUTO-28338    CSEAUTO-30139
     Switch to the league ${OTHER_LEAGUE}
     Navigate to LM tools, Click on Roster moves and do the dropPlayers on the Team 3
