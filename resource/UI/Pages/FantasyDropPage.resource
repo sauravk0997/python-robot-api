@@ -5,9 +5,7 @@ Resource         resource/suite_setup_teardown_moveplayer.resource
 Resource         resource/UI/FantasyUIcommon.resource
 
 *** Variables ***
-${PROFILE_LOGIN_BUTTON}       xpath://button[text()='Log In']
 @{DROP_PLAYERS_LIST}          //button[contains(@title,'Drop Player')]
-${BROWSER}                    Chrome
 ${COMMON_DROP_BUTTON}         //div[@class='action-container absolute']//button[2]                     
 ${CONTINUE_BUTTON}            //span[normalize-space()='Continue']
 ${UNDROPPABLE_PLAYER}         //button[contains(@aria-label,"Can't drop")]
@@ -20,7 +18,6 @@ Click on drop button
     wait until element is visible   ${COMMON_DROP_BUTTON}
     Scroll Element Into View    ${COMMON_DROP_BUTTON}
     Click Element    ${COMMON_DROP_BUTTON}
-    Wait Until Element Is Visible    ${DROP_PLAYERS_LIST}
 
 Verify the player has been dropped
     Reload Page
@@ -90,6 +87,37 @@ Select roster moves in LM tools
     Click on roster moves
     Select options from dropdown
 
+Select a team from LM tools as a team manager
+    Click on LM tools
+    Click on roster moves
+    Select options from dropdown as a team manager
+
+Select own team from LM tools as a league manager
+    Click on LM tools
+    Click on roster moves
+    Select own team from dropdown as a league manager
+    ${before_drop}    check no of players available to drop
+    Set Global Variable    ${before_drop}
+
+Select own team from dropdown as a league manager
+    wait until element is visible    ${ROSTER_MOVES_DROPDOWN1}
+    Select From List By Value       ${ROSTER_MOVES_DROPDOWN1}        dropPlayers
+    wait until element is visible    ${ROSTER_MOVES_DROPDOWN2}
+    Select From List By Value       ${ROSTER_MOVES_DROPDOWN2}        1
+    Wait Until Element Is Visible    ${LM_TOOLS_CONTINUE_BUTTON}
+    click element       ${LM_TOOLS_CONTINUE_BUTTON}
+    Sleep    3s
+
+Select options from dropdown as a team manager
+    wait until element is visible    ${ROSTER_MOVES_DROPDOWN1}
+    Select From List By Value       ${ROSTER_MOVES_DROPDOWN1}        dropPlayers
+    wait until element is visible    ${ROSTER_MOVES_DROPDOWN2}
+    Select From List By Value       ${ROSTER_MOVES_DROPDOWN2}        2
+    Click Element    (//div[@class='control__indicator'][1])[2]
+    Wait Until Element Is Visible    ${LM_TOOLS_CONTINUE_BUTTON}
+    click element       ${LM_TOOLS_CONTINUE_BUTTON}
+    Sleep    3s
+
 Check availability for ${status} player and drop
     Set availability true
     Scroll Element Into View    //span[@title='${status}']
@@ -135,7 +163,7 @@ Verify that ${status} player has been dropped
     END
 
 Select my team and check the available players
-    Select my fantasy team
+    Select my team
     Click on drop button
     ${before_drop}    check no of players available to drop
     Set Global Variable    ${before_drop}
@@ -180,3 +208,42 @@ Verify multiple players have been dropped inside LM tools
 Verify multiple players have been dropped
     ${after_drop}    Verify the player has been dropped
     Should Be Equal    ${${before_drop}-2}    ${after_drop}
+
+Drop button should not be visible
+    Element Should Not Be Visible    ${COMMON_DROP_BUTTON}
+
+Select an opposition team
+    Mouse Over    //span[text()='Opposing Teams']
+    Click Element    //span[text()='Team 2 (TM2)']
+
+Undroppable player button should be disabled
+    ${Status}=     Run Keyword And Return Status    Element Should be Disabled    id=${UNDROPPABLE_PLAYER}
+    Run Keyword If    '${Status}'=='True'    
+    ...    Log To Console    "Can't drop an undroppable player" 
+
+
+All players button should be disabled
+    ${Status}=     Run Keyword And Return Status    Element Should be Disabled    id=${DROP_PLAYERS_LIST}
+    Run Keyword If    '${Status}'=='True'    
+    ...    Log To Console    "Can't drop a player from other team as a team manager"
+    
+Reset and schedule empty draft
+    Reset draft    
+    Click on LM tools
+    wait until element is visible     ${INPUT_OFFLINE_RESULTS_LINK}
+    click element    ${INPUT_OFFLINE_RESULTS_LINK}
+    wait until element is visible    ${BEGIN_OFFLINE_DRAFT}
+    click element    ${BEGIN_OFFLINE_DRAFT}
+    Sleep    3s
+    Scroll Element Into View         ${FINISH_ENTERING_BUTTON}
+    wait until element is visible    ${FINISH_ENTERING_BUTTON}
+    click element                    ${FINISH_ENTERING_BUTTON}
+    Sleep    2s
+    wait until element is visible    ${RELEASE_ROSTER_BUTTON}    timeout=10s
+    click element                    ${RELEASE_ROSTER_BUTTON}
+    Wait Until Element Is Not Visible    ${RELEASE_ROSTER_BUTTON}
+    Reload Page
+
+Drop button should be disabled
+    Element Should be Disabled    ${COMMON_DROP_BUTTON}
+    
