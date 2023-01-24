@@ -15,7 +15,7 @@ ${droppedteamid}=    0                           #A dropped player will always h
 *** Test Cases ***
 Drop a player from any team as a league manager
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  valid   fantasy_games    drop   smoke    CSEAUTO-28332
+    [Tags]  valid   fantasy_games    drop   smoke    CSEAUTO-28332    CSEAUTO-28415
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    0
     ${league_manager}    Set Variable    True
@@ -29,7 +29,7 @@ Drop a player from any team as a league manager
 
 Drop a player from my team as a team manager
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  valid    fantasy_games    drop    smoke    CSEAUTO-28629
+    [Tags]  valid    fantasy_games    drop    smoke    CSEAUTO-28629    CSEAUTO-28387
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    3
     ${league_manager}    Set Variable    False
@@ -42,7 +42,7 @@ Drop a player from my team as a team manager
 
 Drop a player from the list of droppable players of a team as a team manager
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  valid    fantasy_games    drop    smoke    CSEAUTO-28629
+    [Tags]  valid    fantasy_games    drop    smoke    CSEAUTO-28629    CSEAUTO-28663
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    4
     ${league_manager}    Set Variable    False
@@ -55,7 +55,7 @@ Drop a player from the list of droppable players of a team as a team manager
     
 Drop a player from the list of undroppable players of a team as a league manager
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  valid    fantasy_games    drop    smoke    CSEAUTO-28629
+    [Tags]  valid    fantasy_games    drop    smoke    CSEAUTO-28629    CSEAUTO-28418
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    1
     ${league_manager}    Set Variable    True
@@ -66,7 +66,7 @@ Drop a player from the list of undroppable players of a team as a league manager
 
 Drop a player from the list of injured players of a team as a team manager
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  valid    fantasy_games    drop    smoke    CSEAUTO-28629
+    [Tags]  valid    fantasy_games    drop    smoke    CSEAUTO-28629    CSEAUTO-28665
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    4
     ${league_manager}    Set Variable    False
@@ -79,7 +79,7 @@ Drop a player from the list of injured players of a team as a team manager
 
 Drop a player from any team in a different scoringPeriodId as a team manager
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-28629
+    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-28629    CSEAUTO-28419
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    0
     ${league_manager}    Set Variable    False
@@ -90,7 +90,7 @@ Drop a player from any team in a different scoringPeriodId as a team manager
 
 Drop a player from the list of undroppable players of a team as a team manager
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-28629
+    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-28629    CSEAUTO-28417
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    1
     ${league_manager}    Set Variable    False
@@ -101,7 +101,7 @@ Drop a player from the list of undroppable players of a team as a team manager
 
 Drop a player from a team as a team owner using invalid type
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003
+    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003    CSEAUTO-29039
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player_invalid_type.json
     ${myteamid}    Set Variable    3
     ${league_manager}    Set Variable    False
@@ -112,7 +112,7 @@ Drop a player from a team as a team owner using invalid type
 
 Drop an invalid player from a team as a team owner
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003
+    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003    CSEAUTO-29040
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    3
     ${league_manager}    Set Variable    False
@@ -123,7 +123,7 @@ Drop an invalid player from a team as a team owner
 
 Drop an invalid player from a team as a league owner
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003
+    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003    CSEAUTO-29041
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    3
     ${league_manager}    Set Variable    True
@@ -134,7 +134,7 @@ Drop an invalid player from a team as a league owner
 
 Drop a player from an invalid team as a league owner
     [Documentation]     Simple validation with steps for the drop player API response schema and values for Fantasy Games API.
-    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003
+    [Tags]  invalid    fantasy_games    drop    smoke    CSEAUTO-29003    CSEAUTO-29042
     &{initial_payload}=    Load JSON from file    resource/JSON/drop_player.json
     ${myteamid}    Set Variable    0
     ${league_manager}    Set Variable    True

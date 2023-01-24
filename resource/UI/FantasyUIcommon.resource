@@ -7,13 +7,14 @@ Library             String
 Resource            resource/UI/Pages/CreateLeaguePage.resource
 
 *** Variables ***
-${FANTASY_URL}                        https://fantasy.espn.com/
-${user}                               test_user_account4@test.com
-${encrypted_password}                 U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
-${ENCRYPTED_PASSWORD1}                VUl1c2VyQEVTUE4=
-@{user_emails}                        ui_test_user1@test.com    ui_test_user2@test.com    ui_test_user3@test.com
-${ROSTER_MOVES_DROPDOWN1}             (//select[@class="dropdown__select"])[1]
-${LM_TOOLS_CONTINUE_BUTTON}           //button[normalize-space()='Continue']
+${FANTASY_URL}                             https://fantasy.espn.com/
+${user}                                    test_user_account4@test.com
+${encrypted_password}                      U3MzVF9HKnhmLy0/UlRpOHUyOHUyOGVyanNqY2pjYjkydTkyOTIx
+${ENCRYPTED_PASSWORD1}                     VUl1c2VyQEVTUE4=
+${PROFILE_LOCATOR}                         id:global-user-trigger
+@{user_emails}                             ui_test_user1@test.com    ui_test_user2@test.com    ui_test_user3@test.com
+${ROSTER_MOVES_DROPDOWN1}                  xpath:(//select[@class="dropdown__select"])[1]
+${LM_TOOLS_CONTINUE_BUTTON}                xpayh://button[normalize-space()='Continue']
 ${SIGNUP_BUTTON}                           xpath://button[text()='Sign Up']
 ${ROSTER_MOVES_DROPDOWN2}                  xpath:(//select[@class="dropdown__select"])[2]
 ${ROSTER_MOVES_OPTION}                     xpath://a[normalize-space()='Roster Moves']
@@ -71,7 +72,7 @@ Launch the Browser and Navigate to the ${url} site
     Go To                    ${url}
     Maximize Browser Window
 
-Select my fantasy team
+Select my team
     wait until element is visible   //span[text()='My Team']
     click element      //span[text()='My Team']
 
@@ -195,14 +196,9 @@ Reset draft
     wait until element is visible    ${RESET_DRAFT_BUTTON1}
     click element    ${RESET_DRAFT_BUTTON1}
     wait until element is visible    ${RESET_DRAFT_BUTTON2}
-    Sleep    5s
     click element    ${RESET_DRAFT_BUTTON2}
-    Sleep    5s
+    wait until element is visible    ${CONTINUE_LEAGUE_OFFICE_BUTTON}
     click element    ${CONTINUE_LEAGUE_OFFICE_BUTTON}
-    Logout from Fantasy Application
-    Log To Console    ***** User logged out *****
-    FantasyUIcommon.Close the current Browser
-    Log To Console    ***** All browsers closed *****
 
 Scroll up 
     execute javascript             window.scrollTo(document.body.scrollHeight, 100)
