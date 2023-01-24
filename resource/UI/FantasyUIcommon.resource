@@ -14,7 +14,7 @@ ${ENCRYPTED_PASSWORD1}                     VUl1c2VyQEVTUE4=
 ${PROFILE_LOCATOR}                         id:global-user-trigger
 @{user_emails}                             ui_test_user1@test.com    ui_test_user2@test.com    ui_test_user3@test.com
 ${ROSTER_MOVES_DROPDOWN1}                  xpath:(//select[@class="dropdown__select"])[1]
-${LM_TOOLS_CONTINUE_BUTTON}                xpayh://button[normalize-space()='Continue']
+${LM_TOOLS_CONTINUE_BUTTON}                xpath://button[normalize-space()='Continue']
 ${SIGNUP_BUTTON}                           xpath://button[text()='Sign Up']
 ${ROSTER_MOVES_DROPDOWN2}                  xpath:(//select[@class="dropdown__select"])[2]
 ${ROSTER_MOVES_OPTION}                     xpath://a[normalize-space()='Roster Moves']
