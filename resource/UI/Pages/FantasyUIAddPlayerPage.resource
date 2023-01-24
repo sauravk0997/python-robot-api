@@ -71,10 +71,10 @@ Click on the Roster Moves
 Fetch the size of roster of the team
   wait until element is visible    ${ALL_PLAYER_LIST}
   # Storing all the droppable player to the list
-  @{player_before_dropping}=       Get WebElements    ${ALL_PLAYER_LIST}
+  @{players_before_dropping}=       Get WebElements    ${ALL_PLAYER_LIST}
   # Getting length of all the droopable players 
-  ${player_before_dropping}        Get Length         ${player_before_dropping}
-  Set Global Variable                                ${player_before_dropping}
+  ${players_before_dropping}        Get Length         ${players_before_dropping}
+  Set Global Variable                                  ${players_before_dropping}
 
 Drop a player from my fantasy team
   Click on drop player button
@@ -107,7 +107,7 @@ Validate whether player is dropped from team
   Click on drop player button
   Fetch the size of roster of the team
   ${total_players_in_a_team}    Evaluate    ${length_before_dropping}-1
-  IF    ${player_before_dropping} == ${total_players_in_a_team}
+  IF    ${players_before_dropping} == ${total_players_in_a_team}
     Log    Player is dropped
   ELSE
     Log    Player is not dropped
@@ -170,7 +170,7 @@ Perform drop action to drop a player
 Add and drop a player from my team as an LM, when roster is full
   Click on drop player button
   Fetch the size of roster of the team
-  IF    ${player_before_dropping} == 13
+  IF    ${players_before_dropping} == 13
     Click on my team link
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 1
     Add players to the team as an LM
@@ -211,7 +211,7 @@ Validate the player is added to a team
   wait until element is visible                    ${ALL_PLAYER_LIST}
   @{player_after_adding}=       Get WebElements    ${ALL_PLAYER_LIST}
   ${length_after_adding}    Get Length             ${player_after_adding}
-  IF    ${player_before_dropping} == ${length_after_adding}
+  IF    ${players_before_dropping} == ${length_after_adding}
     Log    Player is added to the team
   ELSE
     Log    Player is not added to the team
@@ -220,7 +220,7 @@ Validate the player is added to a team
 Add and drop a player when team roster is full
   Click on drop player button
   Fetch the size of roster of the team
-  IF    ${player_before_dropping} == 13
+  IF    ${players_before_dropping} == 13
     Click on my team link
     Add players to the team as a Team Owner
     Perform drop action to drop a player
@@ -232,7 +232,7 @@ Add and drop a player when team roster is full
 Add and drop a player from other team as an LM, when roster is full
   Click on drop player button
   Fetch the size of roster of the team
-  IF    ${player_before_dropping} == 13
+  IF    ${players_before_dropping} == 13
     Click on my team link
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team 3
     Add players to the team as an LM
@@ -253,7 +253,7 @@ Switch to the league ${league_name}
 Add a player when the roster is full as Team Owner
   Click on drop player button
   Fetch the size of roster of the team
-  IF    ${player_before_dropping} == 13
+  IF    ${players_before_dropping} == 13
     Click on my team link
     Add a player as Team Owner
   ELSE 
@@ -338,7 +338,7 @@ Add Position C player to another team ${team_id} as an LM
 
 Validate players are addable when the roster is full to the team ${team_id} as League Manager
   Fetch the size of roster of the team
-  IF    ${player_before_dropping} == 13
+  IF    ${players_before_dropping} == 13
     Navigate to LM tools, Click on Roster moves and do the addPlayers on the Team ${team_id}
     Add players to the team as an LM
     Wait Until Element Is Visible    ${CONTINUE_BUTTON} 
