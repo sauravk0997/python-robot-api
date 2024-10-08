@@ -106,7 +106,7 @@ Validate whether player is dropped from team
   Click on my team link
   Click on drop player button
   Fetch the size of roster of the team
-  ${total_players_in_a_team}    Evaluate    ${length_before_dropping}-1
+  ${total_players_in_a_team}    Evaluate    ${players_before_dropping}-1
   IF    ${players_before_dropping} == ${total_players_in_a_team}
     Log    Player is dropped
   ELSE
